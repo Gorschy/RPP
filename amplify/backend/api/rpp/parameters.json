@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "rpp",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authrppc25d3b1a",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
