@@ -4,7 +4,7 @@
 }
 
 /* Card Stylings */
-#projectListCard.ant-card-head{
+#projectListCard.ant-card-head {
     height: 10px;
     color: red;
 }
@@ -15,6 +15,7 @@
     height: 45.5vh;
     border-top-left-radius: 0.5em;
     border-top-right-radius: 0.5em;
+    border-bottom: solid 1px #F0F0F0;
 }
 
 #carbonReportListCard {
@@ -30,23 +31,33 @@
     width: 70vw;
     height: 91vh;
     border-radius: 0.5em;
+    font: bold;
+    
 }
 
 #projectAdminCard {
     text-align: center;
     background-color: var(--foreground_color);
-    width: 15vw;
-    height: 45.5vh;
-    border-top-left-radius: 0.5em;
-    border-top-right-radius: 0.5em;
+    width: 17vw;
+    height: 45vh;
+    border-radius: 0.5em;
+    margin-bottom: 1vh;
+}
+
+.projectAdminHead {
+    text-align: center;
+    padding-top: 1vh;
+    font-family: var(--general_font_family);
+    font-weight: bold;
 }
 
 #membersList {
     background-color: var(--foreground_color);
-    width: 15vw;
-    height: 45.5vh;
-    border-bottom-left-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+    width: 17vw;
+    height: 45vh;
+    border-radius: 0.5em;
+    padding: 0.5em;
+    display: flex;
 }
 
 /* Header ID stylings */
@@ -98,6 +109,11 @@
 
 .centerContent {
     text-align: center;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    border-bottom: solid 1px #F0F0F0;
+    border-top-left-radius: 0.4em;
+    border-top-right-radius: 0.4em;
 }
 
 .container {
@@ -124,14 +140,45 @@
 }
 
 .projectAnalytics {
-    background-color: rgb(139, 164, 247);
+    padding: 1vh;
     height: 25vh;
-    width: 100%
+    width: 67vw;
+    background-color: white; 
+    border-radius: 0.5em;
+    margin-bottom: 1vh;
 }
 
 .projectBreakdown {
-    background-color: rgb(164, 252, 161);
-    height: 64vh;
+    height: 65vh;
     width: 100%;
+    padding: 1vh;
+    background-color: white; 
+    border-radius: 0.5em;
+    margin-bottom: 1vh;
+    
+}
+
+.adminPicture {
+    margin-top: 1vh;
+    width: 275px;
+    height: 275px;
+    border-radius: 50%;
+    object-fit: cover;    
+}
+
+
+.teamMemberPicture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-direction: column;
+}
+
+.teamMember {
+    display: inline-flex;
+}
+
+.teamMemberLabel {
     
 }
