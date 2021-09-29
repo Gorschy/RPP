@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTint, faLightbulb, faTrashAlt, faBurn, faFile, faUtensils, faIcons, faRoute } from '@fortawesome/free-solid-svg-icons'
 import { Button, Card , Tabs, Layout } from 'antd';
@@ -71,6 +71,8 @@ function Calculator() {
     totalEventProducts: 0
   });
 
+
+
   /* -- Unit of Measurement Data -- */
   const metric = {
     uom: 'Metric',
@@ -115,6 +117,22 @@ function Calculator() {
   }
   /* -------------------------------- */
 
+  const handleEmission = (e) => {
+    
+    const { name, value } = e.target;
+    if(value === "") {
+      setEmissions(prevState => ({
+        ...prevState,
+        [name]: 0
+      }));
+    } else {
+      setEmissions(prevState => ({
+        ...prevState,
+        [name]: parseFloat(value)
+      }));
+    }
+  }
+
   const totalEmissions = () => {
     return emission.transportTotal + emission.electricityTotal + emission.gasTotal + emission.wasteTotal + emission.waterTotal + emission.paperTotal + emission.foodAndDrinkTotal + emission.eventsTotal;  
   }
@@ -142,22 +160,37 @@ function Calculator() {
           <TabPane tab={<div className="standardText"> {transportIcon}Transport</div>} key="Transport">
             
             <div>    
-              <form className='basicForm'>
+              <form className = 'basicForm'>
 
                 <h2>Vehicle</h2>
 
                 <label>Vehicle Type</label>
                 <select
                   required
-                  className="userInput"
-                  onChange = {e => setEmissions({ ...emission, vehicleType: parseInt(e.target.value), transportTotal: emission.transportTotal + parseInt(e.target.value)})}
-                 
-                  
+                  className = "userInput"
+                  name = "vehicleType"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value='4.82'>Petrol large V8 car - heavy 4WD (13.2L/100km)</option>
+                  <option value="2">Petrol large car (9.9L/100km)</option>
+                  <option value="3">Petrol medium 4WD (9.8L/100km)</option>
+                  <option value="2">Petrol medium car (7.5L/100km)</option>
+                  <option value="3">Petrol small 4WD (7.4L/100km)</option>
+                  <option value="2">Petrol small car (6.4L/100km)</option>
+                  <option value="3">Petrol light car 1.5L (5.7L/100km)</option>
+                  <option value="2">Petrol motorcycle 251cc (3.0L/100km)</option>
+                  <option value="3">Petrol motorcycle 251-999cc (4.8L/100km)</option>
+                  <option value="3">Petrol motorcycle 999cc (5.7L/100km)</option>
+                  <option value="2">Petrol scooter 125cc (2.6L/100km)</option>
+                  <option value="3">Petrol hybrid small car (3.9L/100km)</option>
+                  <option value="2">Petrol hybrid medium car (4.8L/100km)</option>
+                  <option value="3">Diesel Heavy 4WD (8.4L/100km)</option>
+                  <option value="2">Diesel large car (9.5L/100km)</option>
+                  <option value="3">Diesel medium 4WD (6.3L/100km)</option>
+                  <option value="3">Diesel medium car (5.5L/100km)</option>
+                  <option value="2">Diesel small car (4.6L/100km)</option>
+                  <option value="3">LPG large hybrid car (7.9L/100km)</option>
                 </select>
 
                 <h2>Air Travel</h2>
@@ -166,25 +199,25 @@ function Calculator() {
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, cabinClass: parseInt(e.target.value), transportTotal: emission.transportTotal + parseInt(e.target.value)})}
+                  name = "cabinClass"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Average</option>
+                  <option value="2">Economy</option>
+                  <option value="3">Premium Economy</option>
+                  <option value="2">Business Class</option>
+                  <option value="3">First Class</option>
                 </select>
 
                 <label>Distance</label>
-                <select
-                  required
-                  className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, airDistance: parseInt(e.target.value), transportTotal: emission.transportTotal + parseInt(e.target.value)})}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
+                <input
+                  className='userInput' 
+                  type='number'
+                  name="airDistance"
+                  onChange = {handleEmission}
+                  placeholder={uom.distance}
+                />
 
                 <h2>Public Transport</h2>
                           
@@ -192,30 +225,32 @@ function Calculator() {
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, transportMethod: parseInt(e.target.value), transportTotal: emission.transportTotal + parseInt(e.target.value)})}
+                  name = "transportMethod"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Bus</option>
+                  <option value="2">Train</option>
                 </select>
 
                 <label>Transport Type</label>
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, transportType: parseInt(e.target.value), transportTotal: emission.transportTotal + parseInt(e.target.value)})}
+                  name = "transportType"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Average Passenger Load</option>
+                  <option value="2">Urban Commute</option>
+                  <option value="3">Long Distance</option>
                 </select>
 
                 <label>Distance</label>   
                 <input
-                  onChange = {e => setEmissions({ ...emission, pubDistance: parseInt(e.target.value), transportTotal: emission.transportTotal + parseInt(e.target.value)})}
-                  className='userInput' 
+                  className='userInput'
+                  name = "pubDistance"
+                  onChange = {handleEmission}
                   type='number' 
                   placeholder={uom.distance}
                 />
@@ -224,8 +259,9 @@ function Calculator() {
                   ? <div>
                       <label>Test</label>
                       <input
-                        onChange = {e => setEmissions({ ...emission, ADVANCED_INPUT: parseInt(e.target.value), transportTotal: emission.transportTotal + parseInt(e.target.value)})}
                         className='userInput'
+                        name = "ADVANCED_INPUT"
+                        onChange = {handleEmission}
                         type='number'
                         placeholder='adv Input'
                       />
@@ -245,7 +281,8 @@ function Calculator() {
 
                 <label>Consumption</label>
                 <input
-                  onChange = {e => setEmissions({ ...emission, consumption: parseInt(e.target.value), electricityTotal: emission.electricityTotal + parseInt(e.target.value)})}
+                  name = "consumption"
+                  onChange = {handleEmission}
                   className='userInput'
                   type='number'
                   placeholder={uom.consumption}
@@ -263,8 +300,9 @@ function Calculator() {
 
                 <label>LPG Consumption</label>
                 <input
-                  onChange = {e => setEmissions({ ...emission, lpgConsumption: parseInt(e.target.value), gasTotal: emission.gasTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "lpgConsumption"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.gas}
                 />
@@ -273,8 +311,9 @@ function Calculator() {
                 
                 <label>Gas Consumption</label>
                 <input
-                  onChange = {e => setEmissions({ ...emission, gasConsumption: parseInt(e.target.value), gasTotal: emission.gasTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "gasConsumption"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.gas}
                 />
@@ -283,24 +322,31 @@ function Calculator() {
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, unitOfMeasurement: parseInt(e.target.value), gasTotal: emission.gasTotal + parseInt(e.target.value)})}
+                  name = "unitOfMeasurement"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Kilowatt hours</option>
+                  <option value="2">Megajoules</option>
                 </select>
 
                 <label>State or Territory</label>
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, stateOrTerritory: parseInt(e.target.value), gasTotal: emission.gasTotal + parseInt(e.target.value)})}
+                  name = "stateOrTerritory"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">ACT</option>
+                  <option value="2">NSW</option>
+                  <option value="3">NT</option>
+                  <option value="1">QLD</option>
+                  <option value="2">SA</option>
+                  <option value="3">TAS</option>
+                  <option value="1">VIC</option>
+                  <option value="2">WA</option>
+                  <option value="3">Australian Average</option>
                 </select> 
 
                 <Button type='primary' className='formButton'>Add</Button>
@@ -317,18 +363,27 @@ function Calculator() {
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, wasteType: parseInt(e.target.value), wasteTotal: emission.wasteTotal + parseInt(e.target.value)})}
+                  name = "wasteType"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Food</option>
+                  <option value="2">Paper</option>
+                  <option value="3">Garden</option>
+                  <option value="1">Wood</option>
+                  <option value="2">Textiles</option>
+                  <option value="3">Sludge</option>
+                  <option value="1">Rubber and leather</option>
+                  <option value="2">Inert waste (including concrete/metal/plastics/glass)</option>
+                  <option value="3">Co-mingled mixed commericial and industrial waste</option>
+                  <option value="3">Co-mingled mixed construction and demolition waste</option>
                 </select>
 
                 <label>Weight</label>
                 <input
-                  onChange = {e => setEmissions({ ...emission, wasteWeight: parseInt(e.target.value), wasteTotal: emission.wasteTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "wasteWeight"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.waste}
                 />
@@ -347,12 +402,19 @@ function Calculator() {
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, waterUtilityLocation: parseInt(e.target.value), waterTotal: emission.waterTotal + parseInt(e.target.value)})}
+                  name = "waterUtilityLocation"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">ACT</option>
+                  <option value="2">NSW</option>
+                  <option value="3">NT</option>
+                  <option value="1">QLD</option>
+                  <option value="2">SA</option>
+                  <option value="3">TAS</option>
+                  <option value="1">VIC</option>
+                  <option value="2">WA</option>
+                  <option value="3">Australian Average</option>
                 </select>
 
                 <Button type='primary' className='formButton'>Add</Button>
@@ -369,30 +431,31 @@ function Calculator() {
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, source: parseInt(e.target.value), paperTotal: emission.paperTotal + parseInt(e.target.value)})}
+                  name = "source"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Domestic</option>
+                  <option value="2">Imported</option>
                 </select>
                 
                 <label>Paper Type</label>
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, paperType: parseInt(e.target.value), paperTotal: emission.paperTotal + parseInt(e.target.value)})}
+                  name = "paperType"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Recycled</option>
+                  <option value="2">Virgin (if paper type unknown)</option>
                 </select>
 
                 <label>Weight</label>
                 <input
-                  onChange = {e => setEmissions({ ...emission, paperWeight: parseInt(e.target.value), paperTotal: emission.paperTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "paperWeight"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.weight}
                 />
@@ -411,18 +474,28 @@ function Calculator() {
                 <select
                   required
                   className = 'userInput'
-                  onChange = {e => setEmissions({ ...emission, foodType: parseInt(e.target.value), foodAndDrinkTotal: emission.foodAndDrinkTotal + parseInt(e.target.value)})}
+                  name = "foodType"
+                  onChange = {handleEmission}
                 >
                   <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="1">Meat products</option>
+                  <option value="2">Eggs</option>
+                  <option value="3">Seafood</option>
+                  <option value="1">Dairy</option>
+                  <option value="2">Bread and cereals</option>
+                  <option value="3">Fruit, vegetables and nuts</option>
+                  <option value="1">Sugar, packaged meals & confectionary</option>
+                  <option value="2">Non-alcoholic drinks</option>
+                  <option value="3">Alcoholic take away drinks</option>
+                  <option value="2">Take away and dining out</option>
+                  <option value="3">TOTAL food and drink</option>
                 </select>
 
                 <label>Expenditure</label>
                 <input
-                  onChange = {e => setEmissions({ ...emission, expenditure: parseInt(e.target.value), foodAndDrinkTotal: emission.foodAndDrinkTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "expenditure"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.dollar}
                 />
@@ -441,8 +514,9 @@ function Calculator() {
 
                 <label>Total Spent on Accommodation</label>   
                 <input
-                  onChange = {e => setEmissions({ ...emission, totalAccommodation: parseInt(e.target.value), eventsTotal: emission.eventsTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "totalAccommodation"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.dollar}
                 />
@@ -451,16 +525,18 @@ function Calculator() {
 
                 <label>Total Spent on Meals</label>   
                 <input
-                  onChange = {e => setEmissions({ ...emission, totalMeals: parseInt(e.target.value), eventsTotal: emission.eventsTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "totalMeals"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.dollar}
                 />
 
                 <label>Total Spent on Non-Alcoholic Drinks</label>   
                 <input
-                  onChange = {e => setEmissions({ ...emission, totalDrinks: parseInt(e.target.value), eventsTotal: emission.eventsTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "totalDrinks"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.dollar}
                 />
@@ -469,8 +545,9 @@ function Calculator() {
 
                 <label>Total Spent on Plastic Products</label>   
                 <input
-                  onChange = {e => setEmissions({ ...emission, totalEventProducts: parseInt(e.target.value), eventsTotal: emission.eventsTotal + parseInt(e.target.value)})}
                   className='userInput'
+                  name = "totalEventProducts"
+                  onChange = {handleEmission}
                   type='number'
                   placeholder={uom.dollar}
                 />
@@ -530,6 +607,5 @@ function Calculator() {
     </div>
   );
 }
-
 
 export default Calculator;
