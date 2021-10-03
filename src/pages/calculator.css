@@ -116,32 +116,25 @@ TODO:
     display: -ms-flexbox;  
     display: -webkit-flex; 
     display: flex;         
-    justify-content: center;
-    
-}
-
-.ant-btn-primary {
-    color: #fff;
-    background: #5B7444;
-    border-color: #5B7444;
-    border-radius: 6px;
-    width: 150px;
-    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
-    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
-    
+    justify-content: center;    
 }
 
 .formButton {
     color: #fff;
     background: #5B7444;
-    border-color: #5B7444;
+    border: 1.5px solid #5B7444;
     border-radius: 6px;
     width: 150px;
-    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
-    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    height: 35px;
     display: block;
     margin: 0 auto;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
 
+.formButton:hover {
+    background-color: #fff;
+    color: #5B7444;
 }
 
 .ant-tabs-tabpane {
@@ -186,7 +179,7 @@ TODO:
     color: #fff;
 }
 
-.basicForm {
+#calculatorForm {
     float: right;
     margin-left: 10vw;
     margin-right: 1vw;
@@ -216,13 +209,13 @@ TODO:
     position: relative;
     width: 40px;
     vertical-align: middle;
-  }
+}
   
-  .switch input {
+.switch input {
     display:none;
-  }
+}
   
-  .slider {
+.slider {
     background-color: #ccc;
     bottom: 0;
     cursor: pointer;
@@ -231,10 +224,10 @@ TODO:
     right: 0;
     top: 0;
     transition: .4s;
-  }
+}
 
   
-  .slider:before {
+.slider:before {
     background-color: #fff;
     bottom: 4px;
     content: "";
@@ -243,32 +236,41 @@ TODO:
     position: absolute;
     transition: .4s;
     width: 16px;
-  }
+}
   
-  input:checked + .slider {
+input:checked + .slider {
     background-color: #5B7444;
-  }
+}
   
-  input:checked + .slider:before {
+input:checked + .slider:before {
     transform: translateX(16px);
-  }
+}
   
-  .slider.round {
+.slider.round {
     border-radius: 34px;
-  }
+}
   
-  .slider.round:before {
+.slider.round:before {
     border-radius: 50%;
-  }
+}
 
-  .switchContainer {
+.switchContainer {
     padding-top: 2vh;
     padding-left: 1vw;
     
     display: flex; 
     align-items: center;   
-  }
+}
 
 .switchLabel {
     padding-left: 1vw;
+}
+
+.checkboxLabel {
+    font-size: 1em;
+}
+
+.checkboxes {
+    margin-right: 0.5em;
+    vertical-align: -0.1em;
 }

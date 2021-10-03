@@ -1,9 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTint, faLightbulb, faTrashAlt, faBurn, faFile, faUtensils, faIcons, faRoute } from '@fortawesome/free-solid-svg-icons'
-import { Button, Card , Tabs, Layout } from 'antd';
+import { Button, Card , Tabs, Layout, Divider } from 'antd';
 import './calculator.css';
 import '../style.css';
+
+/* TODO:
+  - fix state issues with emission data
+  - push emissions to datasource for listing and removal
+  - calculate data functions
+  - generate final carbon report object for breakdown
+*/
+
+/* -- CONSTANTS ----------------------------------------------------- */
 
 const transportIcon = <FontAwesomeIcon style={{marginRight: 8}} icon={faRoute} />;
 const electricityIcon = <FontAwesomeIcon style={{marginRight: 8}} icon={faLightbulb} />;
@@ -14,20 +23,15 @@ const paperIcon = <FontAwesomeIcon style={{marginRight: 8}} icon={faFile} />;
 const foodAndDrinkIcon = <FontAwesomeIcon style={{marginRight: 8}} icon={faUtensils} />;
 const eventsIcon = <FontAwesomeIcon style={{marginRight: 8}} icon={faIcons} />;
 
-
-/* TODO: 
-    - build logic maybe
-    - once client provides calculation/input data handle uom conversion rates
-    - add emission section addition part (every time add is clicked emission shown below)
-*/ 
-
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
-function Calculator() {
+/* -- handles form inputs for calculation --------------------------- */
+
+/*
+const initialState = {
   
-  const [emission, setEmissions] = useState({
-  
+  transport: {
     transportTotal: 0,
     vehicleType: 0,
     cabinClass: 0,
@@ -35,45 +39,64 @@ function Calculator() {
     transportMethod: 0,
     transportType: 0,
     pubDistance: 0,
-
-    // TEST INPUT FOR CALC TYPE -- will implement all once client provides us with calculation data...
-    ADVANCED_INPUT: 0,
-        
+  },
+  
+  electricity: {     
     electricityTotal: 0,
     consumption: 0,
-        
+  },
+  
+  gas: {
     gasTotal: 0,
     lpgConsumption: 0,
     gasConsumption: 0,
     unitOfMeasurement: 0,
     stateOrTerritory: 0,
-      
+  },
+
+  waste: {
     wasteTotal: 0,
     wasteType: 0,
     wasteWeight: 0,
-        
+  },
+  
+  water: {
     waterTotal: 0,
     waterUtilityLocation: 0,
-      
+  },
+
+  paper: {
     paperTotal: 0,
     source: 0,
     paperType: 0,
     paperWeight: 0,
-        
+  },
+
+  foodAndDrink: {
     foodAndDrinkTotal: 0,
     foodType: 0,
     expenditure: 0,
-        
+  },
+
+  events: {
     eventsTotal: 0,
     totalAccommodation: 0,
     totalMeals: 0,
     totalDrinks: 0,
     totalEventProducts: 0
-  });
+  }
+};
+*/
 
+/* ------------------------------------------------------------------ */
 
+const Calculator = () => {
+  
+  const [emission, setEmissions] = useState([]);
+  const [emissionData, setEmissionData] = useState([]);
 
-  /* -- Unit of Measurement Data -- */
+  /* -- Unit of Measurement Data ------------------------------------ */
+
   const metric = {
     uom: 'Metric',
     distance: 'Kilometres',
@@ -93,8 +116,9 @@ function Calculator() {
     weight: 'Pounds',
     dollar: 'USD'
   };
-  
-  /* -- Calculator Switch Handlers -- */
+
+  /* -- Calculator Switch Handlers ---------------------------------- */
+
   const [uom, setUom] = useState(metric);
   const [advCalc, setAdvCalc] = useState(false);
 
@@ -114,445 +138,1407 @@ function Calculator() {
     else {
       setAdvCalc(false);
     }
+    clearState();
   }
-  /* -------------------------------- */
+
+  /* -- Form input handler ------------------------------------------ */
 
   const handleEmission = (e) => {
     
-    const { name, value } = e.target;
-    if(value === "") {
+    const { type, id, name, value } = e.target;
+   
+    if(value === '' && type === 'number') {
+     
       setEmissions(prevState => ({
         ...prevState,
-        [name]: 0
+        [id]: { ...prevState[id], [name]: 0 }
       }));
+
+    } else if(type === 'text') {
+      
+      setEmissions(prevState => ({
+        ...prevState,
+        [id]: { ...prevState[id], [name]: value }
+      }));
+
     } else {
+      
       setEmissions(prevState => ({
         ...prevState,
-        [name]: parseFloat(value)
+        [id]: { ...prevState[id], [name]: parseFloat(value) }
       }));
+      
     }
+    
   }
 
   const totalEmissions = () => {
     return emission.transportTotal + emission.electricityTotal + emission.gasTotal + emission.wasteTotal + emission.waterTotal + emission.paperTotal + emission.foodAndDrinkTotal + emission.eventsTotal;  
   }
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    alert(`Submitting emission ${JSON.stringify(emission, null, 2)}`);
+  
+  const clearState = () => {
     
+    setEmissions([]);
+  };
+  
+
+  const handleSubmit = (e) => {
+    
+    e.preventDefault();
+    if (emission.length !== 0) {
+      const { id } = e.target;
+      setEmissionData(emissionData => ([ ...emissionData, emission ]));
+      clearState();
+      resetForms(id);
+      //console.log(`Submitting emission ${JSON.stringify(emission, null, 2)}`);
+    }
+  }
+
+  const emissionList = emissionData.map((test) =>
+    
+    <li>{JSON.stringify(test)}</li>
+  );
+
+  const calculate = () => {
+
+  }
+
+  
+
+  function resetForms(id) {
+    console.log(id);
+    switch(id) {
+      case ('transport'): document.getElementById('transportForm').reset();
+        break;
+      case 'electricity': document.getElementById('electricityForm').reset();
+        break;
+      case 'gas': document.getElementById('gasForm').reset();
+        break;
+      case 'waste': document.getElementById('wasteForm').reset();
+        break;
+      case 'water': document.getElementById('waterForm').reset();
+        break;
+      case 'paper': document.getElementById('paperForm').reset();
+        break;
+      case 'foodAndDrink': document.getElementById('foodAndDrinkForm').reset();
+        break;
+      case 'events': document.getElementById('eventsForm').reset();
+        break;
+      default: console.log('reset failed - ' + id);
+    }
   }
 
   function callback(key) {
     console.log(key);
   }
 
-  return (  
-    <div className='calculatorContent'>
-    
+  return (
+    <div className = 'calculatorContent'>
+
       <Card
-        id='calculatorCard'
-        bordered={false} 
-        title={<h1 id="centreContent">Carbon Calculator</h1>}
+        id = 'calculatorCard'
+        bordered = { false } 
+        title = { <h1 id= 'centreContent'>Carbon Calculator</h1> }
       >
-        <Tabs defaultActiveKey="Transport" onChange={callback}>                          
+        <Tabs defaultActiveKey = 'Transport' onChange = { callback }>                          
 
-          <TabPane tab={<div className="standardText"> {transportIcon}Transport</div>} key="Transport">
+          <TabPane tab = { <div className = 'standardText'> { transportIcon }Transport</div> } key = 'Transport'>
             
-            <div>    
-              <form className = 'basicForm'>
-
-                <h2>Vehicle</h2>
-
-                <label>Vehicle Type</label>
-                <select
-                  required
-                  className = "userInput"
-                  name = "vehicleType"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value='4.82'>Petrol large V8 car - heavy 4WD (13.2L/100km)</option>
-                  <option value="2">Petrol large car (9.9L/100km)</option>
-                  <option value="3">Petrol medium 4WD (9.8L/100km)</option>
-                  <option value="2">Petrol medium car (7.5L/100km)</option>
-                  <option value="3">Petrol small 4WD (7.4L/100km)</option>
-                  <option value="2">Petrol small car (6.4L/100km)</option>
-                  <option value="3">Petrol light car 1.5L (5.7L/100km)</option>
-                  <option value="2">Petrol motorcycle 251cc (3.0L/100km)</option>
-                  <option value="3">Petrol motorcycle 251-999cc (4.8L/100km)</option>
-                  <option value="3">Petrol motorcycle 999cc (5.7L/100km)</option>
-                  <option value="2">Petrol scooter 125cc (2.6L/100km)</option>
-                  <option value="3">Petrol hybrid small car (3.9L/100km)</option>
-                  <option value="2">Petrol hybrid medium car (4.8L/100km)</option>
-                  <option value="3">Diesel Heavy 4WD (8.4L/100km)</option>
-                  <option value="2">Diesel large car (9.5L/100km)</option>
-                  <option value="3">Diesel medium 4WD (6.3L/100km)</option>
-                  <option value="3">Diesel medium car (5.5L/100km)</option>
-                  <option value="2">Diesel small car (4.6L/100km)</option>
-                  <option value="3">LPG large hybrid car (7.9L/100km)</option>
-                </select>
-
-                <h2>Air Travel</h2>
-
-                <label>Cabin Class</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "cabinClass"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Average</option>
-                  <option value="2">Economy</option>
-                  <option value="3">Premium Economy</option>
-                  <option value="2">Business Class</option>
-                  <option value="3">First Class</option>
-                </select>
-
-                <label>Distance</label>
-                <input
-                  className='userInput' 
-                  type='number'
-                  name="airDistance"
-                  onChange = {handleEmission}
-                  placeholder={uom.distance}
-                />
-
-                <h2>Public Transport</h2>
-                          
-                <label>Transport Method</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "transportMethod"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Bus</option>
-                  <option value="2">Train</option>
-                </select>
-
-                <label>Transport Type</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "transportType"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Average Passenger Load</option>
-                  <option value="2">Urban Commute</option>
-                  <option value="3">Long Distance</option>
-                </select>
-
-                <label>Distance</label>   
-                <input
-                  className='userInput'
-                  name = "pubDistance"
-                  onChange = {handleEmission}
-                  type='number' 
-                  placeholder={uom.distance}
-                />
+            <div id = 'calculatorForm'>    
+              <form id = 'transportForm'>
 
                 { advCalc 
+                  // ADVANCED TRANSPORT FORM
                   ? <div>
-                      <label>Test</label>
+                      
+                      <h2>Vehicle</h2>
+
+                      <label>Description</label>
                       <input
-                        className='userInput'
-                        name = "ADVANCED_INPUT"
-                        onChange = {handleEmission}
-                        type='number'
-                        placeholder='adv Input'
+                        className = 'userInput' 
+                        type = 'text'
+                        id = 'vehicleTravelAdv'
+                        name = 'description'
+                        onChange = { handleEmission }
+                        placeholder = 'Description (eg. Landcruiser)'
                       />
+
+                      <label>Number of Vehicles</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'number'
+                        id = 'vehicleTravelAdv'
+                        name = 'numberOfVehicles'
+                        onChange = { handleEmission }
+                        placeholder = 'Amount'
+                      />
+
+                      <label>Fuel Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'vehicleTravelAdv'
+                        name = 'fuelType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '0.24'>Petrol (RON91-98)</option>
+                        <option value = '0.29'>Diesel</option>
+                        <option value = '0.01'>Biodiesel</option>
+                        <option value = '0.01'>Biofuel</option>
+                        <option value = '0.17'>LPG</option>
+                        <option value = '0.21'>E10 (Petrol w 10% Ethanol)</option>
+                        <option value = '0.01'>Ethanol</option>
+                      </select>
+                      
+                      <Divider orientation="left"> Estimate By * </Divider>
+
+                      <label>Fuel Consumption</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'number'
+                        id = 'vehicleTravelAdv'
+                        name = 'fuelConsumption'
+                        onChange = { handleEmission }
+                        placeholder = { uom.gas }
+                      />
+
+                      <Divider plain> OR </Divider>
+
+                      <label>Vehicle Travel Distance</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'number'
+                        id = 'vehicleTravelAdv'
+                        name = 'travelDistance'
+                        onChange = { handleEmission }
+                        placeholder = { uom.distance }
+                      />
+
+                      <label>Fuel Efficiency</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'number'
+                        id = 'vehicleTravelAdv'
+                        name = 'fuelEfficiency'
+                        onChange = { handleEmission }
+                        placeholder = 'L/100 km'
+                      />
+
+                      <Divider />
+
+                      <div>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'vehicleTravelAdv' 
+                            name = 'includeCO2'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include CO<sub>2</sub> Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'vehicleTravelAdv' 
+                            name = 'includeCH4'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include CH<sub>4</sub> Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'vehicleTravelAdv' 
+                            name = 'includeN2O'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include N<sub>2</sub>O Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'vehicleTravelAdv' 
+                            name = 'includeSCOPE3'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include SCOPE 3 Emissions
+                        </label>
+                      </div><br/>
+
+                      <h2>Air Travel</h2>
+
+                      <label>Description</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'text'
+                        id = 'airTravelAdv'
+                        name = 'description'
+                        onChange = { handleEmission }
+                        placeholder= 'Description (eg. Conference Trip)'
+                      />
+
+                      <label>Cabin Class</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'airTravelAdv'
+                        name = 'cabinClass'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Average</option>
+                        <option value = '2'>Economy</option>
+                        <option value = '3'>Premium Economy</option>
+                        <option value = '2'>Business Class</option>
+                        <option value = '3'>First Class</option>
+                      </select>
+
+                      <label>Number of Passengers</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'number'
+                        id = 'airTravelAdv'
+                        name = 'passengers'
+                        onChange = { handleEmission }
+                        placeholder = 'Amount'
+                      />
+
+                      <label>Distance</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number' 
+                        id = 'airTravelAdv'
+                        name = 'airDistance'
+                        onChange = { handleEmission }
+                        placeholder = { uom.distance }
+                      />
+
+                      <div>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'airTravelAdv' 
+                            name = 'returnFlight'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include Return Flight
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'airTravelAdv' 
+                            name = 'includeCO2'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include CO<sub>2</sub> Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'airTravelAdv' 
+                            name = 'includeCH4'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include CH<sub>4</sub> Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'airTravelAdv' 
+                            name = 'includeN2O'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include N<sub>2</sub>O Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'airTravelAdv' 
+                            name = 'includeINDIRECT'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include INDIRECT Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'airTravelAdv' 
+                            name = 'includeRFI'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include RADIATIVE FORCING INDEX(RFI) of 1.9
+                        </label>
+                      </div><br/>
+
+                      <h2>Public Transport</h2>
+
+                      <label>Description</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'text'
+                        id = 'publicTravelAdv'
+                        name = 'description'
+                        onChange = { handleEmission }
+                        placeholder= 'Description (eg. Trip to the city)'
+                      />
+
+                      <label>Transport Method</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'publicTravelAdv'
+                        name = 'transportMethod'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Bus</option>
+                        <option value = '2'>Train</option>
+                      </select> 
+                          
+                      <label>Transport Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'publicTravelAdv'
+                        name = 'transportType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Average Passenger Load</option>
+                        <option value = '2'>Urban Commute</option>
+                        <option value = '3'>Long Distance</option>
+                      </select>
+
+                      <label>Number of Passengers</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'number'
+                        id = 'publicTravelAdv'
+                        name = 'passengers'
+                        onChange = { handleEmission }
+                        placeholder = 'Amount'
+                      />
+          
+                      <label>Distance</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number' 
+                        id = 'publicTravelAdv'
+                        name = 'pubDistance'
+                        onChange = { handleEmission }
+                        placeholder = { uom.distance }
+                      />
+
                     </div>
-                  : null 
-                }  
+                  
+                  // BASIC TRANSPORT FORM
+                  : <div>
+
+                      <h2>Vehicle</h2>
+
+                      <label>Vehicle Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'vehicleTravel'
+                        name = 'vehicleType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '4.82'>Petrol large V8 car - heavy 4WD (13.2L/100km)</option>
+                        <option value = '3.62'>Petrol large car (9.9L/100km)</option>
+                        <option value = '3.58'>Petrol medium 4WD (9.8L/100km)</option>
+                        <option value = '2.74'>Petrol medium car (7.5L/100km)</option>
+                        <option value = '2.7'>Petrol small 4WD (7.4L/100km)</option>
+                        <option value = '2.34'>Petrol small car (6.4L/100km)</option>
+                        <option value = '2.08'>Petrol light car 1.5L (5.7L/100km)</option>
+                        <option value = '1.1'>Petrol motorcycle 251cc (3.0L/100km)</option>
+                        <option value = '1.75'>Petrol motorcycle 251-999cc (4.8L/100km)</option>
+                        <option value = '2.08'>Petrol motorcycle 999cc (5.7L/100km)</option>
+                        <option value = '0.95'>Petrol scooter 125cc (2.6L/100km)</option>
+                        <option value = '1.42'>Petrol hybrid small car (3.9L/100km)</option>
+                        <option value = '1.75'>Petrol hybrid medium car (4.8L/100km)</option>
+                        <option value = '3.6'>Diesel Heavy 4WD (8.4L/100km)</option>
+                        <option value = '4.08'>Diesel large car (9.5L/100km)</option>
+                        <option value = '2.7'>Diesel medium 4WD (6.3L/100km)</option>
+                        <option value = '2.36'>Diesel medium car (5.5L/100km)</option>
+                        <option value = '1.97'>Diesel small car (4.6L/100km)</option>
+                        <option value = '2'>LPG large hybrid car (7.9L/100km)</option>
+                      </select>
+
+                      <h2>Air Travel</h2>
+
+                      <label>Cabin Class</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'airTravel'
+                        name = 'cabinClass'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Average</option>
+                        <option value = '2'>Economy</option>
+                        <option value = '3'>Premium Economy</option>
+                        <option value = '2'>Business Class</option>
+                        <option value = '3'>First Class</option>
+                      </select>
+
+                      <label>Distance</label>
+                      <input
+                        className = 'userInput' 
+                        type = 'number'
+                        id = 'airTravel'
+                        name= 'airDistance'
+                        onChange = { handleEmission }
+                        placeholder = { uom.distance }
+                      />
+                      
+                      <h2>Public Transport</h2>
+                          
+                      <label>Transport Method</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'publicTravel'
+                        name = 'transportMethod'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Bus</option>
+                        <option value = '2'>Train</option>
+                      </select> 
+                          
+                      <label>Transport Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'publicTravel'
+                        name = 'transportType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Average Passenger Load</option>
+                        <option value = '2'>Urban Commute</option>
+                        <option value = '3'>Long Distance</option>
+                      </select>
+          
+                      <label>Distance</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number' 
+                        id = 'publicTravel'
+                        name = 'pubDistance'
+                        onChange = { handleEmission }
+                        placeholder = { uom.distance }
+                      />
+
+                    </div> 
+                }
                
-                <Button type='primary' className='formButton' onClick={handleSubmit}>Add</Button>
-                                            
-              </form>                
+                <input type = 'button' id = 'transport' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
+                            
+              </form>
             </div>
           </TabPane>
             
-          <TabPane tab={<div className="standardText"> {electricityIcon}Electricity</div>} key="Electricity">
-            <div>    
-              <form className='basicForm'>
+          <TabPane tab = { <div className = 'standardText'> { electricityIcon }Electricity</div> } key = 'Electricity'>
+            <div id = 'calculatorForm'>    
+              <form id = 'electricityForm'>
 
-                <label>Consumption</label>
-                <input
-                  name = "consumption"
-                  onChange = {handleEmission}
-                  className='userInput'
-                  type='number'
-                  placeholder={uom.consumption}
-                />
+                { advCalc 
+                  // ADVANCED ELECTRICITY FORM
+                  ? <div>
+                      
+                      <label>Description</label>
+                      <input
+                        className = 'userInput'
+                        type = 'text'
+                        id = 'electricityAdv'
+                        name = 'electricityDescription'
+                        onChange = { handleEmission }
+                        placeholder = 'Description (eg. Office Lighting)'
+                      />
+
+                      <label>Electricity Utility Location</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'electricityAdv'
+                        name = 'utilityLocation'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '0.09'>ACT</option>
+                        <option value = '0.09'>NSW</option>
+                        <option value = '0.07'>NT</option>
+                        <option value = '0.09'>QLD</option>
+                        <option value = '0.05'>SA</option>
+                        <option value = '0.02'>TAS</option>
+                        <option value = '0.21'>VIC</option>
+                        <option value = '0.07'>WA</option>
+                        <option value = '0.09'>Australian Average</option>
+                      </select> 
+
+                      <div>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'electricityAdv' 
+                            name = 'includeSCOPE2'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include SCOPE 2 Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'electricityAdv' 
+                            name = 'includeSCOPE3'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include SCOPE 3 Emissions
+                        </label>
+                      </div><br/>
+
+                    </div>
+                  
+                  // BASIC ELECTRICITY FORM
+                  : <div>
+
+                      <label>Consumption</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'electricity'
+                        name = 'electricityConsumption'
+                        onChange = { handleEmission }
+                        placeholder= { uom.consumption }
+                      />
+
+                    </div> 
+                }
                
-                <Button type='primary' className='formButton'>Add</Button>
+                <input type = 'button' id = 'electricity' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
                                             
               </form>                
             </div>
           </TabPane>
 
-          <TabPane tab={<div className="standardText"> {gasIcon}Gas</div>} key="Gas">
-            <div>    
-              <form className='basicForm'>
+          <TabPane tab = { <div className= 'standardText'> { gasIcon }Gas</div> } key = 'Gas'>
+            <div id = 'calculatorForm'>    
+              <form id = 'gasForm'>
 
-                <label>LPG Consumption</label>
-                <input
-                  className='userInput'
-                  name = "lpgConsumption"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.gas}
-                />
+                { advCalc 
+                  // ADVANCED GAS FORM
+                  ? <div>
+                      
+                      <label>Description</label>
+                      <input
+                        className = 'userInput'
+                        type = 'text'
+                        id = 'gasAdv'
+                        name = 'gasDescription'
+                        onChange = { handleEmission }
+                        placeholder = 'Description (ed. Workplace Gas Usage)'
+                      />
 
-                <h2 style={{textAlign: 'center'}}>or</h2>
-                
-                <label>Gas Consumption</label>
-                <input
-                  className='userInput'
-                  name = "gasConsumption"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.gas}
-                />
+                      <Divider />
 
-                <label>Unit of Measurement</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "unitOfMeasurement"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Kilowatt hours</option>
-                  <option value="2">Megajoules</option>
-                </select>
+                      <label>Gas Consumption</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'gasAdv'
+                        name = 'gasConsumption'
+                        onChange = { handleEmission }
+                        placeholder= { uom.consumption }
+                      />
 
-                <label>State or Territory</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "stateOrTerritory"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">ACT</option>
-                  <option value="2">NSW</option>
-                  <option value="3">NT</option>
-                  <option value="1">QLD</option>
-                  <option value="2">SA</option>
-                  <option value="3">TAS</option>
-                  <option value="1">VIC</option>
-                  <option value="2">WA</option>
-                  <option value="3">Australian Average</option>
-                </select> 
+                      <Divider plain> OR </Divider>
 
-                <Button type='primary' className='formButton'>Add</Button>
+                      <label>LPG Consumption</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'gasAdv'
+                        name = 'lpgConsumption'
+                        onChange = { handleEmission }
+                        placeholder= { uom.consumption }
+                      />
+
+                      <Divider />
+
+                      <label>Unit of Measurement</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'gasAdv'
+                        name = 'unitOfMeasurement'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = ''>Kilowatt Hours</option>
+                        <option value = ''>Megajoules</option>
+                      </select> 
+
+                      <label>State or Territory</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'gasAdv'
+                        name = 'stateOrTerritory'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '23.27'>ACT</option>
+                        <option value = '23.27'>NSW</option>
+                        <option value = '21.68'>NT</option>
+                        <option value = '21.72'>QLD</option>
+                        <option value = '22.4'>SA</option>
+                        <option value = '21.68'>TAS</option>
+                        <option value = '19.99'>VIC</option>
+                        <option value = '20.03'>WA</option>
+                      </select> 
+
+                      <div>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'gasAdv' 
+                            name = 'includeCO2'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include CO<sub>2</sub> Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'gasAdv' 
+                            name = 'includeCH4'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include CH<sub>4</sub> Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'gasAdv' 
+                            name = 'includeN2O'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include N<sub>2</sub>O Emissions
+                        </label>
+                        <label className = 'checkboxLabel'>
+                          <input 
+                            className = 'checkboxes'
+                            type = 'checkbox'
+                            id = 'gasAdv' 
+                            name = 'includeSCOPE3'
+                            value = ''
+                            onChange = { handleEmission }
+                          />
+                          Include SCOPE 3 Emissions
+                        </label>
+                      </div><br/>
+
+                    </div>
+                  
+                  // BASIC GAS FORM
+                  : <div>
+
+                      <label>Gas Consumption</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'gas'
+                        name = 'gasConsumption'
+                        onChange = { handleEmission }
+                        placeholder = { uom.consumption }
+                      />
+
+                      <Divider plain> OR </Divider>
+
+                      <label>LPG Consumption</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'gas'
+                        name = 'lpgConsumption'
+                        onChange = { handleEmission }
+                        placeholder= { uom.consumption }
+                      />
+
+                      <Divider />
+
+                      <label>Unit of Measurement</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'gas'
+                        name = 'unitOfMeasurement'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = ''>Kilowatt Hours</option>
+                        <option value = ''>Megajoules</option>
+                      </select> 
+
+                      <label>State or Territory</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'gas'
+                        name = 'stateOrTerritory'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '23.27'>ACT</option>
+                        <option value = '23.27'>NSW</option>
+                        <option value = '21.68'>NT</option>
+                        <option value = '21.72'>QLD</option>
+                        <option value = '22.4'>SA</option>
+                        <option value = '21.68'>TAS</option>
+                        <option value = '19.99'>VIC</option>
+                        <option value = '20.03'>WA</option>
+                      </select> 
+
+                    </div> 
+                }
+               
+                <input type = 'button' id = 'gas' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
                                             
               </form>                
             </div>
           </TabPane>
 
-          <TabPane tab={<div className="standardText"> {wasteIcon}Waste</div>} key="Waste">
-            <div>    
-              <form className='basicForm'>
+          <TabPane tab = { <div className= 'standardText'> { wasteIcon }Waste</div> } key = 'Waste'>
+            <div id = 'calculatorForm'>    
+              <form id = 'wasteForm'>
                 
-                <label>Waste Type</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "wasteType"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Food</option>
-                  <option value="2">Paper</option>
-                  <option value="3">Garden</option>
-                  <option value="1">Wood</option>
-                  <option value="2">Textiles</option>
-                  <option value="3">Sludge</option>
-                  <option value="1">Rubber and leather</option>
-                  <option value="2">Inert waste (including concrete/metal/plastics/glass)</option>
-                  <option value="3">Co-mingled mixed commericial and industrial waste</option>
-                  <option value="3">Co-mingled mixed construction and demolition waste</option>
-                </select>
+                { advCalc 
+                  // ADVANCED WASTE FORM
+                  ? <div>
 
-                <label>Weight</label>
-                <input
-                  className='userInput'
-                  name = "wasteWeight"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.waste}
-                />
+                      <label>Description</label>
+                      <input
+                        className = 'userInput'
+                        type = 'text'
+                        id = 'wasteAdv'
+                        name = 'description'
+                        onChange = { handleEmission }
+                        placeholder = 'Description (eg. Office General Waste)'
+                      />
 
-                <Button type='primary' className='formButton'>Add</Button>
+                      <label>Waste Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'wasteAdv'
+                        name = 'wasteType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '210'>Food</option>
+                        <option value = '330'>Paper</option>
+                        <option value = '160'>Garden</option>
+                        <option value = '0'>Wood</option>
+                        <option value = '200'>Textiles</option>
+                        <option value = '40'>Sludge</option>
+                        <option value = '200'>Nappies</option>
+                        <option value = '330'>Rubber and leather</option>
+                        <option value = '0'>Inert waste (including concrete/metal/plastics/glass)</option>
+                        <option value = '160'>Co-mingled mixed municpal solid waste</option>
+                        <option value = '130'>Co-mingled mixed commericial and industrial waste</option>
+                        <option value = '20'>Co-mingled mixed construction and demolition waste</option>
+                      </select>
+
+                      <Divider />
+
+                      <label>Weight</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'wasteAdv'
+                        name = 'wasteWeight'
+                        onChange = { handleEmission }
+                        placeholder = { uom.waste }
+                      />
+
+                      <Divider plain> OR </Divider>
+                      
+                      <label>Volume</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'wasteAdv'
+                        name = 'wasteVolume'
+                        onChange = { handleEmission }
+                        placeholder = 'm3'
+                      />
+
+                    </div>
+
+                  // BASIC WASTE FORM
+                  : <div>
+
+                      <label>Waste Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'waste'
+                        name = 'wasteType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '210'>Food</option>
+                        <option value = '330'>Paper</option>
+                        <option value = '160'>Garden</option>
+                        <option value = '0'>Wood</option>
+                        <option value = '200'>Textiles</option>
+                        <option value = '40'>Sludge</option>
+                        <option value = '200'>Nappies</option>
+                        <option value = '330'>Rubber and leather</option>
+                        <option value = '0'>Inert waste (including concrete/metal/plastics/glass)</option>
+                        <option value = '160'>Co-mingled mixed municpal solid waste</option>
+                        <option value = '130'>Co-mingled mixed commericial and industrial waste</option>
+                        <option value = '20'>Co-mingled mixed construction and demolition waste</option>
+                      </select>
+
+                      <label>Weight</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'waste'
+                        name = 'wasteWeight'
+                        onChange = { handleEmission }
+                        placeholder = { uom.waste }
+                      />
+
+                    </div>
+                }
+
+                <input type = 'button' id = 'waste' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
                                             
               </form>                
             </div>
           </TabPane>
 
-          <TabPane tab={<div className="standardText"> {waterIcon}Water</div>} key="Water">
-            <div>    
-              <form className='basicForm'>
+          <TabPane tab = { <div className = 'standardText'> { waterIcon }Water</div> } key = 'Water'>
+            <div id = 'calculatorForm'>    
+              <form id = 'waterForm'>
                 
-                <label>Water Utility Location</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "waterUtilityLocation"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">ACT</option>
-                  <option value="2">NSW</option>
-                  <option value="3">NT</option>
-                  <option value="1">QLD</option>
-                  <option value="2">SA</option>
-                  <option value="3">TAS</option>
-                  <option value="1">VIC</option>
-                  <option value="2">WA</option>
-                  <option value="3">Australian Average</option>
-                </select>
+              { advCalc 
+                  // ADVANCED WATER FORM
+                  ? <div>
 
-                <Button type='primary' className='formButton'>Add</Button>
+                      <label>Water Utility Location</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'waterAdv'
+                        name = 'waterUtilityLocation'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>ACT</option>
+                        <option value = '2'>NSW</option>
+                        <option value = '3'>NT</option>
+                        <option value = '1'>QLD</option>
+                        <option value = '2'>SA</option>
+                        <option value = '3'>TAS</option>
+                        <option value = '1'>VIC</option>
+                        <option value = '2'>WA</option>
+                        <option value = '3'>Australian Average</option>
+                      </select>
+
+                      <label>Water Used</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'waterAdv'
+                        name = 'waterConsumption'
+                        onChange = { handleEmission }
+                        placeholder = 'kL'
+                      />
+
+                    </div>
+
+                  // BASIC WATER FORM
+                  : <div>
+
+                      <label>Water Utility Location</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'water'
+                        name = 'waterUtilityLocation'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>ACT</option>
+                        <option value = '2'>NSW</option>
+                        <option value = '3'>NT</option>
+                        <option value = '1'>QLD</option>
+                        <option value = '2'>SA</option>
+                        <option value = '3'>TAS</option>
+                        <option value = '1'>VIC</option>
+                        <option value = '2'>WA</option>
+                        <option value = '3'>Australian Average</option>
+                      </select>
+
+                    </div>
+                }
+
+                <input type = 'button' id = 'water' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
                                             
               </form>                
             </div>
           </TabPane>
 
-          <TabPane tab={<div className="standardText"> {paperIcon}Paper</div>} key="Paper">
-            <div>    
-              <form className='basicForm'>
+          <TabPane tab = { <div className = 'standardText'> { paperIcon }Paper</div> } key = 'Paper'>
+            <div id = 'calculatorForm'>    
+              <form id = 'paperForm'>
                 
-                <label>Source</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "source"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Domestic</option>
-                  <option value="2">Imported</option>
-                </select>
-                
-                <label>Paper Type</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "paperType"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Recycled</option>
-                  <option value="2">Virgin (if paper type unknown)</option>
-                </select>
+                { advCalc 
+                  // ADVANCED PAPER FORM
+                  ? <div>
 
-                <label>Weight</label>
-                <input
-                  className='userInput'
-                  name = "paperWeight"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.weight}
-                />
+                      <label>Description</label>
+                      <input
+                        className = 'userInput'
+                        type = 'text'
+                        id = 'paperAdv'
+                        name = 'description'
+                        onChange = { handleEmission }
+                        placeholder = 'Description (eg. Office Printing)'
+                      />
 
-                <Button type='primary' className='formButton'>Add</Button>
+                      <label>Source</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'paperAdv'
+                        name = 'source'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Domestic</option>
+                        <option value = '2'>Imported</option>
+                      </select>
+                      
+                      <label>Paper Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'paperAdv'
+                        name = 'paperType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Recycled</option>
+                        <option value = '2'>Virgin (if paper type unknown)</option>
+                      </select>
+
+                      <label>Weight</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'paperAdv'
+                        name = 'paperWeight'
+                        onChange = { handleEmission }
+                        placeholder = { uom.weight }
+                      />
+
+                    </div>
+
+                  // BASIC PAPER FORM
+                  : <div>
+
+                      <label>Source</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'paper'
+                        name = 'source'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Domestic</option>
+                        <option value = '2'>Imported</option>
+                      </select>
+                      
+                      <label>Paper Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'paper'
+                        name = 'paperType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Recycled</option>
+                        <option value = '2'>Virgin (if paper type unknown)</option>
+                      </select>
+
+                      <label>Weight</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'paper'
+                        name = 'paperWeight'
+                        onChange = { handleEmission }
+                        placeholder={uom.weight}
+                      />
+
+                    </div>
+                }
+
+                <input type = 'button' id = 'paper' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
                                             
               </form>                
             </div>  
           </TabPane>
 
-          <TabPane tab={<div className="standardText"> {foodAndDrinkIcon}Food And Drink</div>} key="FoodAndDrink">
-            <div>    
-              <form className='basicForm'>
+          <TabPane tab = { <div className = 'standardText'> { foodAndDrinkIcon }Food And Drink</div> } key = 'FoodAndDrink'>
+            <div id = 'calculatorForm'>    
+              <form id = 'foodAndDrinkForm'>
                 
-                <label>Food Type</label>
-                <select
-                  required
-                  className = 'userInput'
-                  name = "foodType"
-                  onChange = {handleEmission}
-                >
-                  <option value="" disabled selected hidden>Please Select</option>
-                  <option value="1">Meat products</option>
-                  <option value="2">Eggs</option>
-                  <option value="3">Seafood</option>
-                  <option value="1">Dairy</option>
-                  <option value="2">Bread and cereals</option>
-                  <option value="3">Fruit, vegetables and nuts</option>
-                  <option value="1">Sugar, packaged meals & confectionary</option>
-                  <option value="2">Non-alcoholic drinks</option>
-                  <option value="3">Alcoholic take away drinks</option>
-                  <option value="2">Take away and dining out</option>
-                  <option value="3">TOTAL food and drink</option>
-                </select>
+                { advCalc 
+                  // ADVANCED FOOD AND DRINK FORM
+                  ? <div>
 
-                <label>Expenditure</label>
-                <input
-                  className='userInput'
-                  name = "expenditure"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.dollar}
-                />
+                      <label>Description</label>
+                      <input
+                        className = 'userInput'
+                        type = 'text'
+                        id = 'foodAndDrinkAdv'
+                        name = 'description'
+                        onChange = { handleEmission }
+                        placeholder = 'Description (eg. Shopping)'
+                      />
 
-                <Button type='primary' className='formButton'>Add</Button>
+                      <label>Food Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'foodAndDrinkAdv'
+                        name = 'foodType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Meat products</option>
+                        <option value = '2'>Eggs</option>
+                        <option value = '3'>Seafood</option>
+                        <option value = '1'>Dairy</option>
+                        <option value = '2'>Bread and cereals</option>
+                        <option value = '3'>Fruit, vegetables and nuts</option>
+                        <option value = '1'>Sugar, packaged meals & confectionary</option>
+                        <option value = '2'>Non-alcoholic drinks</option>
+                        <option value = '3'>Alcoholic take away drinks</option>
+                        <option value = '2'>Take away and dining out</option>
+                        <option value = '3'>TOTAL food and drink</option>
+                      </select>
+
+                      <label>Expenditure</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'foodAndDrinkAdv'
+                        name = 'expenditure'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                    </div>
+
+                  // BASIC FOOD AND PAPER FORM
+                  : <div>
+
+                      <label>Food Type</label>
+                      <select
+                        required
+                        className = 'userInput'
+                        id = 'foodAndDrink'
+                        name = 'foodType'
+                        onChange = { handleEmission }
+                      >
+                        <option value = '' selected hidden>Please Select</option>
+                        <option value = '1'>Meat products</option>
+                        <option value = '2'>Eggs</option>
+                        <option value = '3'>Seafood</option>
+                        <option value = '1'>Dairy</option>
+                        <option value = '2'>Bread and cereals</option>
+                        <option value = '3'>Fruit, vegetables and nuts</option>
+                        <option value = '1'>Sugar, packaged meals & confectionary</option>
+                        <option value = '2'>Non-alcoholic drinks</option>
+                        <option value = '3'>Alcoholic take away drinks</option>
+                        <option value = '2'>Take away and dining out</option>
+                        <option value = '3'>TOTAL food and drink</option>
+                      </select>
+
+                      <label>Expenditure</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'foodAndDrink'
+                        name = 'expenditure'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                    </div>
+                }
+
+                <input type = 'button' id = 'foodAndDrink' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
                                             
               </form>                
             </div>  
           </TabPane>
 
-          <TabPane tab={<div className="standardText"> {eventsIcon}Events</div>} key="Events">
-            <div>    
-              <form className='basicForm'>
+          <TabPane tab = { <div className = 'standardText'> { eventsIcon }Events</div> } key = 'Events'>
+            <div id = 'calculatorForm'>    
+              <form id = 'eventsForm'>
 
-                <h2>Accommodation</h2>
+                { advCalc 
+                  // ADVANCED EVENTS FORM
+                  ? <div>
 
-                <label>Total Spent on Accommodation</label>   
-                <input
-                  className='userInput'
-                  name = "totalAccommodation"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.dollar}
-                />
+                      <label>Description</label>
+                      <input
+                        className = 'userInput'
+                        type = 'text'
+                        id = 'eventsAdv'
+                        name = 'description'
+                        onChange = { handleEmission }
+                        placeholder = 'Description (eg. Concert)'
+                      />
 
-                <h2>Food And Drink</h2>
+                      <h2>Accommodation</h2>
 
-                <label>Total Spent on Meals</label>   
-                <input
-                  className='userInput'
-                  name = "totalMeals"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.dollar}
-                />
+                      <label>Number of Attendees in Accomodation</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'numberOfAttendees'
+                        onChange = { handleEmission }
+                        placeholder = 'Amount'
+                      />
 
-                <label>Total Spent on Non-Alcoholic Drinks</label>   
-                <input
-                  className='userInput'
-                  name = "totalDrinks"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.dollar}
-                />
-                          
-                <h2>Promotional Materials</h2>
+                      <label>Number of Nights per Attendee</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'numberOfNights'
+                        onChange = { handleEmission }
+                        placeholder = 'Amount'
+                      />
+                      
+                      <Divider />
 
-                <label>Total Spent on Plastic Products</label>   
-                <input
-                  className='userInput'
-                  name = "totalEventProducts"
-                  onChange = {handleEmission}
-                  type='number'
-                  placeholder={uom.dollar}
-                />
+                      <label>Average Daily Cost per Room</label>
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'roomCost'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+                      
+                      <Divider plain> OR </Divider>
 
-                <Button type='primary' className='formButton'>Add</Button>
+                      <label>Total Spent on Accommodation</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'totalAccommodation'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <Divider />
+
+                      <h2>Food And Drink</h2>
+
+                      <label>Total Number of Meals</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'numberOfMeals'
+                        onChange = { handleEmission }
+                        placeholder = 'Amount'
+                      />
+
+                      <Divider />
+
+                      <label>Average Cost of Meals</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'avgCostOfMeals'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <Divider plain> OR </Divider>
+
+                      <label>Total Spent on Meals</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'totalMeals'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <Divider />
+
+                      <label>Total Spent on Non-Alcoholic Drinks</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'totalDrinks'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <label>Total Spent on Spirits</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'totalSpirits'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <label>Total Spent on Beer</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'totalBeer'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <label>Total Spent on Wine</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'totalWine'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+                                
+                      <h2>Promotional Materials</h2>
+
+                      <label>Total Spent on Plastic Products</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'eventsAdv'
+                        name = 'totalEventProducts'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                    </div>
+
+                  // BASIC EVENTS FORM
+                  : <div>
+
+                      <h2>Accommodation</h2>
+
+                      <label>Total Spent on Accommodation</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'events'
+                        name = 'totalAccommodation'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <h2>Food And Drink</h2>
+
+                      <label>Total Spent on Meals</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'events'
+                        name = 'totalMeals'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                      <label>Total Spent on Non-Alcoholic Drinks</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'events'
+                        name = 'totalDrinks'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+                                
+                      <h2>Promotional Materials</h2>
+
+                      <label>Total Spent on Plastic Products</label>   
+                      <input
+                        className = 'userInput'
+                        type = 'number'
+                        id = 'events'
+                        name = 'totalEventProducts'
+                        onChange = { handleEmission }
+                        placeholder = { uom.dollar }
+                      />
+
+                    </div>
+                }
+                
+                <input type = 'button' id = 'events' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
                                             
               </form>                
             </div>  
@@ -560,22 +1546,18 @@ function Calculator() {
                         
           <Layout>
             <Content>
-              <Card id="totalCard" title={<h2 id="centreContent">Carbon Report</h2>}>
+              <Card id= 'totalCard' title={<h2 id= 'centreContent'>Carbon Report</h2>}>
                 
-                <div className='standardText'>
-                <br />
-                Transport: {emission.transportTotal} <br/>
-                Electricity: {emission.electricityTotal} <br/>
-                Gas: {emission.gasTotal} <br/>
-                Waste: {emission.wasteTotal} <br/>
-                Water: {emission.waterTotal} <br/>
-                Paper: {emission.paperTotal} <br/>
-                Food And Drink: {emission.foodAndDrinkTotal} <br/>
-                Events: {emission.eventsTotal}</div>
-                <br/>
+                
 
-                <h3 className='outputTotal'>Total: {totalEmissions()}t CO<sub>2</sub></h3>
+                <ul>{emissionList}</ul>
 
+                <input type = 'button' id = 'calculate' className = 'formButton' value = 'Calculate' />
+
+                
+                
+              
+                
               </Card>
             </Content>
           </Layout>       
@@ -583,24 +1565,24 @@ function Calculator() {
       </Card>
       
       <div>
-        <div class="switchContainer">
-          <label class="switch" for="advBasic">
-            <input type="checkbox" id="advBasic" name="advBasic" onClick={(e) => {
+        <div class= 'switchContainer'>
+          <label class= 'switch' for= 'advBasic'>
+            <input type= 'checkbox' id= 'advBasic' name= 'advBasic' onClick={(e) => {
               handleAdvCalc(e.target.checked);
             }}/>
-            <div class="slider round"></div>  
+            <div class= 'slider round'></div>  
           </label>
-          <h3 class='switchLabel'>Advanced</h3>      
+          <h3 class= 'switchLabel'>Advanced</h3>      
         </div>
 
-        <div class="switchContainer">
-          <label class="switch" for="uom">
-            <input type="checkbox" id="uom" name="uom" onClick={(e) => {
+        <div class= 'switchContainer'>
+          <label class= 'switch' for= 'uom'>
+            <input type= 'checkbox' id= 'uom' name= 'uom' onClick={(e) => {
               handleUom(e.target.checked);
             }}/>
-            <div class="slider round"></div>  
+            <div class= 'slider round'></div>  
           </label>
-          <h3 class='switchLabel'>Imperial</h3>      
+          <h3 class= 'switchLabel'>Imperial</h3>      
         </div>
         
       </div>
