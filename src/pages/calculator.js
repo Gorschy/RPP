@@ -26,67 +26,6 @@ const eventsIcon = <FontAwesomeIcon style={{marginRight: 8}} icon={faIcons} />;
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
-/* -- handles form inputs for calculation --------------------------- */
-
-/*
-const initialState = {
-  
-  transport: {
-    transportTotal: 0,
-    vehicleType: 0,
-    cabinClass: 0,
-    airDistance: 0,
-    transportMethod: 0,
-    transportType: 0,
-    pubDistance: 0,
-  },
-  
-  electricity: {     
-    electricityTotal: 0,
-    consumption: 0,
-  },
-  
-  gas: {
-    gasTotal: 0,
-    lpgConsumption: 0,
-    gasConsumption: 0,
-    unitOfMeasurement: 0,
-    stateOrTerritory: 0,
-  },
-
-  waste: {
-    wasteTotal: 0,
-    wasteType: 0,
-    wasteWeight: 0,
-  },
-  
-  water: {
-    waterTotal: 0,
-    waterUtilityLocation: 0,
-  },
-
-  paper: {
-    paperTotal: 0,
-    source: 0,
-    paperType: 0,
-    paperWeight: 0,
-  },
-
-  foodAndDrink: {
-    foodAndDrinkTotal: 0,
-    foodType: 0,
-    expenditure: 0,
-  },
-
-  events: {
-    eventsTotal: 0,
-    totalAccommodation: 0,
-    totalMeals: 0,
-    totalDrinks: 0,
-    totalEventProducts: 0
-  }
-};
-*/
 
 /* ------------------------------------------------------------------ */
 
@@ -165,16 +104,13 @@ const Calculator = () => {
       
       setEmissions(prevState => ({
         ...prevState,
-        [id]: { ...prevState[id], [name]: parseFloat(value) }
+        [id]: { ...prevState[id], [name]: value }
       }));
       
     }
     
   }
 
-  const totalEmissions = () => {
-    return emission.transportTotal + emission.electricityTotal + emission.gasTotal + emission.wasteTotal + emission.waterTotal + emission.paperTotal + emission.foodAndDrinkTotal + emission.eventsTotal;  
-  }
 
   
   const clearState = () => {
@@ -201,11 +137,256 @@ const Calculator = () => {
   );
 
   const calculate = () => {
+      //Add additional properties
+      emissionData['totalCarbon'] = 0;
+      emissionData['transportCarbon'] = 0;
+      emissionData['electricityCarbon'] = 0;
+      emissionData['gasCarbon'] = 0;
+      emissionData['wasteCarbon'] = 0;
+      emissionData['waterCarbon'] = 0;
+      emissionData['paperCarbon'] = 0;
+      emissionData['foodDrinkCarbon'] = 0;
+      emissionData['eventsCarbon'] = 0;
+      
+      //Iterrate through each report object
+      for (let i = 0; i < emissionData.length; i++) {
+        
+        let temp = 0;
+        
+        switch(true) {
+          
+          case emissionData[i].hasOwnProperty('vehicleTravel'):
+            emissionData.totalCarbon += emissionData[i].vehicleTravel.vehicleType;
+            emissionData.transportCarbon += emissionData[i].vehicleTravel.vehicleType;
+            break;
 
+          case emissionData[i].hasOwnProperty('airTravel'):
+            let tempCabinClass = emissionData[i].airTravel.cabinClass;
+            console.log(tempCabinClass);
+            let tempDistance = emissionData[i].airTravel.airDistance;
+            console.log(tempDistance);
+            
+            switch(tempCabinClass) {
+              
+              case 1:
+                temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
+                if(temp < 0) {
+                  temp = 0;
+                }
+                emissionData.totalCarbon += temp;
+                emissionData.transportCarbon += temp;
+                break;
+
+              case 2:
+                temp = Math.pow(0.000202965*tempDistance, 0.973721) + 0.00407937;
+                if(temp < 0){
+                  temp = 0;
+                }
+                emissionData.totalCarbon += temp;
+                emissionData.transportCarbon += temp;
+                break;
+
+              case 3:
+                temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
+                if(temp < 0){
+                  temp = 0;
+                }
+                emissionData.totalCarbon += temp;
+                emissionData.transportCarbon += temp;
+                break;
+
+              case 4:
+                temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
+                if(temp < 0){
+                  temp = 0;
+                }
+                emissionData.totalCarbon += temp;
+                emissionData.transportCarbon += temp;
+                break;
+
+              case 5:
+                temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
+                if(temp < 0){
+                  temp = 0;
+                }
+                emissionData.totalCarbon += temp;
+                emissionData.transportCarbon += temp;
+              break;
+              default: console.log('-- main switch error --');
+            } 
+          break;
+          case emissionData[i].hasOwnProperty('publicTravel'):
+            let tempTransportMethod = emissionData[i].publicTravel.transportMethod;
+            let tempTransportType = emissionData[i].publicTravel.transportType;
+            let tempDistancePub = emissionData[i].publicTravel.pubDistance;
+
+            if(tempTransportMethod === 1){
+              if(tempTransportType === 1){
+                temp = Math.pow(0.0000884831 * tempDistancePub, 0.934661) - 0.106027;
+              }else if(tempTransportType === 2){
+                temp = Math.pow(0.0000497395 * tempDistancePub, 0.998722) - 0.00129669;
+              }else if(tempTransportType === 3){
+                temp = Math.pow(0.0000570462 * tempDistancePub, 0.999922) + 0.00049945;
+              }else{
+                console.log("There was an unexpected transport TYPE in calculate function bus")
+              }
+            }else if(tempTransportMethod === 2) {
+              if(tempTransportType === 1){
+                temp = Math.pow(0.000111839 * tempDistancePub, 1.00013) - 0.0000298673;
+              }else if(tempTransportType === 2){
+                temp = Math.pow(0.000041585 * tempDistancePub, 0.998798) - 0.0013409;
+              }else if(tempTransportType === 3){
+                temp = 0.00118995 * tempDistancePub + 0.000183289;
+              }else{
+                console.log("There was an unexpected transport TYPE in calculate function train")
+              }
+            }else{
+              console.log("There was an unexpected transport METHOD in calculate function")
+            }
+            
+            if(temp < 0){
+              temp = 0;
+            }
+            emissionData.totalCarbon += temp;
+            emissionData.transportCarbon += temp;
+          break;
+          case emissionData[i].hasOwnProperty('electricity'):
+            emissionData.electricityCarbon += Math.pow( 0.00086905 * emissionData.electricity.electricityConsumption, 1.00009) + 0.00160968;
+            emissionData.totalCarbon += Math.pow( 0.00086905 * emissionData.electricity.electricityConsumption, 1.00009) + 0.00160968;
+          break;
+          case emissionData[i].hasOwnProperty('gas'):
+
+          break;
+          case emissionData[i].hasOwnProperty('waste'):
+            emissionData.totalCarbon += emissionData[i].waste.wasteType * emissionData[i].waste.wasteWeight;
+            emissionData.wasteCarbon += emissionData[i].waste.wasteType * emissionData[i].waste.wasteWeight;
+          break;
+          case emissionData[i].hasOwnProperty('water'):
+            let waterLocation = emissionData[i].water.waterUtilityLocation;
+
+            switch(waterLocation){
+              case 'ACT' :
+                emissionData.totalCarbon += 0.27;
+                emissionData.waterCarbon += 0.27;
+              break;
+              case 'NSW' :
+                emissionData.totalCarbon += 0.14;
+                emissionData.waterCarbon += 0.14;
+              break;
+              case 'NT' :
+                emissionData.totalCarbon += 0.41;
+                emissionData.waterCarbon += 0.41;
+              break;
+              case 'QLD' :
+                emissionData.totalCarbon += 0.17;
+                emissionData.waterCarbon += 0.17;
+              break;
+              case 'SA' :
+                emissionData.totalCarbon += 0.27;
+                emissionData.waterCarbon += 0.27;
+              break;
+              case 'TAS' :
+                emissionData.totalCarbon += 0.1;
+                emissionData.waterCarbon += 0.1;
+              break;
+              case 'VIC' :
+                emissionData.totalCarbon += 0.1;
+                emissionData.waterCarbon += 0.1;
+              break;
+              case 'WA' :
+                emissionData.totalCarbon += 0.46;
+                emissionData.waterCarbon += 0.46;
+              break;
+              case 'Australian Average' :
+                emissionData.totalCarbon += 0.22;
+                emissionData.waterCarbon += 0.22;
+              break;
+              default: console.log('-- main switch error --');
+            }
+          break;
+          case emissionData[i].hasOwnProperty('paper'):
+            let source = emissionData[i].paper.source;  
+            let paperType = emissionData[i].paper.paperType;
+            let paperWeight = emissionData[i].paper.paperWeight;
+            switch(source){
+              case 1 :
+                if(paperType === 1){
+                  temp = Math.pow(0.00235612 * paperWeight, 0.999719) - 0.00358936;
+                }else if(paperType === 2){
+                  temp = Math.pow(0.00265348 * paperWeight, 0.999844) - 0.000197495;
+                }else{
+                  console.log("There was an unexpected paperType")
+                }
+              break;
+              case 2 :
+                if(paperType === 1){
+                  temp = Math.pow(0.00322242 * paperWeight, 0.999922) - 0.00090519;
+                }else if(paperType === 2){
+                  temp = Math.pow(0.00351468 * paperWeight, 1.0016) + 0.00126615;
+                }else{
+                  console.log("There was an unexpected paperType")
+                }
+              break;
+              default: console.log('-- main switch error --');
+            }
+            if(temp < 0){ temp = 0;}
+            emissionData.totalCarbon += temp;
+            emissionData.paperCarbon += temp;
+          break;
+          case emissionData[i].hasOwnProperty('foodAndDrink'):
+            let foodType = emissionData[i].foodAndDrink.foodType;  
+            let expenditure = emissionData[i].foodAndDrink.expenditure;
+            switch(foodType){
+              case 1:
+                temp = Math.pow(0.00163526 * expenditure, 1.00116) + 0.00230795;
+              break;
+              case 2: 
+                temp = Math.pow(0.000140557 * expenditure, 0.989971) - 0.0015257;
+              break;
+              case 3:
+                temp = Math.pow(0.00588688 * expenditure, 1.0024) + 0.00135518;
+              break;
+              case 4: 
+                temp = Math.pow(0.00901502 * expenditure, 1.00138) - 0.000199918;
+              break;
+              case 5: 
+                temp = Math.pow(0.000390022 * expenditure, 1.00058) - 0.00124577;
+              break;
+              case 6: 
+                temp = Math.pow(0.000470379 * expenditure, 0.994551) - 0.00350373;
+              break;
+              case 7: 
+                temp = Math.pow(0.000354663 * expenditure, 0.994863) - 0.00270374;
+              break;
+              case 8: 
+                temp = Math.pow(0.00051407 * expenditure, 0.993723) - 0.00194128;
+              break;
+              case 9: 
+                temp = Math.pow(0.000212832 * expenditure, 1.00562) - 0.00136793;
+              break;
+              case 10: 
+                temp = Math.pow(0.00574957 * expenditure, 0.998251) + 0.00215296;
+              break;
+              case 11: 
+                temp = Math.pow(0.000590206 * expenditure, 0.999565) + 0.00154406;
+              break;
+              default: console.log('-- main switch error --');
+            }
+            if(temp < 0){temp = 0;}
+            emissionData.totalCarbon += temp;
+            emissionData.foodDrinkCarbon += temp;
+          break;
+          case emissionData[i].hasOwnProperty('events'):
+          break;
+          default: console.log('-- main switch error --');
+        }
+
+      }
+
+      console.log(emissionData);
   }
 
-  
-
+      
   function resetForms(id) {
     console.log(id);
     switch(id) {
@@ -1023,18 +1204,18 @@ const Calculator = () => {
                         onChange = { handleEmission }
                       >
                         <option value = '' selected hidden>Please Select</option>
-                        <option value = '210'>Food</option>
-                        <option value = '330'>Paper</option>
-                        <option value = '160'>Garden</option>
+                        <option value = '2.1'>Food</option>
+                        <option value = '3.3'>Paper</option>
+                        <option value = '1.6'>Garden</option>
                         <option value = '0'>Wood</option>
-                        <option value = '200'>Textiles</option>
-                        <option value = '40'>Sludge</option>
-                        <option value = '200'>Nappies</option>
-                        <option value = '330'>Rubber and leather</option>
+                        <option value = '2'>Textiles</option>
+                        <option value = '0.4'>Sludge</option>
+                        <option value = '2'>Nappies</option>
+                        <option value = '3.3'>Rubber and leather</option>
                         <option value = '0'>Inert waste (including concrete/metal/plastics/glass)</option>
-                        <option value = '160'>Co-mingled mixed municpal solid waste</option>
-                        <option value = '130'>Co-mingled mixed commericial and industrial waste</option>
-                        <option value = '20'>Co-mingled mixed construction and demolition waste</option>
+                        <option value = '1.6'>Co-mingled mixed municpal solid waste</option>
+                        <option value = '1.3'>Co-mingled mixed commericial and industrial waste</option>
+                        <option value = '0.2'>Co-mingled mixed construction and demolition waste</option>
                       </select>
 
                       <label>Weight</label>
@@ -1108,15 +1289,15 @@ const Calculator = () => {
                         onChange = { handleEmission }
                       >
                         <option value = '' selected hidden>Please Select</option>
-                        <option value = '1'>ACT</option>
-                        <option value = '2'>NSW</option>
-                        <option value = '3'>NT</option>
-                        <option value = '1'>QLD</option>
-                        <option value = '2'>SA</option>
-                        <option value = '3'>TAS</option>
-                        <option value = '1'>VIC</option>
-                        <option value = '2'>WA</option>
-                        <option value = '3'>Australian Average</option>
+                        <option value = 'ACT'>ACT</option>
+                        <option value = 'NSW'>NSW</option>
+                        <option value = 'NT'>NT</option>
+                        <option value = 'QLD'>QLD</option>
+                        <option value = 'SA'>SA</option>
+                        <option value = 'TAS'>TAS</option>
+                        <option value = 'VIC'>VIC</option>
+                        <option value = 'WA'>WA</option>
+                        <option value = 'Australian Average'>Australian Average</option>
                       </select>
 
                     </div>
@@ -1552,7 +1733,7 @@ const Calculator = () => {
 
                 <ul>{emissionList}</ul>
 
-                <input type = 'button' id = 'calculate' className = 'formButton' value = 'Calculate' />
+                <input type = 'button' id = 'calculate' className = 'formButton' onClick = { calculate } value = 'Calculate' />
 
                 
                 
