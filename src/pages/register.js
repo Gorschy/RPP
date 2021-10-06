@@ -37,6 +37,7 @@ const Register = () => {
           
         <div>
             <Card className="registerCard" title={<h1>Register</h1>}>
+            <br/>
                 <h2 className="registerLabels">Email</h2>
                 <Input className="registerField"
                     id="username"
@@ -83,7 +84,7 @@ const Register = () => {
                 
                 <br/><br/>
                 <span className="errorLabel">{errors}</span>
-                <Button className="registerButton" id="signUpButton" onClick={signUp} type="primary">
+                <Button className="registerButton" onClick={signUp} type="primary">
                     Sign up                 
                 </Button> 
                 

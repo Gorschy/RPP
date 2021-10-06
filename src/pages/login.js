@@ -68,9 +68,7 @@ const SignIn = ({ onSignin }) => {
                 <a className="forgotPassword" onClick={forgotPassword}>Forgot Password? </a> 
                 <span className="errorLabel">{errors}</span>
                 <br/><br/>
-                <Button className="buttonType1 loginButton" id="signinButton" onClick={signIn} type="primary">
-                    Log In      
-                </Button>
+                <Button className="loginButton" onClick={signIn} type="primary">Log In</Button>
             </Card> 
         </div>
     );

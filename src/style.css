@@ -23,6 +23,10 @@
     --input_border_color: var(--color_forest_green);
     --input_border_hover_color: var(--color_green);
 
+    /* Unfortunately, due to the nature of antd, 
+    we cannot use CSS to change the color of progress 
+    bars on the solutions page, so to change that, view solutions.js */
+
     --general_font_family: 'Jost';
 
     --card_header_font_size: 40px;
@@ -98,7 +102,7 @@ h3 {
     font-weight: var(--unit_title_font_weight);
     color: var(--general_text_color);
     text-align: left;
-
+    line-height: 32px;
 }
 
 label {

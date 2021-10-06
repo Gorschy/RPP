@@ -9,8 +9,9 @@
 
 #solutionList {
     background-color: var(--foreground_color);
-    width:max(750px, 100vw - 1300px);
+    width:max(750px, 100vw - 1310px);
     margin-right: 10px;
+    margin-left: 10px;
     padding:var(--card_standard_padding);
     
 }
@@ -45,5 +46,66 @@
     color: var(--general_text_color);
     font-weight: var(--general_text_font_weight);
     text-align: left;
+
+}
+
+Button.investButton, Button.cancelButton {
+    width: 100px;
+    height: 4vh;
+    border-radius: 8px;
+
+    background-color: var(--color_green);
+
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    font-weight: var(--heading_text_font_weight);
+    color: var(--color_white);
+
+
+}
+
+#loginAndRegisterContainer, #loginAndRegisterText {
+    text-align: center;
+}
+
+
+.loginAndRegisterButtons {
+    width: 500px;
+    height: 4vh;
+    border-radius: 8px;
+
+
+    background-color: var(--color_green);
+
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    font-weight: var(--heading_text_font_weight);
+    color: var(--color_white);
+
+}
+
+.progressTT {
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    font-weight: var(--heading_text_font_weight);
+    color: var(--color_white);
+
+}
+
+.progressBar {
+    width: 100%;
+
+}
+
+#purchaseNumberInput {
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    font-weight: var(--heading_text_font_weight);
+    color: var(--color_deep_black);
+    height:32px;
+}
+
+#solutionModalVertDivider {
+    height: 500px;
 
 }
