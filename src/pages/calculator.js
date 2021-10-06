@@ -104,7 +104,7 @@ const Calculator = () => {
       
       setEmissions(prevState => ({
         ...prevState,
-        [id]: { ...prevState[id], [name]: parseFloat(value) }
+        [id]: { ...prevState[id], [name]: value }
       }));
       
     }
@@ -150,26 +150,33 @@ const Calculator = () => {
       
       //Iterrate through each report object
       for (let i = 0; i < emissionData.length; i++) {
+        
         let temp = 0;
-        switch(true){
+        
+        switch(true) {
+          
           case emissionData[i].hasOwnProperty('vehicleTravel'):
             emissionData.totalCarbon += emissionData[i].vehicleTravel.vehicleType;
             emissionData.transportCarbon += emissionData[i].vehicleTravel.vehicleType;
-          break;
+            break;
+
           case emissionData[i].hasOwnProperty('airTravel'):
-              let tempCabinClass = emissionData[i].airTravel.cabinClass;
-              console.log(tempCabinClass);
-              let tempDistance = emissionData[i].airTravel.airDistance;
-              console.log(tempDistance);
-            switch(tempCabinClass){
+            let tempCabinClass = emissionData[i].airTravel.cabinClass;
+            console.log(tempCabinClass);
+            let tempDistance = emissionData[i].airTravel.airDistance;
+            console.log(tempDistance);
+            
+            switch(tempCabinClass) {
+              
               case 1:
-                  temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
-                  if(temp < 0){
-                    temp = 0;
-                  }
-                  emissionData.totalCarbon += temp;
-                  emissionData.transportCarbon += temp;
-              break;
+                temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
+                if(temp < 0) {
+                  temp = 0;
+                }
+                emissionData.totalCarbon += temp;
+                emissionData.transportCarbon += temp;
+                break;
+
               case 2:
                 temp = Math.pow(0.000202965*tempDistance, 0.973721) + 0.00407937;
                 if(temp < 0){
@@ -177,7 +184,8 @@ const Calculator = () => {
                 }
                 emissionData.totalCarbon += temp;
                 emissionData.transportCarbon += temp;
-              break;
+                break;
+
               case 3:
                 temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
                 if(temp < 0){
@@ -185,7 +193,8 @@ const Calculator = () => {
                 }
                 emissionData.totalCarbon += temp;
                 emissionData.transportCarbon += temp;
-              break;
+                break;
+
               case 4:
                 temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
                 if(temp < 0){
@@ -193,7 +202,8 @@ const Calculator = () => {
                 }
                 emissionData.totalCarbon += temp;
                 emissionData.transportCarbon += temp;
-              break;
+                break;
+
               case 5:
                 temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
                 if(temp < 0){
@@ -202,6 +212,7 @@ const Calculator = () => {
                 emissionData.totalCarbon += temp;
                 emissionData.transportCarbon += temp;
               break;
+              default: console.log('-- main switch error --');
             } 
           break;
           case emissionData[i].hasOwnProperty('publicTravel'):
@@ -209,22 +220,22 @@ const Calculator = () => {
             let tempTransportType = emissionData[i].publicTravel.transportType;
             let tempDistancePub = emissionData[i].publicTravel.pubDistance;
 
-            if(tempTransportMethod == 1){
-              if(tempTransportType == 1){
+            if(tempTransportMethod === 1){
+              if(tempTransportType === 1){
                 temp = Math.pow(0.0000884831 * tempDistancePub, 0.934661) - 0.106027;
-              }else if(tempTransportType == 2){
+              }else if(tempTransportType === 2){
                 temp = Math.pow(0.0000497395 * tempDistancePub, 0.998722) - 0.00129669;
-              }else if(tempTransportType == 3){
+              }else if(tempTransportType === 3){
                 temp = Math.pow(0.0000570462 * tempDistancePub, 0.999922) + 0.00049945;
               }else{
                 console.log("There was an unexpected transport TYPE in calculate function bus")
               }
-            }else if(tempTransportMethod == 2) {
-              if(tempTransportType == 1){
+            }else if(tempTransportMethod === 2) {
+              if(tempTransportType === 1){
                 temp = Math.pow(0.000111839 * tempDistancePub, 1.00013) - 0.0000298673;
-              }else if(tempTransportType == 2){
+              }else if(tempTransportType === 2){
                 temp = Math.pow(0.000041585 * tempDistancePub, 0.998798) - 0.0013409;
-              }else if(tempTransportType == 3){
+              }else if(tempTransportType === 3){
                 temp = 0.00118995 * tempDistancePub + 0.000183289;
               }else{
                 console.log("There was an unexpected transport TYPE in calculate function train")
@@ -290,6 +301,7 @@ const Calculator = () => {
                 emissionData.totalCarbon += 0.22;
                 emissionData.waterCarbon += 0.22;
               break;
+              default: console.log('-- main switch error --');
             }
           break;
           case emissionData[i].hasOwnProperty('paper'):
@@ -298,23 +310,24 @@ const Calculator = () => {
             let paperWeight = emissionData[i].paper.paperWeight;
             switch(source){
               case 1 :
-                if(paperType == 1){
+                if(paperType === 1){
                   temp = Math.pow(0.00235612 * paperWeight, 0.999719) - 0.00358936;
-                }else if(paperType == 2){
+                }else if(paperType === 2){
                   temp = Math.pow(0.00265348 * paperWeight, 0.999844) - 0.000197495;
                 }else{
                   console.log("There was an unexpected paperType")
                 }
               break;
               case 2 :
-                if(paperType == 1){
+                if(paperType === 1){
                   temp = Math.pow(0.00322242 * paperWeight, 0.999922) - 0.00090519;
-                }else if(paperType == 2){
+                }else if(paperType === 2){
                   temp = Math.pow(0.00351468 * paperWeight, 1.0016) + 0.00126615;
                 }else{
                   console.log("There was an unexpected paperType")
                 }
               break;
+              default: console.log('-- main switch error --');
             }
             if(temp < 0){ temp = 0;}
             emissionData.totalCarbon += temp;
@@ -357,14 +370,15 @@ const Calculator = () => {
               case 11: 
                 temp = Math.pow(0.000590206 * expenditure, 0.999565) + 0.00154406;
               break;
+              default: console.log('-- main switch error --');
             }
             if(temp < 0){temp = 0;}
             emissionData.totalCarbon += temp;
             emissionData.foodDrinkCarbon += temp;
           break;
           case emissionData[i].hasOwnProperty('events'):
-            
           break;
+          default: console.log('-- main switch error --');
         }
 
       }
