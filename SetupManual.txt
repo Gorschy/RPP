@@ -5,3 +5,19 @@
 // finally type "npm start" to host the local server (if you have problems with the local server a computer restart should fix it) 
 
 //For the mail server to work for the contactUS Page install emailjs by typing "npm install emailjs-com --save" in the IDE terminal
+
+npm List: 
+npm install react-scripts --save
+
+npm i --save @fortawesome/fontawesome-svg-core
+npm install --save @fortawesome/free-solid-svg-icons
+npm install --save @fortawesome/react-fontawesome 
+npm i --save @fortawesome/free-brands-svg-icons
+npm i leaflet
+npm i react-leaflet
+npm i react-router
+npm i react-router-dom
+npm install emailjs-com --save
+
+npm install react-bootstrap@next bootstrap@5.1.1
+npm install -g reactstrap

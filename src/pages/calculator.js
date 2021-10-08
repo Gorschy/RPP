@@ -5,12 +5,34 @@ import { Button, Card , Tabs, Layout, Divider } from 'antd';
 import './calculator.css';
 import '../style.css';
 
+import {Button as BootButton,Modal} from "react-bootstrap"; // For Modal
+import { API, graphqlOperation } from 'aws-amplify'; // Used for sending DynamoDB
+import {createReport} from '../graphql/mutations'; // For creating Reports
+import {getID} from '../graphql/customQueries'; // For creating Reports
+
 /* TODO:
   - fix state issues with emission data
   - push emissions to datasource for listing and removal
   - calculate data functions
   - generate final carbon report object for breakdown
 */
+
+
+/*
+Added in the database API all ye need to do is;
+- Add items to the graphql schema (e.g. totalCarbon: String) based on what ye need
+- push that schema to amplify (amplify push --y)
+- then add the new items it to const report() (e.g. totalCarbon: emissionData.totalCarbon)
+
+Refer to Discord Back-end chat for futher tips/tricks
+
+To-Dos
+- Since the calculator.js file changed the local storage is broken.
+
+From Alex :D
+*/
+
+
 
 /* -- CONSTANTS ----------------------------------------------------- */
 
@@ -409,6 +431,106 @@ const Calculator = () => {
       default: console.log('reset failed - ' + id);
     }
   }
+
+
+  /* -------- Local Storage --------*/
+  // OUTDATED
+   // Add to Local Storage
+   React.useEffect(() =>{ // Every time the emission data is changed this will trigger
+    localStorage.setItem('emission_key',JSON.stringify(emission,null,2))
+  }, [emission]);
+
+
+  // FIX Emission/EmissionData stored in local storage
+  // OUTDATED - When page is refreshed the local storage will be pulled 
+function getFormValues(){
+  const storedValues = localStorage.getItem('emission_key');
+  if(!storedValues) return{
+    totalCarbon: 0,
+    transportTotal: 0,
+    vehicleType: 0,
+    cabinClass: 0,
+    airDistance: 0,
+    transportMethod: 0,
+    transportType: 0,
+    pubDistance: 0,
+
+    // TEST INPUT FOR CALC TYPE -- will implement all once client provides us with calculation data...
+    ADVANCED_INPUT: 0,
+        
+    electricityTotal: 0,
+    consumption: 0,
+        
+    gasTotal: 0,
+    lpgConsumption: 0,
+    gasConsumption: 0,
+    unitOfMeasurement: 0,
+    stateOrTerritory: 0,
+      
+    wasteTotal: 0,
+    wasteType: 0,
+    wasteWeight: 0,
+        
+    waterTotal: 0,
+    waterUtilityLocation: 0,
+      
+    paperTotal: 0,
+    source: 0,
+    paperType: 0,
+    paperWeight: 0,
+        
+    foodAndDrinkTotal: 0,
+    foodType: 0,
+    expenditure: 0,
+        
+    eventsTotal: 0,
+    totalAccommodation: 0,
+    totalMeals: 0,
+    totalDrinks: 0,
+    totalEventProducts: 0
+  };
+
+  return JSON.parse(storedValues);
+}
+// OUTDATED
+// Sets local storage to default value
+const clearFormValues = async () => {
+  localStorage.removeItem('emission_key');
+  setEmissions(getFormValues());
+  handleClose();
+}
+
+/* -------- End of Local Storage --------*/
+
+/* --- Send Data to DB ----- */
+const report = async () => {
+  try{
+    Auth.currentUserInfo().then((userInfo) => {
+      if(userInfo == null){ // If not signed in head to login page
+        localStorage.setItem('calculate_data','true') // Add to local storage. And will be removed when user is tasken to Carbon reports
+        history.push('login');
+      }
+    })   
+    // If the user is still here they must be logged in 
+    // thus we send the data to DB
+
+    const getUser = await API.graphql(graphqlOperation(getID));
+
+
+    // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
+   const newReport= {
+       userID: getUser.data.listUsers.items[0].id,
+       emissions: emissionData.totalCarbon
+     }
+     await API.graphql(graphqlOperation(createReport, { input: newReport}));
+     //history.push('carbon_report'); // MUST FIX; should send user to carbon report
+
+  }catch(e){
+    console.error("Error in calculator.js report method: ", e)
+  }
+
+};
+
 
   function callback(key) {
     console.log(key);
