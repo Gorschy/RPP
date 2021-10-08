@@ -1,5 +1,42 @@
-type Todo @model {
+type User @model @auth(rules: [
+{ allow: groups, groups: ["Admin"] },
+{allow: owner,  ownerField: "id", operations: [read, create, update, delete]}])
+{
   id: ID!
-  name: String!
-  description: String
+  email: String!
+  given_name: String
+  family_name: String
+  phone_number: String
+  admin: Boolean!
+  carbon_reports: [Report] @connection(keyName: "byUser", fields: ["id"])
+}
+
+
+type Report @model @key(name: "byUser", fields: ["userID"])
+@auth(rules: [
+{ allow: groups, groups: ["Admin"]},
+{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]}])
+{
+  id: ID!
+  userID: ID!
+  user: User @connection(fields: ["userID"])
+  emissions: String! #Temp its just the total carbon
+}
+
+type Solutions @model 
+@auth(rules :[
+{ allow: groups, groups: ["Admin"], operations: [create, delete, update]}])
+{
+  id:ID!
+  title: String!
+  desc: String!
+  coordX: String!
+  coordY: String!
+  filledP: String!
+  totalP: String!
+  type: String!
+  goal: String!
+  funding: String!
+  backerCount: Int!
+  visibility: Boolean!
 }
