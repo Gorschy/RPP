@@ -70,7 +70,9 @@ function App() {
                                 <Route exact path="/account" component={path.account} />
                                 <Route exact path="/projects" component={path.projects} />
                                 <Route exact path="/solutions" component={path.solutions} />
-                                                            
+                                <Route exact path="/admin" component={path.admin}/>                              
+                                <Route exact path="/details" component={path.details}/>
+
                                 </UserContext.Provider>
                             </Switch>    
                         </div>

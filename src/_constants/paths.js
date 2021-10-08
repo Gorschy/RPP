@@ -9,6 +9,8 @@ import Calculator from '../pages/calculator';
 import Solutions from '../pages/solutions';
 import ForgotPassword from '../pages/forgotPassword';
 import ForgotPasswordAuth from '../pages/forgotPasswordAuth';
+import Admin from '../pages/admin';
+import details from '../pages/details';
 
 const path = {
     register: Register,
@@ -21,7 +23,9 @@ const path = {
     projects: Projects,
     account: Account,
     calculator: Calculator,
-    solutions: Solutions
+    solutions: Solutions,
+    admin:Admin,
+    details: details
 }
 
 export default path;
