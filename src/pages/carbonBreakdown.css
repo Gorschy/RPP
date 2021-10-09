@@ -1,0 +1,36 @@
+#barChart {
+    height: 30vh;
+    width: 30vw;
+}
+
+#radarChart {
+    height: 30vh;
+    width: 30vw;
+}
+
+#pieChart {
+    height: 30vh;
+    width: 30vw;
+}
+
+#reportList {
+    height: 80vh;
+    width: 18vw;
+}
+
+#carbonBreakdown {
+    height: 80vh;
+    width: 48vw;
+}
+
+.column {
+    float: left;
+}
+  
+.left, .right {
+    width: 19.5%;
+}
+  
+.middle {
+    width: 49.5%;
+}

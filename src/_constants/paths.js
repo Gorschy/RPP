@@ -11,6 +11,7 @@ import ForgotPassword from '../pages/forgotPassword';
 import ForgotPasswordAuth from '../pages/forgotPasswordAuth';
 import admin from '../pages/admin';
 import details from '../pages/details';
+import CarbonBreakdown from '../pages/carbonBreakdown';
 
 const path = {
     register: Register,
@@ -25,7 +26,8 @@ const path = {
     calculator: Calculator,
     solutions: Solutions,
     admin:admin,
-    details: details
+    details: details,
+    carbonBreakdown: CarbonBreakdown
 }
 
 export default path;

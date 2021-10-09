@@ -129,7 +129,7 @@ const Calculator = () => {
       
       setEmissions(prevState => ({
         ...prevState,
-        [id]: { ...prevState[id], [name]: value }
+        [id]: { ...prevState[id], [name]: parseFloat(value) }
       }));
       
     }
@@ -163,83 +163,63 @@ const Calculator = () => {
 
   const calculate = () => {
       //Add additional properties
-      emissionData['totalCarbon'] = 0;
-      emissionData['transportCarbon'] = 0;
-      emissionData['electricityCarbon'] = 0;
-      emissionData['gasCarbon'] = 0;
-      emissionData['wasteCarbon'] = 0;
-      emissionData['waterCarbon'] = 0;
-      emissionData['paperCarbon'] = 0;
-      emissionData['foodDrinkCarbon'] = 0;
-      emissionData['eventsCarbon'] = 0;
-      
+      let totalCarbon = 0;
+      let transportCarbon = 0;
+      let electricityCarbon = 0;
+      let gasCarbon = 0;
+      let wasteCarbon = 0;
+      let waterCarbon = 0;
+      let paperCarbon = 0;
+      let foodDrinkCarbon = 0;
+      let eventsCarbon = 0;
+
+
+
       //Iterrate through each report object
       for (let i = 0; i < emissionData.length; i++) {
-        
         let temp = 0;
-        
+
+        //Main Switch
         switch(true) {
-          
+
+          //Basic Vehicle Travel Case
           case emissionData[i].hasOwnProperty('vehicleTravel'):
-            emissionData.totalCarbon += emissionData[i].vehicleTravel.vehicleType;
-            emissionData.transportCarbon += emissionData[i].vehicleTravel.vehicleType;
+            totalCarbon += emissionData[i].vehicleTravel.vehicleType;
+            transportCarbon += emissionData[i].vehicleTravel.vehicleType;
             break;
 
+          //Basic Air Travel Case
           case emissionData[i].hasOwnProperty('airTravel'):
             let tempCabinClass = emissionData[i].airTravel.cabinClass;
-            console.log(tempCabinClass);
             let tempDistance = emissionData[i].airTravel.airDistance;
-            console.log(tempDistance);
-            
+
             switch(tempCabinClass) {
-              
               case 1:
                 temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
-                if(temp < 0) {
-                  temp = 0;
-                }
-                emissionData.totalCarbon += temp;
-                emissionData.transportCarbon += temp;
                 break;
-
               case 2:
                 temp = Math.pow(0.000202965*tempDistance, 0.973721) + 0.00407937;
-                if(temp < 0){
-                  temp = 0;
-                }
-                emissionData.totalCarbon += temp;
-                emissionData.transportCarbon += temp;
                 break;
-
               case 3:
                 temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
-                if(temp < 0){
-                  temp = 0;
-                }
-                emissionData.totalCarbon += temp;
-                emissionData.transportCarbon += temp;
                 break;
-
               case 4:
                 temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
-                if(temp < 0){
-                  temp = 0;
-                }
-                emissionData.totalCarbon += temp;
-                emissionData.transportCarbon += temp;
                 break;
-
               case 5:
                 temp = Math.pow(0.00040532*tempDistance, 0.934661) - 0.106027;
-                if(temp < 0){
-                  temp = 0;
-                }
-                emissionData.totalCarbon += temp;
-                emissionData.transportCarbon += temp;
               break;
               default: console.log('-- main switch error --');
             } 
-          break;
+      
+            if(temp < 0) {
+              temp = 0;
+            }
+            totalCarbon += temp;
+            transportCarbon += temp;
+            break;
+
+          //Basic Public Travel Case
           case emissionData[i].hasOwnProperty('publicTravel'):
             let tempTransportMethod = emissionData[i].publicTravel.transportMethod;
             let tempTransportType = emissionData[i].publicTravel.transportType;
@@ -272,67 +252,78 @@ const Calculator = () => {
             if(temp < 0){
               temp = 0;
             }
-            emissionData.totalCarbon += temp;
-            emissionData.transportCarbon += temp;
-          break;
+            totalCarbon += temp;
+            transportCarbon += temp;
+            break;
+
+          //Basic Electricity Case
           case emissionData[i].hasOwnProperty('electricity'):
-            emissionData.electricityCarbon += Math.pow( 0.00086905 * emissionData.electricity.electricityConsumption, 1.00009) + 0.00160968;
-            emissionData.totalCarbon += Math.pow( 0.00086905 * emissionData.electricity.electricityConsumption, 1.00009) + 0.00160968;
-          break;
+            electricityCarbon += Math.pow( 0.00086905 * emissionData[i].electricity.electricityConsumption, 1.00009) + 0.00160968;
+            totalCarbon += Math.pow( 0.00086905 * emissionData[i].electricity.electricityConsumption, 1.00009) + 0.00160968;
+            break;
+          
+          //Basic Gas Case
           case emissionData[i].hasOwnProperty('gas'):
 
-          break;
+            break;
+          
+          //Basic Waste Case
           case emissionData[i].hasOwnProperty('waste'):
-            emissionData.totalCarbon += emissionData[i].waste.wasteType * emissionData[i].waste.wasteWeight;
-            emissionData.wasteCarbon += emissionData[i].waste.wasteType * emissionData[i].waste.wasteWeight;
-          break;
+            totalCarbon += emissionData[i].waste.wasteType * emissionData[i].waste.wasteWeight;
+            wasteCarbon += emissionData[i].waste.wasteType * emissionData[i].waste.wasteWeight;
+            break;
+
+          //Basic Water Case
           case emissionData[i].hasOwnProperty('water'):
             let waterLocation = emissionData[i].water.waterUtilityLocation;
 
             switch(waterLocation){
               case 'ACT' :
-                emissionData.totalCarbon += 0.27;
-                emissionData.waterCarbon += 0.27;
-              break;
+                totalCarbon += 0.27;
+                waterCarbon += 0.27;
+                break;
               case 'NSW' :
-                emissionData.totalCarbon += 0.14;
-                emissionData.waterCarbon += 0.14;
-              break;
+                totalCarbon += 0.14;
+                waterCarbon += 0.14;
+                break;
               case 'NT' :
-                emissionData.totalCarbon += 0.41;
-                emissionData.waterCarbon += 0.41;
-              break;
+                totalCarbon += 0.41;
+                waterCarbon += 0.41;
+                break;
               case 'QLD' :
-                emissionData.totalCarbon += 0.17;
-                emissionData.waterCarbon += 0.17;
-              break;
+                totalCarbon += 0.17;
+                waterCarbon += 0.17;
+                break;
               case 'SA' :
-                emissionData.totalCarbon += 0.27;
-                emissionData.waterCarbon += 0.27;
-              break;
+                totalCarbon += 0.27;
+                waterCarbon += 0.27;
+                break;
               case 'TAS' :
-                emissionData.totalCarbon += 0.1;
-                emissionData.waterCarbon += 0.1;
-              break;
+                totalCarbon += 0.1;
+                waterCarbon += 0.1;
+                break;
               case 'VIC' :
-                emissionData.totalCarbon += 0.1;
-                emissionData.waterCarbon += 0.1;
-              break;
+                totalCarbon += 0.1;
+                waterCarbon += 0.1;
+                break;
               case 'WA' :
-                emissionData.totalCarbon += 0.46;
-                emissionData.waterCarbon += 0.46;
-              break;
+                totalCarbon += 0.46;
+                waterCarbon += 0.46;
+                break;
               case 'Australian Average' :
-                emissionData.totalCarbon += 0.22;
-                emissionData.waterCarbon += 0.22;
-              break;
+                totalCarbon += 0.22;
+                waterCarbon += 0.22;
+                break;
               default: console.log('-- main switch error --');
             }
-          break;
+            break;
+          
+          //Basic Paper Case
           case emissionData[i].hasOwnProperty('paper'):
             let source = emissionData[i].paper.source;  
             let paperType = emissionData[i].paper.paperType;
             let paperWeight = emissionData[i].paper.paperWeight;
+
             switch(source){
               case 1 :
                 if(paperType === 1){
@@ -342,7 +333,7 @@ const Calculator = () => {
                 }else{
                   console.log("There was an unexpected paperType")
                 }
-              break;
+                break;
               case 2 :
                 if(paperType === 1){
                   temp = Math.pow(0.00322242 * paperWeight, 0.999922) - 0.00090519;
@@ -351,56 +342,62 @@ const Calculator = () => {
                 }else{
                   console.log("There was an unexpected paperType")
                 }
-              break;
+                break;
               default: console.log('-- main switch error --');
             }
+
             if(temp < 0){ temp = 0;}
-            emissionData.totalCarbon += temp;
-            emissionData.paperCarbon += temp;
-          break;
+            totalCarbon += temp;
+            paperCarbon += temp;
+            break;
+
+          //Basic foodAndDrink Case  
           case emissionData[i].hasOwnProperty('foodAndDrink'):
             let foodType = emissionData[i].foodAndDrink.foodType;  
             let expenditure = emissionData[i].foodAndDrink.expenditure;
+
             switch(foodType){
               case 1:
                 temp = Math.pow(0.00163526 * expenditure, 1.00116) + 0.00230795;
-              break;
+                break;
               case 2: 
                 temp = Math.pow(0.000140557 * expenditure, 0.989971) - 0.0015257;
-              break;
+                break;
               case 3:
                 temp = Math.pow(0.00588688 * expenditure, 1.0024) + 0.00135518;
-              break;
+                break;
               case 4: 
                 temp = Math.pow(0.00901502 * expenditure, 1.00138) - 0.000199918;
-              break;
+                break;
               case 5: 
                 temp = Math.pow(0.000390022 * expenditure, 1.00058) - 0.00124577;
-              break;
+                break;
               case 6: 
                 temp = Math.pow(0.000470379 * expenditure, 0.994551) - 0.00350373;
-              break;
+                break;
               case 7: 
                 temp = Math.pow(0.000354663 * expenditure, 0.994863) - 0.00270374;
-              break;
+                break;
               case 8: 
                 temp = Math.pow(0.00051407 * expenditure, 0.993723) - 0.00194128;
-              break;
+                break;
               case 9: 
                 temp = Math.pow(0.000212832 * expenditure, 1.00562) - 0.00136793;
-              break;
+                break;
               case 10: 
                 temp = Math.pow(0.00574957 * expenditure, 0.998251) + 0.00215296;
-              break;
+                break;
               case 11: 
                 temp = Math.pow(0.000590206 * expenditure, 0.999565) + 0.00154406;
-              break;
+                break;
               default: console.log('-- main switch error --');
             }
             if(temp < 0){temp = 0;}
-            emissionData.totalCarbon += temp;
-            emissionData.foodDrinkCarbon += temp;
-          break;
+            totalCarbon += temp;
+            foodDrinkCarbon += temp;
+            break;
+
+          //Basic Events Case
           case emissionData[i].hasOwnProperty('events'):
           break;
           default: console.log('-- main switch error --');
@@ -409,6 +406,16 @@ const Calculator = () => {
       }
 
       console.log(emissionData);
+      console.log(totalCarbon);
+      console.log(transportCarbon);
+      console.log(electricityCarbon);
+      console.log(gasCarbon);
+      console.log(wasteCarbon);
+      console.log(waterCarbon);
+      console.log(paperCarbon);
+      console.log(foodDrinkCarbon);
+      console.log(eventsCarbon);
+
   }
 
       
