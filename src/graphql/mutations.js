@@ -1,43 +1,232 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createTodo = /* GraphQL */ `
-  mutation CreateTodo(
-    $input: CreateTodoInput!
-    $condition: ModelTodoConditionInput
+export const createUser = /* GraphQL */ `
+  mutation CreateUser(
+    $input: CreateUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    createTodo(input: $input, condition: $condition) {
+    createUser(input: $input, condition: $condition) {
       id
-      name
-      description
+      email
+      given_name
+      family_name
+      phone_number
+      admin
+      carbon_reports {
+        items {
+          id
+          userID
+          emissions
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const updateTodo = /* GraphQL */ `
-  mutation UpdateTodo(
-    $input: UpdateTodoInput!
-    $condition: ModelTodoConditionInput
+export const updateUser = /* GraphQL */ `
+  mutation UpdateUser(
+    $input: UpdateUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    updateTodo(input: $input, condition: $condition) {
+    updateUser(input: $input, condition: $condition) {
       id
-      name
-      description
+      email
+      given_name
+      family_name
+      phone_number
+      admin
+      carbon_reports {
+        items {
+          id
+          userID
+          emissions
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
   }
 `;
-export const deleteTodo = /* GraphQL */ `
-  mutation DeleteTodo(
-    $input: DeleteTodoInput!
-    $condition: ModelTodoConditionInput
+export const deleteUser = /* GraphQL */ `
+  mutation DeleteUser(
+    $input: DeleteUserInput!
+    $condition: ModelUserConditionInput
   ) {
-    deleteTodo(input: $input, condition: $condition) {
+    deleteUser(input: $input, condition: $condition) {
       id
-      name
-      description
+      email
+      given_name
+      family_name
+      phone_number
+      admin
+      carbon_reports {
+        items {
+          id
+          userID
+          emissions
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createReport = /* GraphQL */ `
+  mutation CreateReport(
+    $input: CreateReportInput!
+    $condition: ModelReportConditionInput
+  ) {
+    createReport(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      emissions
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateReport = /* GraphQL */ `
+  mutation UpdateReport(
+    $input: UpdateReportInput!
+    $condition: ModelReportConditionInput
+  ) {
+    updateReport(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      emissions
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteReport = /* GraphQL */ `
+  mutation DeleteReport(
+    $input: DeleteReportInput!
+    $condition: ModelReportConditionInput
+  ) {
+    deleteReport(input: $input, condition: $condition) {
+      id
+      userID
+      user {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      emissions
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSolutions = /* GraphQL */ `
+  mutation CreateSolutions(
+    $input: CreateSolutionsInput!
+    $condition: ModelSolutionsConditionInput
+  ) {
+    createSolutions(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSolutions = /* GraphQL */ `
+  mutation UpdateSolutions(
+    $input: UpdateSolutionsInput!
+    $condition: ModelSolutionsConditionInput
+  ) {
+    updateSolutions(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSolutions = /* GraphQL */ `
+  mutation DeleteSolutions(
+    $input: DeleteSolutionsInput!
+    $condition: ModelSolutionsConditionInput
+  ) {
+    deleteSolutions(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
       createdAt
       updatedAt
     }

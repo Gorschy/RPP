@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, lazy, Component } from 'react'
-import {CBadge,CButton,CButtonGroup,CCard,CCardBody,CCardFooter,CCardHeader,CCol,CProgress,CRow,CCallout, CDataTable} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import MainChartExample from './charts/MainChartExample.js'
+import React, { useEffect, useMemo, lazy, Component } from 'react';
+import {CCardBody,CCardHeader} from '@coreui/react';
 import './admin.css';
 import {FontAwesomeIcon }from "@fortawesome/react-fontawesome";
 
@@ -9,8 +7,9 @@ import { API, graphqlOperation } from 'aws-amplify'; // Used for sending DynamoD
 import {listUsers} from '../graphql/queries'; // For creating Reports
 import {Row,Col,Badge,InputGroup,Modal,Button, Form, FormControl,DropdownButton,Dropdown, Tabs, Tab, Accordion,Card} from 'react-bootstrap';
 //import 'bootstrap/dist/css/bootstrap.css';
+
 import defProfile from '../assets/default_profile.jpg';
-import { faUser, faGlobeAsia } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faGlobeAsia } from '@fortawesome/free-solid-svg-icons';
 import {faEnvira} from '@fortawesome/free-brands-svg-icons' ;
 import Pagination from '../components/Pagination';
 import Users from '../components/Users';

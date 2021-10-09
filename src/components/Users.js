@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
-import '../admin.css';
+import '../pages/admin.css';
 
 import { API, graphqlOperation } from 'aws-amplify'; // Used for sending DynamoDB
-import {deleteUser} from '../../graphql/mutations'; // For removing User
-import {getID} from '../../graphql/customQueries'; // For getting User ID
-import {listUsers} from '../../graphql/queries'; // For getting All Users
+import {deleteUser} from '../graphql/mutations'; // For removing User
+import {getID} from '../graphql/customQueries'; // For getting User ID
+import {listUsers} from '../graphql/queries'; // For getting All Users
 import { withRouter } from 'react-router-dom'    
 
 import {Badge,Modal,Button, Form} from 'react-bootstrap';
 //import 'bootstrap/dist/css/bootstrap.css';
-import defProfile from '../../assets/default_profile.jpg';
+import defProfile from '../assets/default_profile.jpg';
 
 
 

@@ -10,6 +10,18 @@ Parameters:
     Type: String
 
   
+  
+  
+  functionrppc25d3b1aPostConfirmationArn:
+    Type: String
+    Default: functionrppc25d3b1aPostConfirmationArn
+  
+  functionrppc25d3b1aPostConfirmationName:
+    Type: String
+    Default: functionrppc25d3b1aPostConfirmationName
+  
+  
+  
 
     
   identityPoolName:
@@ -126,7 +138,6 @@ Parameters:
   userPoolGroupList:
     Type: CommaDelimitedList
       
-            
   serviceName:
     Type: String
   
@@ -137,6 +148,47 @@ Parameters:
             
         
   dependsOn:
+    Type: CommaDelimitedList
+      
+  
+  thirdPartyAuth:
+    Type: String
+            
+  
+  userPoolGroups:
+    Type: String
+            
+  
+  adminQueries:
+    Type: String
+            
+  triggers:
+    Type: String
+  
+            
+  
+  hostedUI:
+    Type: String
+            
+            
+      
+  parentStack:
+    Type: String
+        
+  authTriggerConnections:
+    Type: String
+  
+            
+  
+  breakCircularDependency:
+    Type: String
+            
+        
+  permissions:
+    Type: CommaDelimitedList
+      
+        
+  authProviders:
     Type: CommaDelimitedList
       
 Conditions:
