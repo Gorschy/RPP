@@ -5,8 +5,11 @@ import { Button, Card , Tabs, Layout, Divider } from 'antd';
 import './calculator.css';
 import '../style.css';
 
+
+// Imports for Calculator DB ~Alex
+import { useHistory } from 'react-router-dom'; // redirects
 import {Button as BootButton,Modal} from "react-bootstrap"; // For Modal
-import { API, graphqlOperation } from 'aws-amplify'; // Used for sending DynamoDB
+import { API, graphqlOperation, Auth } from 'aws-amplify'; // Used for sending DynamoDB
 import {createReport} from '../graphql/mutations'; // For creating Reports
 import {getID} from '../graphql/customQueries'; // For creating Reports
 
@@ -497,7 +500,7 @@ function getFormValues(){
 const clearFormValues = async () => {
   localStorage.removeItem('emission_key');
   setEmissions(getFormValues());
-  handleClose();
+ // handleClose();
 }
 
 /* -------- End of Local Storage --------*/
@@ -508,7 +511,7 @@ const report = async () => {
     Auth.currentUserInfo().then((userInfo) => {
       if(userInfo == null){ // If not signed in head to login page
         localStorage.setItem('calculate_data','true') // Add to local storage. And will be removed when user is tasken to Carbon reports
-        history.push('login');
+       // history.push('login');
       }
     })   
     // If the user is still here they must be logged in 
