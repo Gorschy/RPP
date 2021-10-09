@@ -14,13 +14,26 @@ const CarbonBreakdown = () => {
 
     /* Carbon Reduction Tips
     Travel
-    Electricity
-    Gas
-    Water
-    Waste
-    Paper
-    
+      - Use less impactful fuel sources - Ideally electric + solar
+      - Use public transport where possible?
+      - Car Pooling?
 
+    Electricity
+      - Solar panels
+      - Other clean energies
+      - Use less electricity??
+    Gas
+      -
+    Water
+      - Quicker showers aim for ~4min, maybe use music as a timer.
+      - Rainwater??
+
+    Waste
+      - Composting.
+      - Proper Recycling.
+      - Reduce plastic wastes by using more reusable products.
+    Paper
+      - Dont use paper?
     */
 
     const bar = {
