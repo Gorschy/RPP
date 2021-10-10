@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "rppc25d3b1a": {}
+        "rppc25d3b1a": {},
+        "userPoolGroups": {}
       },
       "function": {
         "rppc25d3b1aPostConfirmation": {

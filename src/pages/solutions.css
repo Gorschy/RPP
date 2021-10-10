@@ -16,6 +16,28 @@
     
 }
 
+.solListItem {
+    background-color: var(--foreground_color);
+    animation: lightenOffHover 0.1s linear;
+    
+
+}
+
+.solListItem:hover {
+    animation: darkenOnHover 0.2s linear;
+    background-color: #cdcdcd
+
+}
+
+@keyframes lightenOffHover {
+    from    {background-color: #cdcdcd}
+    to      {background-color: var(--foreground_color)}
+}
+@keyframes darkenOnHover {
+    from    {background-color: var(--foreground_color)}
+    to      {background-color: #cdcdcd}
+}
+
 @media screen and (max-width: 2050px) {
     #solutionList {
         width:calc(100vw - 40px);
@@ -35,12 +57,12 @@
     text-align: center;
     line-height: 0px;
     padding-bottom: 0px;
-
+    white-space: normal;
+    
 }
 
 .markerDescription {
     padding-top: 0px;
-    line-height: fit-content;
     font-family: var(--general_font_family);
     font-size: var(--general_font_size);
     color: var(--general_text_color);
