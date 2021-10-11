@@ -116,6 +116,7 @@ export const getSolutions = /* GraphQL */ `
       funding
       backerCount
       visibility
+      priority
       createdAt
       updatedAt
     }
@@ -141,6 +142,7 @@ export const listSolutions = /* GraphQL */ `
         funding
         backerCount
         visibility
+        priority
         createdAt
         updatedAt
       }

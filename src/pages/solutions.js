@@ -200,6 +200,18 @@ class Solutions extends Component {
         const getSols = await API.graphql(graphqlOperation(listSolutions));
         const returnArray = getSols.data.listSolutions.items;
 
+        console.log("RA: ");
+        console.log(returnArray);
+        console.log("SA: ");
+        const sortArray = returnArray.sort((a, b) => {
+            if (a.priority === b.priority) {return (a.totalP - a.filledP) - (b.totalP - b.filledP)}
+            return a.priority < b.priority ? 1 : -1 ;
+
+
+        });
+        console.log(sortArray);
+
+
         populateMarkers(returnArray)
         this.setState({loaded: true})
     }

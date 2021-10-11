@@ -10,5 +10,3 @@ query getID(
   }
 }
 `;
-
-

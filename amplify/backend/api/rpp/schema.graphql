@@ -39,4 +39,5 @@ type Solutions @model
   funding: String!
   backerCount: Int!
   visibility: Boolean!
+  priority: Boolean!
 }
