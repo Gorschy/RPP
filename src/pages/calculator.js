@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTint, faLightbulb, faTrashAlt, faBurn, faFile, faUtensils, faIcons, faRoute } from '@fortawesome/free-solid-svg-icons'
-import { Button, Card , Tabs, Layout, Divider } from 'antd';
+import { Card , Tabs, Layout, Divider } from 'antd';
 import './calculator.css';
 import '../style.css';
 
@@ -12,14 +12,6 @@ import {Button as BootButton,Modal} from "react-bootstrap"; // For Modal
 import { API, graphqlOperation, Auth } from 'aws-amplify'; // Used for sending DynamoDB
 import {createReport} from '../graphql/mutations'; // For creating Reports
 import {getID} from '../graphql/customQueries'; // For creating Reports
-
-/* TODO:
-  - fix state issues with emission data
-  - push emissions to datasource for listing and removal
-  - calculate data functions
-  - generate final carbon report object for breakdown
-*/
-
 
 /*
 Added in the database API all ye need to do is;
@@ -156,9 +148,9 @@ const Calculator = () => {
     }
   }
 
-  const emissionList = emissionData.map((test) =>
+  const emissionList = emissionData.map((test, index) =>
     
-    <li>{JSON.stringify(test)}</li>
+    <li key = {index}>{JSON.stringify(test)}</li>
   );
 
   const calculate = () => {
