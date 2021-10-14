@@ -14,7 +14,16 @@ export const getUser = /* GraphQL */ `
         items {
           id
           userID
-          emissions
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -67,7 +76,16 @@ export const getReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }
@@ -93,7 +111,16 @@ export const listReports = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        emissions
+        date
+        totalCarbon
+        transportCarbon
+        electricityCarbon
+        gasCarbon
+        wasteCarbon
+        waterCarbon
+        paperCarbon
+        foodDrinkCarbon
+        eventsCarbon
         createdAt
         updatedAt
       }
