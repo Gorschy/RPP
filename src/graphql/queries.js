@@ -12,9 +12,18 @@ export const getUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          id
           userID
-          emissions
+          id
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -52,7 +61,6 @@ export const listUsers = /* GraphQL */ `
 export const getReport = /* GraphQL */ `
   query GetReport($id: ID!) {
     getReport(id: $id) {
-      id
       userID
       user {
         id
@@ -67,7 +75,17 @@ export const getReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      id
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }
@@ -81,7 +99,6 @@ export const listReports = /* GraphQL */ `
   ) {
     listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        id
         userID
         user {
           id
@@ -93,7 +110,17 @@ export const listReports = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        emissions
+        id
+        date
+        totalCarbon
+        transportCarbon
+        electricityCarbon
+        gasCarbon
+        wasteCarbon
+        waterCarbon
+        paperCarbon
+        foodDrinkCarbon
+        eventsCarbon
         createdAt
         updatedAt
       }

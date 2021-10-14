@@ -12,7 +12,7 @@ import {Button as BootButton,Modal} from "react-bootstrap"; // For Modal
 import { API, graphqlOperation, Auth } from 'aws-amplify'; // Used for sending DynamoDB
 import {createReport} from '../graphql/mutations'; // For creating Reports
 import {getID} from '../graphql/customQueries'; // For creating Reports
-
+import {getUser} from '../graphql/queries'
 /*
 Added in the database API all ye need to do is;
 - Add items to the graphql schema (e.g. totalCarbon: String) based on what ye need
@@ -516,15 +516,34 @@ const report = async () => {
     // If the user is still here they must be logged in 
     // thus we send the data to DB
 
-    const getUser = await API.graphql(graphqlOperation(getID));
+   // const getUser = await API.graphql(graphqlOperation(getID));
 
+
+
+          const data = await Auth.currentUserPoolUser();
+          const userInfo = { ...data.attributes };
+         // console.log(userInfo.sub)
+          //const  test = await API.graphql(graphqlOperation( getUser,{id: userInfo.sub }));
+         // console.log(test)
 
     // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
-   const newReport= {
-       userID: getUser.data.listUsers.items[0].id,
-       emissions: emissionData.totalCarbon
-     }
-     await API.graphql(graphqlOperation(createReport, { input: newReport}));
+ 
+      const newReport= {
+        userID: userInfo.sub,
+        date: "String!",
+        totalCarbon: "String!",
+        transportCarbon: "String!",
+        electricityCarbon: "String!",
+        gasCarbon: "String!",
+        wasteCarbon: "String!",
+        waterCarbon: "String!",
+        paperCarbon: "String!",
+        foodDrinkCarbon: "String!",
+        eventsCarbon: "String!"
+      }     
+      
+      await API.graphql(graphqlOperation(createReport, { input: newReport}));
+
      //history.push('carbon_report'); // MUST FIX; should send user to carbon report
 
   }catch(e){
@@ -963,7 +982,7 @@ const report = async () => {
                     </div> 
                 }
                
-                <input type = 'button' id = 'transport' className = 'formButton' onClick = { handleSubmit } value = 'Add' />
+                <input type = 'button' id = 'transport' className = 'formButton' onClick = { report } value = 'Add' />
                             
               </form>
             </div>
