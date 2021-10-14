@@ -197,7 +197,7 @@ export class Users extends Component {
                         </div>
                       </td>
                 </tr>
-            ))} }
+            ))} 
 
             </>
     )

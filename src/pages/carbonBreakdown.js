@@ -1,16 +1,15 @@
-import {useState} from "react";
+import {useState, useEffect, useContext} from "react";
 import {CChart}  from "@coreui/react-chartjs";
 import { Card, Button } from "antd";
 import '../style.css';
 import './carbonBreakdown.css';
+import { ReportContext } from "./ReportContext";
 
 
 const CarbonBreakdown = () => {
     //Add breakdown to start of array.
     //Display breakdown at the start by default.
     //when you click on other reports display those instead.
-
-    const [barData, setBarData] = useState([]);
 
     /* Carbon Reduction Tips
     Travel
@@ -36,9 +35,32 @@ const CarbonBreakdown = () => {
       - Dont use paper?
     */
 
-    const bar = {
-        
+    const { report, setReport } = useContext(ReportContext);
 
+    //Not sure how accurate this is.
+    const carbonAverage = {
+      totalCarbon: 17,
+      transportCarbon: 2.89,
+      electricityCarbon: 2.04,
+      gasCarbon: 0.85,
+      wasteCarbon: 0.51,
+      waterCarbon: 0.85,
+      paperCarbon: 0.41,
+      foodDrinkCarbon: 0.51,
+      eventsCarbon: 0.89 
+    };
+
+    const tips = {
+      transport: [],
+      electricity: [],
+      gas: [],
+      waste: [],
+      water: [],
+      paper: [],
+      food: []
+    };
+   
+    const bar = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
           {
@@ -48,15 +70,11 @@ const CarbonBreakdown = () => {
             borderWidth: 1,
             hoverBackgroundColor: 'rgba(255,99,132,0.4)',
             hoverBorderColor: 'rgba(255,99,132,1)',
-            data: barData,
+            data: null,
           },
         ],
       };
 
-      const add = () => {
-        let newElement = 7;
-        setBarData([...barData, newElement]);
-    };
 
       const pie = {
         labels: [
@@ -80,32 +98,6 @@ const CarbonBreakdown = () => {
           }],
       };
 
-      const radar = {
-        labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
-        datasets: [
-          {
-            label: 'My First dataset',
-            backgroundColor: 'rgba(179,181,198,0.2)',
-            borderColor: 'rgba(179,181,198,1)',
-            pointBackgroundColor: 'rgba(179,181,198,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(179,181,198,1)',
-            data: [65, 59, 90, 81, 56, 55, 40],
-          },
-          {
-            label: 'My Second dataset',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderColor: 'rgba(255,99,132,1)',
-            pointBackgroundColor: 'rgba(255,99,132,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(255,99,132,1)',
-            data: [28, 48, 40, 19, 96, 27, 100],
-          },
-        ],
-      };
-
       const options = {
         // tooltips: {
         //   enabled: false,
@@ -114,29 +106,20 @@ const CarbonBreakdown = () => {
         maintainAspectRatio: false
       }
 
+
     return ( 
         <div>
-            <div className="column left">
-                <Card id="reportList" title={<h1>List of Reports</h1>} bordered={true}>
-
-                </Card>
-            </div>
             <div className="column middle">
                 
                 <Card id="carbonBreakdown" title={<h1>Carbon Breakdown</h1>} bordered={true}>
-
+                  <span className="errorLabel">{report} I am the sickest out</span>
                 </Card>
             </div>
             <div className="column right">
                 <CChart id="barChart" type="bar" datasets={bar.datasets} options={options} labels="months"/>
-                <CChart id="radarChart" type="radar" datasets={radar.datasets} labels={radar.labels}/>
                 <CChart id="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} />
             </div>
-            <Button className="add" onClick={add} type="primary">add</Button>
         </div>
     );
 }
 export default CarbonBreakdown;
-
-
-
