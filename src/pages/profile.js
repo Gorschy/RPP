@@ -5,6 +5,9 @@ import '../style.css';
 import './profile.css';
 import CarbonBreakdown from './carbonBreakdown.js';
 import { ReportContext } from './ReportContext';
+
+import { listReports } from "../graphql/queries"; // For creating Reports
+
 const Profile = () => {
     //Add breakdown to start of array.
     //Display breakdown at the start by default.

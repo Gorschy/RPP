@@ -446,7 +446,9 @@ const Calculator = () => {
           console.log("-- main switch error --");
       }
     }
+    
 
+    //Hello message from nathan test.
     let tempTotalCarbon = totalCarbon.toString();
     let tempTransportCarbon = transportCarbon.toString();
     let tempElectricityCarbon = electricityCarbon.toString();
