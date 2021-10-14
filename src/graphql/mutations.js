@@ -15,9 +15,18 @@ export const createUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          id
           userID
-          emissions
+          id
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -42,9 +51,18 @@ export const updateUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          id
           userID
-          emissions
+          id
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -69,9 +87,18 @@ export const deleteUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          id
           userID
-          emissions
+          id
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -88,7 +115,6 @@ export const createReport = /* GraphQL */ `
     $condition: ModelReportConditionInput
   ) {
     createReport(input: $input, condition: $condition) {
-      id
       userID
       user {
         id
@@ -103,7 +129,17 @@ export const createReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      id
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }
@@ -115,7 +151,6 @@ export const updateReport = /* GraphQL */ `
     $condition: ModelReportConditionInput
   ) {
     updateReport(input: $input, condition: $condition) {
-      id
       userID
       user {
         id
@@ -130,7 +165,17 @@ export const updateReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      id
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }
@@ -142,7 +187,6 @@ export const deleteReport = /* GraphQL */ `
     $condition: ModelReportConditionInput
   ) {
     deleteReport(input: $input, condition: $condition) {
-      id
       userID
       user {
         id
@@ -157,7 +201,17 @@ export const deleteReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      id
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }

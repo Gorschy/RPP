@@ -12,9 +12,18 @@ export const onCreateUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          id
           userID
-          emissions
+          id
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -36,9 +45,18 @@ export const onUpdateUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          id
           userID
-          emissions
+          id
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -60,9 +78,18 @@ export const onDeleteUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          id
           userID
-          emissions
+          id
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -76,7 +103,6 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateReport = /* GraphQL */ `
   subscription OnCreateReport($userID: String) {
     onCreateReport(userID: $userID) {
-      id
       userID
       user {
         id
@@ -91,7 +117,17 @@ export const onCreateReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      id
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }
@@ -100,7 +136,6 @@ export const onCreateReport = /* GraphQL */ `
 export const onUpdateReport = /* GraphQL */ `
   subscription OnUpdateReport($userID: String) {
     onUpdateReport(userID: $userID) {
-      id
       userID
       user {
         id
@@ -115,7 +150,17 @@ export const onUpdateReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      id
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }
@@ -124,7 +169,6 @@ export const onUpdateReport = /* GraphQL */ `
 export const onDeleteReport = /* GraphQL */ `
   subscription OnDeleteReport($userID: String) {
     onDeleteReport(userID: $userID) {
-      id
       userID
       user {
         id
@@ -139,7 +183,17 @@ export const onDeleteReport = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      emissions
+      id
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }

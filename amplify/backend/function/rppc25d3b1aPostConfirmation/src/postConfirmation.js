@@ -175,6 +175,7 @@ let params;
 
               'family_name':{S:family_name}, // Checked
               'phone_number':{S:phone_number}, // checked
+              'admin':{BOOL:false}, 
 
               'createdAt': {S: date.toISOString()},
               'updatedAt': {S: date.toISOString()},
@@ -191,7 +192,8 @@ let params;
 
               'phone_number':{S:phone_number}, // checked
               'given_name':{S:given_name},  // Checked
-              
+              'admin':{BOOL:false}, 
+
               'createdAt': {S: date.toISOString()},
               'updatedAt': {S: date.toISOString()},
             },
@@ -205,7 +207,8 @@ let params;
               'email':{S:email},
 
               'phone_number':{S:phone_number}, // checked
-              
+              'admin':{BOOL:false}, 
+
               'createdAt': {S: date.toISOString()},
               'updatedAt': {S: date.toISOString()},
             },
@@ -221,6 +224,8 @@ let params;
             'email':{S:email},
             'createdAt': {S: date.toISOString()},
             'updatedAt': {S: date.toISOString()},
+            'admin':{BOOL:false}, 
+
           },
           TableName: process.env.USERTABLE
         }  

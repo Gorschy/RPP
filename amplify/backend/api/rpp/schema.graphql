@@ -11,17 +11,27 @@ type User @model @auth(rules: [
   carbon_reports: [Report] @connection(keyName: "byUser", fields: ["id"])
 }
 
-
-type Report @model @key(name: "byUser", fields: ["userID"])
+type Report @model  @key(name: "byUser", fields: ["userID"])
 @auth(rules: [
 { allow: groups, groups: ["Admin"]},
 { allow: owner, ownerField: "userID", operations: [read, create, update, delete]}])
 {
-  id: ID!
   userID: ID!
   user: User @connection(fields: ["userID"])
-  emissions: String! #Temp its just the total carbon
+  id: ID!
+  date: String!
+  totalCarbon: String!
+  transportCarbon: String!
+  electricityCarbon: String!
+  gasCarbon: String!
+  wasteCarbon: String!
+  waterCarbon: String!
+  paperCarbon: String!
+  foodDrinkCarbon: String!
+  eventsCarbon: String!
 }
+
+
 
 type Solutions @model 
 @auth(rules :[
