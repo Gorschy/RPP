@@ -447,17 +447,16 @@ const Calculator = () => {
       }
     }
 
-    let tempTotalCarbon = toString(totalCarbon);
-    let tempTransportCarbon = toString(transportCarbon);
-    let tempElectricityCarbon = toString(electricityCarbon);
-    let tempGasCarbon = toString(gasCarbon);
-    let tempWasteCarbon = toString(wasteCarbon);
-    let tempWaterCarbon = toString(waterCarbon);
-    let tempPaperCarbon = toString(paperCarbon);
-    let tempFoodDrinkCarbon = toString(foodDrinkCarbon);
-    let tempEventsCarbon = toString(eventsCarbon);
+    let tempTotalCarbon = totalCarbon.toString();
+    let tempTransportCarbon = transportCarbon.toString();
+    let tempElectricityCarbon = electricityCarbon.toString();
+    let tempGasCarbon = gasCarbon.toString();
+    let tempWasteCarbon = wasteCarbon.toString();
+    let tempWaterCarbon = waterCarbon.toString();
+    let tempPaperCarbon = paperCarbon.toString();
+    let tempFoodDrinkCarbon = foodDrinkCarbon.toString();
+    let tempEventsCarbon = eventsCarbon.toString();
 
-    /*
       try{
         Auth.currentUserInfo().then((userInfo) => {
           if(userInfo == null){ // If not signed in head to login page
@@ -468,12 +467,12 @@ const Calculator = () => {
         // If the user is still here they must be logged in 
         // thus we send the data to DB
     
-        const getUser = await API.graphql(graphqlOperation(getID));
-    
-    
+        const data = await Auth.currentUserPoolUser();
+        const userInfo = { ...data.attributes };
+      
         // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
         const report = {
-          id: 7,
+          userID: userInfo.sub,
           date: date,
           totalCarbon: tempTotalCarbon,
           transportCarbon: tempTransportCarbon,
@@ -485,13 +484,15 @@ const Calculator = () => {
           foodDrinkCarbon: tempFoodDrinkCarbon,
           eventsCarbon: tempEventsCarbon
         };
+
+        console.log(report);
          await API.graphql(graphqlOperation(createReport, { input: report}));
          //history.push('carbon_report'); // MUST FIX; should send user to carbon report
     
       }catch(e){
         console.error("Error in calculator.js report method: ", e)
       }
-    */
+    
   };
 
   function resetForms(id) {
