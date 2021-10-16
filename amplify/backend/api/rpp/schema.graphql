@@ -30,7 +30,26 @@ type Project @model @key(name: "byCreator", fields:["creatorID"])
   creator: User! @connection(fields: ["creatorID"])
   editors: [ProjectEditor] @connection(keyName: "byProject", fields: ["id"])
   title: String!
-  content: String
+  description: String
+  carbon_reports: [ProjectReport] @connection(keyName: "byProject", fields: ["id"])
+}
+
+
+type ProjectReport @model @key(name: "byProject", fields: ["projectID"])
+{
+  id: ID!
+  projectID: ID!
+  project: Project @connection(fields: ["projectID"])
+  date: String!
+  totalCarbon: String!
+  transportCarbon: String!
+  electricityCarbon: String!
+  gasCarbon: String!
+  wasteCarbon: String!
+  waterCarbon: String!
+  paperCarbon: String!
+  foodDrinkCarbon: String!
+  eventsCarbon: String!
 }
 
 # Can only query ProjectEditor through Project.editors and User.projects
@@ -61,6 +80,7 @@ type Solution @model
   funding: String!
   backerCount: Int!
   visibility: Boolean!
+  priority: Boolean!
   backers: [SolutionBacked] @connection(keyName: "bySolution", fields: ["id"])
 }
 
@@ -80,8 +100,6 @@ type SolutionBacked
 }
 
 
-
-
 type Report @model @key(name: "byUser", fields: ["userID"])
 @auth(rules: [
 { allow: groups, groups: ["Admin"]},
@@ -90,5 +108,17 @@ type Report @model @key(name: "byUser", fields: ["userID"])
   id: ID!
   userID: ID!
   user: User @connection(fields: ["userID"])
-  emissions: String! #Temp its just the total carbon
+  date: String!
+  totalCarbon: String!
+  transportCarbon: String!
+  electricityCarbon: String!
+  gasCarbon: String!
+  wasteCarbon: String!
+  waterCarbon: String!
+  paperCarbon: String!
+  foodDrinkCarbon: String!
+  eventsCarbon: String!
 }
+
+
+
