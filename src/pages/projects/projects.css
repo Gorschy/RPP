@@ -3,27 +3,44 @@
     
 }
 
-/* Card Stylings */
-#projectListCard.ant-card-head {
-    height: 10px;
-    color: red;
+/* layout */
+
+.container {
+    display: flex;
+    width: 100%; 
+    height: 100%; 
+    justify-content: space-between;
+    overflow: hidden;
 }
+
+.column {
+    flex-direction: column;
+    margin: 0.5em;
+}
+
+.row {
+    flex-direction: row;
+    margin: 0.5em;
+}
+
+/* Card Stylings */
 
 #projectListCard {
     background-color: var(--foreground_color);
     width: 12vw;
     height: 45.5vh;
-    border-top-left-radius: 0.5em;
-    border-top-right-radius: 0.5em;
-    border-bottom: solid 1px #F0F0F0;
+    border-radius: 0.5em;
+    margin: 0.5em;
+    flex-direction: column;
 }
 
 #carbonReportListCard {
     background-color: var(--foreground_color);
     width: 12vw;
     height: 45.5vh;
-    border-bottom-left-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+    border-radius: 0.5em;
+    margin: 0.5em;
+    flex-direction: column;
 }
 
 #currentProjectCard {
@@ -116,33 +133,21 @@
     border-top-right-radius: 0.4em;
 }
 
-.container {
-    display: flex;
-    width: 100%; 
-    height: 100%; 
-    justify-content: space-between;
-    overflow: hidden;
-}
 
-.column {
-    flex-direction: column;
-}
 
 .projectSummary {
     padding: 1vh;
     width: 100%; 
     height: 91vh;
-    background-color: white; 
-    flex-direction: column;
-    margin-left: 0.5vw;
-    margin-right: 0.5vw;
     border-radius: 0.5em;
+    margin: 0.5em;
+    flex-direction: row;
 }
 
 .projectAnalytics {
     padding: 1vh;
-    height: 25vh;
-    width: 67vw;
+    height: auto;
+    width: auto;
     background-color: white; 
     border-radius: 0.5em;
     margin-bottom: 1vh;
@@ -154,12 +159,13 @@
     padding: 1vh;
     background-color: white; 
     border-radius: 0.5em;
-    margin-bottom: 1vh;
-    
+    margin-bottom: 1vh; 
 }
 
+/* display pictures */
+
 .adminPicture {
-    margin-top: 1vh;
+    margin: 0.5em;
     width: 275px;
     height: 275px;
     border-radius: 50%;
@@ -172,13 +178,52 @@
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    flex-direction: column;
 }
 
-.teamMember {
-    display: inline-flex;
+/* buttons */
+
+button {
+    color: #fff;
+    background: #5B7444;
+    border: none;
+    border-radius: 7px;
+    width: 120px;
+    height: 35px;
+    cursor: pointer;
+    font-size: small;
+    transition-duration: 0.2s;
+    margin: 0.25em
 }
 
-.teamMemberLabel {
-    
+button:hover {
+    background-color: #134A2C;
+    color: #fff;
+}
+
+.delete-project-btn {
+    background: #f94144;
+    color: #fff;
+}
+
+.delete-project-btn:hover {
+    background-color: #dc2f02;
+    color: #fff;
+}
+
+button.ant-modal-close {
+    width: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.45);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    transition: color 0.3s;    
 }

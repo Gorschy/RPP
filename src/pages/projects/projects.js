@@ -6,18 +6,19 @@ import { UserContext } from "../UserContext";
 import { Redirect } from "react-router"
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import { List, Modal } from "antd";
-
+import {getUser} from '../../graphql/queries';
 
 /* MOCK DATA TESTING (ignore)
 --------------------------------------------------------------------------------- */
 
 const users = [
     {
-        id: "e9fe33ff-d4a8-4a84-900b-f24c76c55075",
+        id: "036f3547-e001-467f-9a82-7095c9bff202",
         email: "bb923@uowmail.edu.au",
         first_name: "Brandon",
         last_name: "Britton",
         projects_list: [1, 3, 5],
+        pending_invites: [6,7]
         //carbon_reports: [1]
     },
     {
@@ -26,6 +27,7 @@ const users = [
         first_name: "A",
         last_name: "a",
         projects_list: [1, 2, 3, 4, 5],
+        pending_invites: []
         //carbon_reports: [1]
     },
     {
@@ -34,6 +36,7 @@ const users = [
         first_name: "B",
         last_name: "b",
         projects_list: [3, 4, 5],
+        pending_invites: []
         //carbon_reports: [1,2]
     },
     {
@@ -42,6 +45,7 @@ const users = [
         first_name: "C",
         last_name: "c",
         projects_list: [4, 5],
+        pending_invites: []
         //carbon_reports: [1,2,3]
     },
 ];
@@ -52,8 +56,8 @@ const projects = [
         name: "Current User Project1",
         description: "1",
         creation_date: "",
-        admin_user: "e9fe33ff-d4a8-4a84-900b-f24c76c55075",
-        users: ["e9fe33ff-d4a8-4a84-900b-f24c76c55075", "1"],
+        admin_user: "036f3547-e001-467f-9a82-7095c9bff202",
+        users: ["036f3547-e001-467f-9a82-7095c9bff202", "1"],
         //carbon_reports: [],
         //total_report: "
     },
@@ -73,7 +77,7 @@ const projects = [
         description: "3",
         creation_date: "",
         admin_user: "1",
-        users: ["e9fe33ff-d4a8-4a84-900b-f24c76c55075", "1", "2"],
+        users: ["036f3547-e001-467f-9a82-7095c9bff202", "1", "2"],
         //carbon_reports: [],
         //total_report: "
     },
@@ -93,88 +97,73 @@ const projects = [
         description: "5",
         creation_date: "",
         admin_user: "3",
-        users: ["e9fe33ff-d4a8-4a84-900b-f24c76c55075", "1", "2", "3"],
+        users: ["036f3547-e001-467f-9a82-7095c9bff202", "1", "2", "3"],
         //carbon_reports: [],
         //total_report: "
     }
 ];
 
-const UserLists = (currentUser) => {
+const carbonreports = [
 
-    /* TODO:
-        - get auth currentUser with user from db
-        - get current dbUser.projectsList[]
-            - set selected_project to dbUser.projectsList[0]
-        - get dbUser.pendingInvites[]
-            - show modal with invite onload
-        - get dbUser.
-    */
+];
 
-    console.log(currentUser.sub);
-
-    const [selected_project, select_project] = useState({});
-    const [projectsList, setProjectsList] = useState([]);
-    const [pending_invites, any_pending_invites] = useState(false);
-
-    return (
-        <div className="column">
-
-            <div id="projectListCard">
-                <h3 className="centerContent">Projects</h3>
-                <List
-                    id="projectListID"
-                    itemLayout="horizontal"
-                    dataSource={projects}
-                    renderItem={item => (
-                        <List.Item>
-                            <List.Item.Meta title={<a>{item.name}</a>} />
-                        </List.Item>
-                    )}
-                />
-            </div>
-
-            <div id="carbonReportListCard">
-                <h3 className="centerContent">Carbon Reports</h3>
-            </div>
-
-        </div>
-    );
-}
-
-const Projects = () => {
-
-    /* AUTH CURRENT USER
-    --------------------------------------------------------------------------------- */
-
-    useEffect(() => {
-        checkUser();
-    }, []);
-
-    const { loggedIn } = useContext(UserContext);
+function GetUserData() {
+    
     const [currentUser, setCurrentUser] = useState({});
-    //const [userProjects, setProjects] = useState([]);
     const [isLoading, setLoading] = useState(false);
 
     async function checkUser() {
         try {
             const data = await Auth.currentUserPoolUser();
             const userInfo = { ...data.attributes };
-            setCurrentUser(userInfo);
-
-            setLoading(true);
-
-
+            const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+            setCurrentUser(userData.data.getUser);
         } catch (err) {
             console.log("error: ", err);
+        } finally {
+            setLoading(true);
         }
-
     }
 
-    /* CREATE NEW PROJECT HANDLERS
-    --------------------------------------------------------------------------------- */
+    useEffect(() => {
+        checkUser();
+    }, []);
 
+    return [currentUser, isLoading];
+}
+
+function GetProjects(currentUser) {
+    
+    const userData = users.filter(obj => { if(obj.id === currentUser.id) return obj.projects_list });
+    const tempList = userData[0].projects_list
+    const projectsList = []; 
+
+    for(let i = 0; i < tempList.length; i++){
+        const temp = projects.filter(obj => {
+            if(obj.id === tempList[i]) return obj;
+        });
+        projectsList.push(...temp);
+    }
+    
+    return projectsList
+}
+
+
+const UserLists = (currentUser) => {
+
+    // modal state control
     const [visible, setVisible] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+
+    const showModal = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+    
+    // new project state control
     const [projectVars, setProjectVars] = useState({});
     const [newProject, setNewProject] = useState({});
 
@@ -222,18 +211,125 @@ const Projects = () => {
         }, 2000);
 
         document.getElementById("new_project_form").reset();
-        console.log("new project created: " + project.name);
+        //console.log("new project created: " + project.name);
     }
-
-    const showModal = () => {
-        setVisible(true);
-    };
-
-    const handleCancel = () => {
-        setVisible(false);
-    };
+    
+    // users projects operations
+    const projectsList = GetProjects(currentUser);
+    // const [selected_project, select_project] = useState({});
+    // const [pending_invites, any_pending_invites] = useState(false);
+    //console.log(projectsList);
+    
+    const handleProjectSelect = (e) => {
+        e.preventDefault();
+        const projectID = e.target.id;
+        console.log(projectID);
+        
+    }
+    
 
     return (
+        <div className = "container">
+
+            <Modal
+                title="Create Project"
+                visible={visible}
+                onOk={handleSubmit}
+                okText="Create New Project"
+                confirmLoading={ confirmLoading }
+                onCancel={ handleCancel }
+                centered
+            >
+                <div>
+                    <form id="new_project_form">
+                        <label>Project Name</label>
+                        <input
+                            className = "form_input"
+                            type = "text"
+                            name = "project_name"
+                            onChange = { handleChange }
+                        />
+                        <label>Project Description</label>
+                        <input
+                            className = "form_input"
+                            type = "text"
+                            name = "project_description"
+                            onChange = { handleChange }
+                        />
+                    </form>
+                </div>
+            </Modal>
+
+            <div className="column">
+                <div id="projectListCard">
+                    <h3 className="centerContent">Projects</h3>
+                    { projectsList.map((item, index) => (
+                        <div key = {index}>
+                            <a className = "projects-list-item" id = {item.id} onClick = { handleProjectSelect.bind(item) }>{item.name}</a>
+                        </div>
+                    ))}
+                    <button className = "create-project-btn" onClick = { showModal }>Create Project</button>
+                </div>
+
+                <div id="carbonReportListCard">
+                    <h3 className="centerContent">Carbon Reports</h3>
+                </div>
+            </div>
+
+            <div className = "column">
+                <div className="projectBreakdown">
+                    <h3>Project Breakdown</h3>
+                </div>
+            </div>
+
+            <div className = "column">                
+                <div className="projectAnalytics">
+                    <h3>Project Summary</h3>
+                    <p>{JSON.stringify(currentUser, null, 2)}</p>
+                </div>
+            </div>
+                    
+
+                
+
+            <div className="column">
+                <div id="projectAdminCard">
+                    <h4 className="projectAdminHead">Project Admin</h4>
+                    <img className="adminPicture" src={placeholderImg} alt="Display Picture" />
+                    <h3>{}</h3>
+                    
+                    <button>Invite to Project</button>
+                    <button className = "delete-project-btn">Delete Project</button>
+                </div>
+
+                <div id="membersList">
+                    <div className="teamMember">
+                        <img className="teamMemberPicture" src={placeholderImg} alt="Display Picture" />
+                        <h5 className="teamMemberLabel">{currentUser.given_name} {currentUser.family_name}</h5>
+                        <h5 className="teamMemberLabel">{currentUser.email}</h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    );
+}
+
+const Projects = () => {
+
+    /* AUTH CURRENT USER
+    --------------------------------------------------------------------------------- */
+    const { loggedIn } = useContext(UserContext);
+    const [currentUser, isLoading] = GetUserData();
+    
+
+    /* CREATE NEW PROJECT HANDLERS
+    --------------------------------------------------------------------------------- */
+
+    
+
+    return (
+        
 
         <div>
 
@@ -241,67 +337,10 @@ const Projects = () => {
                 loggedIn ? (
 
                     <div className="container">
-                        { isLoading }
+                        { isLoading && <UserLists { ...currentUser } />}
 
-                        <UserLists { ...currentUser }/>
-
-                        <div className="column">
-                            <div className="projectAnalytics">
-                                <h3>Project Summary</h3>
-                            </div>
-
-                            <div className="projectBreakdown">
-                                <h3>Project Breakdown</h3>
-                                <button onClick={showModal} >Create Project</button>
-                                <button>Delete Project</button>
-                                <button>Invite to Project</button>
-                                <p>{JSON.stringify(newProject, null, 3)}</p>
-                            </div>
-
-                            <Modal
-                                title="Create Project"
-                                visible={visible}
-                                onOk={handleSubmit}
-                                okText="Create New Project"
-                                confirmLoading={confirmLoading}
-                                onCancel={handleCancel}
-                                centered
-                            >
-                                <div>
-                                    <form id="new_project_form">
-                                        <label>Project Name</label>
-                                        <input
-                                            className = "form_input"
-                                            type = "text"
-                                            name = "project_name"
-                                            onChange = { handleChange }
-                                        />
-                                        <label>Project Description</label>
-                                        <input
-                                            className = "form_input"
-                                            type = "text"
-                                            name = "project_description"
-                                            onChange = { handleChange }
-                                        />
-                                    </form>
-                                </div>
-                            </Modal>
-                        </div>
-
-                        <div className="column">
-                            <div id="projectAdminCard">
-                                <h4 className="projectAdminHead">Project Admin</h4>
-                                <img className="adminPicture" src={placeholderImg} alt="Display Picture" />
-                            </div>
-
-                            <div id="membersList">
-                                <div className="teamMember">
-                                    <img className="teamMemberPicture" src={placeholderImg} alt="Display Picture" />
-                                    <h5 className="teamMemberLabel">{currentUser.first_name} {currentUser.last_name}</h5><br />
-                                    <h5 className="teamMemberLabel">{currentUser.email}</h5>
-                                </div>
-                            </div>
-                        </div>
+                        
+                        
                     </div>
 
                 ) : (<Redirect to="/home" />)
