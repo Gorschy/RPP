@@ -470,7 +470,7 @@ const Calculator = () => {
         // thus we send the data to DB
     
         const data = await Auth.currentUserPoolUser();
-        const userInfo = { ...data.attributes };
+        const userInfo = { ...data.attributes }; // userInfo.sub == user ID
       
         // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
         const report = {

@@ -12,18 +12,45 @@ export const getUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          userID
           id
-          date
-          totalCarbon
-          transportCarbon
-          electricityCarbon
-          gasCarbon
-          wasteCarbon
-          waterCarbon
-          paperCarbon
-          foodDrinkCarbon
-          eventsCarbon
+          userID
+          emissions
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_created {
+        items {
+          id
+          creatorID
+          title
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_in {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      hasRegistered
+      carbon_units
+      offsetted_units
+      my_solutions {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
           createdAt
           updatedAt
         }
@@ -51,6 +78,18 @@ export const listUsers = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -58,11 +97,12 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `;
-export const getReport = /* GraphQL */ `
-  query GetReport($id: ID!) {
-    getReport(id: $id) {
-      userID
-      user {
+export const getProject = /* GraphQL */ `
+  query GetProject($id: ID!) {
+    getProject(id: $id) {
+      id
+      creatorID
+      creator {
         id
         email
         given_name
@@ -72,55 +112,66 @@ export const getReport = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      id
-      date
-      totalCarbon
-      transportCarbon
-      electricityCarbon
-      gasCarbon
-      wasteCarbon
-      waterCarbon
-      paperCarbon
-      foodDrinkCarbon
-      eventsCarbon
+      editors {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      title
+      content
       createdAt
       updatedAt
     }
   }
 `;
-export const listReports = /* GraphQL */ `
-  query ListReports(
-    $filter: ModelReportFilterInput
+export const listProjects = /* GraphQL */ `
+  query ListProjects(
+    $filter: ModelProjectFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listProjects(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        userID
-        user {
+        id
+        creatorID
+        creator {
           id
           email
           given_name
           family_name
           phone_number
           admin
+          hasRegistered
+          carbon_units
+          offsetted_units
           createdAt
           updatedAt
         }
-        id
-        date
-        totalCarbon
-        transportCarbon
-        electricityCarbon
-        gasCarbon
-        wasteCarbon
-        waterCarbon
-        paperCarbon
-        foodDrinkCarbon
-        eventsCarbon
+        editors {
+          nextToken
+        }
+        title
+        content
         createdAt
         updatedAt
       }
@@ -128,9 +179,9 @@ export const listReports = /* GraphQL */ `
     }
   }
 `;
-export const getSolutions = /* GraphQL */ `
-  query GetSolutions($id: ID!) {
-    getSolutions(id: $id) {
+export const getSolution = /* GraphQL */ `
+  query GetSolution($id: ID!) {
+    getSolution(id: $id) {
       id
       title
       desc
@@ -143,7 +194,18 @@ export const getSolutions = /* GraphQL */ `
       funding
       backerCount
       visibility
-      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -151,7 +213,7 @@ export const getSolutions = /* GraphQL */ `
 `;
 export const listSolutions = /* GraphQL */ `
   query ListSolutions(
-    $filter: ModelSolutionsFilterInput
+    $filter: ModelSolutionFilterInput
     $limit: Int
     $nextToken: String
   ) {
@@ -169,7 +231,76 @@ export const listSolutions = /* GraphQL */ `
         funding
         backerCount
         visibility
-        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getReport = /* GraphQL */ `
+  query GetReport($id: ID!) {
+    getReport(id: $id) {
+      id
+      userID
+      user {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      emissions
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listReports = /* GraphQL */ `
+  query ListReports(
+    $filter: ModelReportFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userID
+        user {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        emissions
         createdAt
         updatedAt
       }

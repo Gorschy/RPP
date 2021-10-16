@@ -1,6 +1,5 @@
-type User @model @auth(rules: [
-{ allow: groups, groups: ["Admin"] },
-{allow: owner,  ownerField: "id", operations: [read, create, update, delete]}])
+type User @model
+
 {
   id: ID!
   email: String!
@@ -8,34 +7,47 @@ type User @model @auth(rules: [
   family_name: String
   phone_number: String
   admin: Boolean!
+  # --ADDED--
+  # Calculator
   carbon_reports: [Report] @connection(keyName: "byUser", fields: ["id"])
+  #Projects
+  projects_created: [Project] @connection(keyName: "byCreator", fields: ["id"])
+  projects_in: [ProjectEditor] @connection(keyName: "byEditor", fields: ["id"])
+  # unregisted User from Project [invites]
+  hasRegistered: Boolean!
+  # Carbon Units
+  carbon_units: Int 
+  offsetted_units: Int
+  my_solutions: [SolutionBacked] @connection(keyName: "byBacker", fields: ["id"])
+  
 }
 
-type Report @model  @key(name: "byUser", fields: ["userID"])
-@auth(rules: [
-{ allow: groups, groups: ["Admin"]},
-{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]}])
+
+type Project @model @key(name: "byCreator", fields:["creatorID"])
 {
-  userID: ID!
-  user: User @connection(fields: ["userID"])
   id: ID!
-  date: String!
-  totalCarbon: String!
-  transportCarbon: String!
-  electricityCarbon: String!
-  gasCarbon: String!
-  wasteCarbon: String!
-  waterCarbon: String!
-  paperCarbon: String!
-  foodDrinkCarbon: String!
-  eventsCarbon: String!
+  creatorID: ID!
+  creator: User! @connection(fields: ["creatorID"])
+  editors: [ProjectEditor] @connection(keyName: "byProject", fields: ["id"])
+  title: String!
+  content: String
 }
 
+# Can only query ProjectEditor through Project.editors and User.projects
+type ProjectEditor
+  @model(queries: null)
+  @key(name: "byProject", fields: ["projectID", "editorID"])
+  @key(name: "byEditor", fields: ["editorID", "projectID"])     
+  {
+  id: ID!
+  projectID: ID!
+  editorID: ID!
+  project: Project! @connection(fields: ["projectID"])
+  editor: User! @connection(fields: ["editorID"])
+}
 
-
-type Solutions @model 
-@auth(rules :[
-{ allow: groups, groups: ["Admin"], operations: [create, delete, update]}])
+type Solution @model 
+@auth(rules :[{ allow: groups, groups: ["Admin"], operations: [create, delete, update]}])
 {
   id:ID!
   title: String!
@@ -49,5 +61,34 @@ type Solutions @model
   funding: String!
   backerCount: Int!
   visibility: Boolean!
-  priority: Boolean!
+  backers: [SolutionBacked] @connection(keyName: "bySolution", fields: ["id"])
+}
+
+# Can only query SolutionBacked through Solution.backers and User.my_solutions
+type SolutionBacked
+  @model(queries: null)
+  @key(name: "bySolution", fields: ["solutionID", "backerID"])
+  @key(name: "byBacker", fields: ["backerID", "solutionID"])     
+  {
+  id: ID!
+  solutionID: ID!
+  backerID: ID!
+  solution: Solution! @connection(fields: ["solutionID"])
+  backer: User! @connection(fields: ["backerID"])
+  money_amount: Float!
+  credits: Int!
+}
+
+
+
+
+type Report @model @key(name: "byUser", fields: ["userID"])
+@auth(rules: [
+{ allow: groups, groups: ["Admin"]},
+{ allow: owner, ownerField: "userID", operations: [read, create, update, delete]}])
+{
+  id: ID!
+  userID: ID!
+  user: User @connection(fields: ["userID"])
+  emissions: String! #Temp its just the total carbon
 }
