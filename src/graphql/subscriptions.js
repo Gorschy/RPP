@@ -2,8 +2,8 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($id: String) {
-    onCreateUser(id: $id) {
+  subscription OnCreateUser {
+    onCreateUser {
       id
       email
       given_name
@@ -12,8 +12,8 @@ export const onCreateUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          userID
           id
+          userID
           date
           totalCarbon
           transportCarbon
@@ -24,6 +24,42 @@ export const onCreateUser = /* GraphQL */ `
           paperCarbon
           foodDrinkCarbon
           eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_created {
+        items {
+          id
+          creatorID
+          title
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_in {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      hasRegistered
+      carbon_units
+      offsetted_units
+      my_solutions {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
           createdAt
           updatedAt
         }
@@ -35,8 +71,8 @@ export const onCreateUser = /* GraphQL */ `
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($id: String) {
-    onUpdateUser(id: $id) {
+  subscription OnUpdateUser {
+    onUpdateUser {
       id
       email
       given_name
@@ -45,8 +81,8 @@ export const onUpdateUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          userID
           id
+          userID
           date
           totalCarbon
           transportCarbon
@@ -57,6 +93,42 @@ export const onUpdateUser = /* GraphQL */ `
           paperCarbon
           foodDrinkCarbon
           eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_created {
+        items {
+          id
+          creatorID
+          title
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_in {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      hasRegistered
+      carbon_units
+      offsetted_units
+      my_solutions {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
           createdAt
           updatedAt
         }
@@ -68,8 +140,8 @@ export const onUpdateUser = /* GraphQL */ `
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($id: String) {
-    onDeleteUser(id: $id) {
+  subscription OnDeleteUser {
+    onDeleteUser {
       id
       email
       given_name
@@ -78,8 +150,8 @@ export const onDeleteUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          userID
           id
+          userID
           date
           totalCarbon
           transportCarbon
@@ -95,6 +167,636 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      projects_created {
+        items {
+          id
+          creatorID
+          title
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_in {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      hasRegistered
+      carbon_units
+      offsetted_units
+      my_solutions {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateProject = /* GraphQL */ `
+  subscription OnCreateProject {
+    onCreateProject {
+      id
+      creatorID
+      creator {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      editors {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      title
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProject = /* GraphQL */ `
+  subscription OnUpdateProject {
+    onUpdateProject {
+      id
+      creatorID
+      creator {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      editors {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      title
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProject = /* GraphQL */ `
+  subscription OnDeleteProject {
+    onDeleteProject {
+      id
+      creatorID
+      creator {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      editors {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      title
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateProjectEditor = /* GraphQL */ `
+  subscription OnCreateProjectEditor {
+    onCreateProjectEditor {
+      id
+      projectID
+      editorID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        content
+        createdAt
+        updatedAt
+      }
+      editor {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProjectEditor = /* GraphQL */ `
+  subscription OnUpdateProjectEditor {
+    onUpdateProjectEditor {
+      id
+      projectID
+      editorID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        content
+        createdAt
+        updatedAt
+      }
+      editor {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProjectEditor = /* GraphQL */ `
+  subscription OnDeleteProjectEditor {
+    onDeleteProjectEditor {
+      id
+      projectID
+      editorID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        content
+        createdAt
+        updatedAt
+      }
+      editor {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSolution = /* GraphQL */ `
+  subscription OnCreateSolution {
+    onCreateSolution {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSolution = /* GraphQL */ `
+  subscription OnUpdateSolution {
+    onUpdateSolution {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSolution = /* GraphQL */ `
+  subscription OnDeleteSolution {
+    onDeleteSolution {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSolutionBacked = /* GraphQL */ `
+  subscription OnCreateSolutionBacked {
+    onCreateSolutionBacked {
+      id
+      solutionID
+      backerID
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      backer {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      money_amount
+      credits
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSolutionBacked = /* GraphQL */ `
+  subscription OnUpdateSolutionBacked {
+    onUpdateSolutionBacked {
+      id
+      solutionID
+      backerID
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      backer {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      money_amount
+      credits
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSolutionBacked = /* GraphQL */ `
+  subscription OnDeleteSolutionBacked {
+    onDeleteSolutionBacked {
+      id
+      solutionID
+      backerID
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      backer {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      money_amount
+      credits
       createdAt
       updatedAt
     }
@@ -103,6 +805,7 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateReport = /* GraphQL */ `
   subscription OnCreateReport($userID: String) {
     onCreateReport(userID: $userID) {
+      id
       userID
       user {
         id
@@ -114,10 +817,21 @@ export const onCreateReport = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      id
       date
       totalCarbon
       transportCarbon
@@ -136,6 +850,7 @@ export const onCreateReport = /* GraphQL */ `
 export const onUpdateReport = /* GraphQL */ `
   subscription OnUpdateReport($userID: String) {
     onUpdateReport(userID: $userID) {
+      id
       userID
       user {
         id
@@ -147,10 +862,21 @@ export const onUpdateReport = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      id
       date
       totalCarbon
       transportCarbon
@@ -169,6 +895,7 @@ export const onUpdateReport = /* GraphQL */ `
 export const onDeleteReport = /* GraphQL */ `
   subscription OnDeleteReport($userID: String) {
     onDeleteReport(userID: $userID) {
+      id
       userID
       user {
         id
@@ -180,10 +907,21 @@ export const onDeleteReport = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      id
       date
       totalCarbon
       transportCarbon
@@ -194,69 +932,6 @@ export const onDeleteReport = /* GraphQL */ `
       paperCarbon
       foodDrinkCarbon
       eventsCarbon
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateSolutions = /* GraphQL */ `
-  subscription OnCreateSolutions {
-    onCreateSolutions {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateSolutions = /* GraphQL */ `
-  subscription OnUpdateSolutions {
-    onUpdateSolutions {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteSolutions = /* GraphQL */ `
-  subscription OnDeleteSolutions {
-    onDeleteSolutions {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
       createdAt
       updatedAt
     }

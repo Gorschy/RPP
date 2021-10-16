@@ -71,7 +71,7 @@
 
 }
 
-Button.investButton, Button.cancelButton {
+Button.investButton, Button.cancelButton, Button.purchaseButton {
     width: 100px;
     height: 4vh;
     border-radius: 8px;

@@ -15,8 +15,8 @@ export const createUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          userID
           id
+          userID
           date
           totalCarbon
           transportCarbon
@@ -27,6 +27,42 @@ export const createUser = /* GraphQL */ `
           paperCarbon
           foodDrinkCarbon
           eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_created {
+        items {
+          id
+          creatorID
+          title
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_in {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      hasRegistered
+      carbon_units
+      offsetted_units
+      my_solutions {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
           createdAt
           updatedAt
         }
@@ -51,8 +87,8 @@ export const updateUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          userID
           id
+          userID
           date
           totalCarbon
           transportCarbon
@@ -63,6 +99,42 @@ export const updateUser = /* GraphQL */ `
           paperCarbon
           foodDrinkCarbon
           eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_created {
+        items {
+          id
+          creatorID
+          title
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_in {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      hasRegistered
+      carbon_units
+      offsetted_units
+      my_solutions {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
           createdAt
           updatedAt
         }
@@ -87,8 +159,8 @@ export const deleteUser = /* GraphQL */ `
       admin
       carbon_reports {
         items {
-          userID
           id
+          userID
           date
           totalCarbon
           transportCarbon
@@ -104,6 +176,672 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      projects_created {
+        items {
+          id
+          creatorID
+          title
+          content
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      projects_in {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      hasRegistered
+      carbon_units
+      offsetted_units
+      my_solutions {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createProject = /* GraphQL */ `
+  mutation CreateProject(
+    $input: CreateProjectInput!
+    $condition: ModelProjectConditionInput
+  ) {
+    createProject(input: $input, condition: $condition) {
+      id
+      creatorID
+      creator {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      editors {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      title
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateProject = /* GraphQL */ `
+  mutation UpdateProject(
+    $input: UpdateProjectInput!
+    $condition: ModelProjectConditionInput
+  ) {
+    updateProject(input: $input, condition: $condition) {
+      id
+      creatorID
+      creator {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      editors {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      title
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteProject = /* GraphQL */ `
+  mutation DeleteProject(
+    $input: DeleteProjectInput!
+    $condition: ModelProjectConditionInput
+  ) {
+    deleteProject(input: $input, condition: $condition) {
+      id
+      creatorID
+      creator {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      editors {
+        items {
+          id
+          projectID
+          editorID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      title
+      content
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createProjectEditor = /* GraphQL */ `
+  mutation CreateProjectEditor(
+    $input: CreateProjectEditorInput!
+    $condition: ModelProjectEditorConditionInput
+  ) {
+    createProjectEditor(input: $input, condition: $condition) {
+      id
+      projectID
+      editorID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        content
+        createdAt
+        updatedAt
+      }
+      editor {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateProjectEditor = /* GraphQL */ `
+  mutation UpdateProjectEditor(
+    $input: UpdateProjectEditorInput!
+    $condition: ModelProjectEditorConditionInput
+  ) {
+    updateProjectEditor(input: $input, condition: $condition) {
+      id
+      projectID
+      editorID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        content
+        createdAt
+        updatedAt
+      }
+      editor {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteProjectEditor = /* GraphQL */ `
+  mutation DeleteProjectEditor(
+    $input: DeleteProjectEditorInput!
+    $condition: ModelProjectEditorConditionInput
+  ) {
+    deleteProjectEditor(input: $input, condition: $condition) {
+      id
+      projectID
+      editorID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        content
+        createdAt
+        updatedAt
+      }
+      editor {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSolution = /* GraphQL */ `
+  mutation CreateSolution(
+    $input: CreateSolutionInput!
+    $condition: ModelSolutionConditionInput
+  ) {
+    createSolution(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSolution = /* GraphQL */ `
+  mutation UpdateSolution(
+    $input: UpdateSolutionInput!
+    $condition: ModelSolutionConditionInput
+  ) {
+    updateSolution(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSolution = /* GraphQL */ `
+  mutation DeleteSolution(
+    $input: DeleteSolutionInput!
+    $condition: ModelSolutionConditionInput
+  ) {
+    deleteSolution(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSolutionBacked = /* GraphQL */ `
+  mutation CreateSolutionBacked(
+    $input: CreateSolutionBackedInput!
+    $condition: ModelSolutionBackedConditionInput
+  ) {
+    createSolutionBacked(input: $input, condition: $condition) {
+      id
+      solutionID
+      backerID
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      backer {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      money_amount
+      credits
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSolutionBacked = /* GraphQL */ `
+  mutation UpdateSolutionBacked(
+    $input: UpdateSolutionBackedInput!
+    $condition: ModelSolutionBackedConditionInput
+  ) {
+    updateSolutionBacked(input: $input, condition: $condition) {
+      id
+      solutionID
+      backerID
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      backer {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      money_amount
+      credits
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSolutionBacked = /* GraphQL */ `
+  mutation DeleteSolutionBacked(
+    $input: DeleteSolutionBackedInput!
+    $condition: ModelSolutionBackedConditionInput
+  ) {
+    deleteSolutionBacked(input: $input, condition: $condition) {
+      id
+      solutionID
+      backerID
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      backer {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      money_amount
+      credits
       createdAt
       updatedAt
     }
@@ -115,6 +853,7 @@ export const createReport = /* GraphQL */ `
     $condition: ModelReportConditionInput
   ) {
     createReport(input: $input, condition: $condition) {
+      id
       userID
       user {
         id
@@ -126,10 +865,21 @@ export const createReport = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      id
       date
       totalCarbon
       transportCarbon
@@ -151,6 +901,7 @@ export const updateReport = /* GraphQL */ `
     $condition: ModelReportConditionInput
   ) {
     updateReport(input: $input, condition: $condition) {
+      id
       userID
       user {
         id
@@ -162,10 +913,21 @@ export const updateReport = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      id
       date
       totalCarbon
       transportCarbon
@@ -187,6 +949,7 @@ export const deleteReport = /* GraphQL */ `
     $condition: ModelReportConditionInput
   ) {
     deleteReport(input: $input, condition: $condition) {
+      id
       userID
       user {
         id
@@ -198,10 +961,21 @@ export const deleteReport = /* GraphQL */ `
         carbon_reports {
           nextToken
         }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
         createdAt
         updatedAt
       }
-      id
       date
       totalCarbon
       transportCarbon
@@ -212,78 +986,6 @@ export const deleteReport = /* GraphQL */ `
       paperCarbon
       foodDrinkCarbon
       eventsCarbon
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSolutions = /* GraphQL */ `
-  mutation CreateSolutions(
-    $input: CreateSolutionsInput!
-    $condition: ModelSolutionsConditionInput
-  ) {
-    createSolutions(input: $input, condition: $condition) {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateSolutions = /* GraphQL */ `
-  mutation UpdateSolutions(
-    $input: UpdateSolutionsInput!
-    $condition: ModelSolutionsConditionInput
-  ) {
-    updateSolutions(input: $input, condition: $condition) {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteSolutions = /* GraphQL */ `
-  mutation DeleteSolutions(
-    $input: DeleteSolutionsInput!
-    $condition: ModelSolutionsConditionInput
-  ) {
-    deleteSolutions(input: $input, condition: $condition) {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
       createdAt
       updatedAt
     }
