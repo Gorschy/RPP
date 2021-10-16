@@ -34,7 +34,7 @@ export const onCreateUser = /* GraphQL */ `
           id
           creatorID
           title
-          content
+          description
           createdAt
           updatedAt
         }
@@ -103,7 +103,7 @@ export const onUpdateUser = /* GraphQL */ `
           id
           creatorID
           title
-          content
+          description
           createdAt
           updatedAt
         }
@@ -172,7 +172,7 @@ export const onDeleteUser = /* GraphQL */ `
           id
           creatorID
           title
-          content
+          description
           createdAt
           updatedAt
         }
@@ -249,7 +249,26 @@ export const onCreateProject = /* GraphQL */ `
         nextToken
       }
       title
-      content
+      description
+      carbon_reports {
+        items {
+          id
+          projectID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -296,7 +315,26 @@ export const onUpdateProject = /* GraphQL */ `
         nextToken
       }
       title
-      content
+      description
+      carbon_reports {
+        items {
+          id
+          projectID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -343,7 +381,179 @@ export const onDeleteProject = /* GraphQL */ `
         nextToken
       }
       title
-      content
+      description
+      carbon_reports {
+        items {
+          id
+          projectID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateProjectReport = /* GraphQL */ `
+  subscription OnCreateProjectReport {
+    onCreateProjectReport {
+      id
+      projectID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        description
+        carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateProjectReport = /* GraphQL */ `
+  subscription OnUpdateProjectReport {
+    onUpdateProjectReport {
+      id
+      projectID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        description
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteProjectReport = /* GraphQL */ `
+  subscription OnDeleteProjectReport {
+    onDeleteProjectReport {
+      id
+      projectID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        description
+        carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
       createdAt
       updatedAt
     }
@@ -375,7 +585,10 @@ export const onCreateProjectEditor = /* GraphQL */ `
           nextToken
         }
         title
-        content
+        description
+        carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -435,7 +648,10 @@ export const onUpdateProjectEditor = /* GraphQL */ `
           nextToken
         }
         title
-        content
+        description
+        carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -495,7 +711,10 @@ export const onDeleteProjectEditor = /* GraphQL */ `
           nextToken
         }
         title
-        content
+        description
+        carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }

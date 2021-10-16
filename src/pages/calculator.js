@@ -20,6 +20,7 @@ import { Button as BootButton, Modal } from "react-bootstrap"; // For Modal
 import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
 import { createReport } from "../graphql/mutations"; // For creating Reports
 import { getID } from "../graphql/customQueries"; // For creating Reports
+import { getUser } from "../graphql/queries";
 
 /*
 Added in the database API all ye need to do is;
@@ -470,7 +471,7 @@ const Calculator = () => {
         // thus we send the data to DB
     
         const data = await Auth.currentUserPoolUser();
-        const userInfo = { ...data.attributes };
+        const userInfo = { ...data.attributes }; // userInfo.sub == user ID
       
         // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
         const report = {
@@ -486,6 +487,11 @@ const Calculator = () => {
           foodDrinkCarbon: tempFoodDrinkCarbon,
           eventsCarbon: tempEventsCarbon
         };
+
+        const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+        
+
+        //Set user carbon owning += carbontotal 
 
         console.log(report);
          await API.graphql(graphqlOperation(createReport, { input: report}));
