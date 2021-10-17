@@ -132,3 +132,14 @@ Button.investButton, Button.cancelButton, Button.purchaseButton {
     height: 500px;
 
 }
+
+
+h3.backerCountText {
+    font-family: var(--general_font_family);
+    font-size: var(--unit_title_font_size);
+    font-weight: var(--unit_title_font_weight);
+    color: var(--general_text_color);
+    text-align: right;
+    line-height: 0px;
+
+}

@@ -3,8 +3,8 @@ import { List, Row, Col, Modal, Button, Divider, Progress, Tooltip, InputNumber 
 import { Link } from 'react-router-dom';
 import { UserContext } from './UserContext';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import {listSolutions} from '../graphql/queries';
-import {createSolutionBacked, updateSolution, createSolution} from '../graphql/mutations';
+import {getUser, listSolutions} from '../graphql/queries';
+import {createSolutionBacked, updateSolution, updateUser} from '../graphql/mutations';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, LayerGroup} from 'react-leaflet';
 import '../style.css';
@@ -22,6 +22,7 @@ COMMENTS BY: Zachary O'Reilly-Fullerton
 const startingZoom = 2; 
 var waypointList = [];
 var pageUser={"given_name":""};
+var currentUnitsSelected = 1;
 const startVariables = [
     0, //Start Latitude
     0, //Start Longitude
@@ -58,8 +59,15 @@ var itemToPass = {
     "totalP"            : 100
     
 }
-const updateCost = (inputVal) => {mainClass.setState({currentUnitsSelected: inputVal})}
-const calcPercent = (CurrentPurchases, MaxPurchases) => { return Math.floor((CurrentPurchases / MaxPurchases)* 100); }
+const updateCost = (inputVal) => {
+    currentUnitsSelected = inputVal;
+    mainClass.doUpdate();
+}
+const calcPercent = (currentPurchases, maxPurchases) => { 
+    if (currentPurchases === 0 && maxPurchases === 0) {return 100;} else{
+        return Math.floor((currentPurchases / maxPurchases)* 100); 
+    }
+}
 const calcRemainingSpots = (val1, val2) => { return (val1-val2); }
 
 
@@ -123,14 +131,17 @@ function Waypoints (props) {
 function CreateList () {
     const {loggedIn, setLoggedIn} = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [showPurchaseButton, setPurchaseButton] = useState(true);
     const showModal = (passedItem) => {
         mainClass.setState({selectedSoln: passedItem});
         itemToPass = passedItem;
+        if (passedItem.totalP <= passedItem.filledP) {setPurchaseButton(false)}
+        else {setPurchaseButton(true);}
         setIsModalVisible(true);
     };
     const handleCancel = () => {setIsModalVisible(false);}
-    const getCost = () => { return (20* mainClass.state.currentUnitsSelected+ ".00"); }
-    const calcSuccess = () => {return itemToPass.filledP + mainClass.state.currentUnitsSelected}
+    const getCost = () => { return (20* currentUnitsSelected + ".00"); }
+    const calcSuccess = () => {return itemToPass.filledP + currentUnitsSelected}
     return(
         <div>
         
@@ -143,7 +154,7 @@ function CreateList () {
         renderItem={item => (
             <List.Item className="solListItem" onClick={() => showModal(item)}>
                 <List.Item.Meta
-                    title={<h2>{item.title}</h2>}
+                    title={<div><h2>{item.title}</h2><b><h3 className="backerCountText">Backed By: {item.backerCount} donors!</h3></b></div>}
                     description={<div className="standardText">{item.desc}</div>}
                 />     
                 <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{item.filledP} of {item.totalP} units purchased.</h3>}
@@ -151,7 +162,6 @@ function CreateList () {
                     <Progress   className="progressBar" showInfo={false} percent={calcPercent(item.filledP, item.totalP)} 
                                 strokeColor={{"0%" : "#4A7634","100%" : "#134A2C",}} />
                 </Tooltip>
-                
             </List.Item>
         )}
         ></List>
@@ -178,13 +188,22 @@ function CreateList () {
                         </h2></Col>
                     </Row>
                     <br/>
-                    <Row><Col span={14}>
+                    
+                    
+                    {showPurchaseButton ? (
+                        <React.Fragment>
+                        <h3>Total Cost: ${getCost()}</h3>
+                        <Row><Col span={14}>
                         <h3>How many carbon tonnes would you like to offset? </h3> </Col><Col span={10}>
                         <InputNumber id="purchaseNumberInput" min={1} max={calcRemainingSpots(itemToPass.totalP, itemToPass.filledP)} 
                             defaultValue = {1} onChange={updateCost} step={1}/>
-                    </Col></Row>
-                    <h3>Total Cost: ${getCost()}</h3>
-                    <Button className="purchaseButton" onClick={mainClass.makePurchase}>Purchase</Button>
+                        </Col></Row>
+                        <Button className="purchaseButton" onClick={mainClass.makePurchase}>Purchase</Button>
+                        </React.Fragment>
+                    ) : (
+                        <h3>This solution has been completely funded.</h3>
+                    )}
+                    
                     <br/><br/>
                     <h3 className="disclaimerText">DISCLAIMER: The project client has requested that we refrain from implementing a proper payment system. Pressing the "Purchase" button simulates a successful payment.</h3>
 
@@ -196,15 +215,15 @@ function CreateList () {
                     <Row>
                     <Col span={18}>
                         <h2>Hello, <b>{pageUser.given_name}</b>.<br/>
-                        You have <b>{mainClass.state.carbonScore}</b> tonnes of excess carbon 
+                        You have <b>{pageUser.carbon_units}</b> tonnes of excess carbon 
                         emission that hasn't been offset. <br/>
-                        You have offset a total of <b>{mainClass.state.carbonOffset}</b> tonnes
+                        You have offset a total of <b>{pageUser.offsetted_units}</b> tonnes
                         of carbon.<br/></h2>
                     </Col>
                     <Col span={6}>
-                        <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{mainClass.state.carbonOffset}/{mainClass.state.carbonOffset+mainClass.state.carbonScore} Carbon Tonnes offset.</h3>}
+                        <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{pageUser.offsetted_units}/{pageUser.offsetted_units+pageUser.carbon_units} Carbon Tonnes offset.</h3>}
                             color={"#ffffff"}>
-                        <Progress className="progressBar" percent={calcPercent(mainClass.state.carbonOffset, (mainClass.state.carbonOffset+mainClass.state.carbonScore))} 
+                        <Progress className="progressBar" percent={calcPercent(pageUser.offsetted_units, (pageUser.offsetted_units+pageUser.carbon_units))} 
                             strokeColor={{"0%" : "#4A7634","100%" : "#134A2C",}} type="circle"/>
                         </Tooltip>
                     </Col>
@@ -258,26 +277,6 @@ function populateMarkers(solutionsArray) {
     })
 };
 
-function makeSolnFromSelected() {
-    console.log("Making New Solution From The Following Solution:")
-    console.log(mainClass.state.selectedSoln);
-    return {
-        title: mainClass.state.selectedSoln.title,
-        desc: mainClass.state.selectedSoln.desc,
-        coordX: mainClass.state.selectedSoln.coords[1],
-        coordY: mainClass.state.selectedSoln.coordY[0],
-        filledP: mainClass.state.selectedSoln.filledP,
-        totalP: mainClass.state.selectedSoln.totalP,
-        type: mainClass.state.selectedSoln.type,
-        goal: mainClass.state.selectedSoln.goal,
-        funding: mainClass.state.selectedSoln.funding,
-        backerCount: parseInt(mainClass.state.selectedSoln.backerCount),
-        visibility: true,
-        priority: false
-    }
-
-}
-
 var mainClass;
 // Finally, the actual section that renders the page.
 class Solutions extends Component { 
@@ -290,17 +289,27 @@ class Solutions extends Component {
     state = {
         user: null,
         loaded: false,
-        currentUnitsSelected: 1,
         carbonScore: 20,
         carbonOffset: 140,
-        selectedSoln: null
+        selectedSoln: null,
+        purchaseButtonVisible: true
+    }
+
+    doUpdate = () => {
+        this.forceUpdate();
     }
 
     async componentDidMount () {
+        try {
         var currentUser = await Auth.currentAuthenticatedUser();
-        this.setState({user: currentUser})
-        pageUser = this.state.user.attributes
-        console.log(pageUser);
+        const userID = currentUser.attributes.sub;
+        const userForUpdate = await API.graphql(graphqlOperation(getUser,  {id: userID}))
+        const userFinal = userForUpdate.data.getUser;
+        if (userFinal.offsetted_units == null) {userFinal.offsetted_units = 0;}
+        if (userFinal.carbon_units == null) {userFinal.carbon_units = 0;}
+        this.setState({user: userFinal})
+        pageUser = userFinal;
+
         const getSols = await API.graphql(graphqlOperation(listSolutions));
         const returnArray = getSols.data.listSolutions.items;
         const sortArray = returnArray.sort((a, b) => {
@@ -311,50 +320,39 @@ class Solutions extends Component {
         
         populateMarkers(sortArray)
         this.setState({loaded: true})
+        } catch (e) { console.error(e); }
     }
 
     
 
     async makePurchase () {
-        console.log(mainClass.state.selectedSoln);
         try {
-            /*
-        //----- Create Solution [if user is login] -----
-        const object = await API.graphql(graphqlOperation(createSolution, { input: {
-            title: "String!",
-            desc: "String!",
-            coordX: "String!",
-            coordY: "String!",
-            filledP: "String!",
-            totalP: "String!",
-            type: "String!",
-            goal: "String!",
-            funding: "String!",
-            backerCount: 0,
-            visibility: true,
-            priority: false
+        mainClass.setState({carbonScore: mainClass.state.carbonScore - currentUnitsSelected})
+        mainClass.setState({carbonOffset: mainClass.state.carbonOffset + currentUnitsSelected})
+        const userObject = await API.graphql(graphqlOperation(updateUser, 
+            { input:{
+                id: mainClass.state.user.id, 
+                carbon_units: mainClass.state.user.carbon_units - currentUnitsSelected,
+                offsetted_units: mainClass.state.user.offsetted_units + currentUnitsSelected
         }}));
-        */
-        console.log(mainClass.state.user.attributes.sub)
-        mainClass.setState({carbonScore: mainClass.state.carbonScore - mainClass.state.currentUnitsSelected})
-        mainClass.setState({carbonOffset: mainClass.state.carbonOffset + mainClass.state.currentUnitsSelected})
         
-        // update soln
-        //await API.graphql(graphqlOperation(updateSolution, {input: {
-        //                                                            filter: mainClass.state.selectedSoln.id,
-        //                                                            set: 
-        //}, condition: }))
-
-            console.log(Auth.currentUserInfo())
-            //Auth.currentUserInfo().then((userInfo) => {
-                // This shouldn't happen as the purchase button is inaccessible to users who are not logged in.
-                //if(userInfo == null){console.error("User Is NULL?")}
-            //})
-            //User has just bought a solution
-            //const object = await API.graphql(graphqlOperation(createSolutionBacked, { input:{backer: mainClass.state.user.username, solutionID: object.data.createSolutionBacked.id }}));
-            }
-        catch (e) { 
-            console.error(e)}
+        const solnObject = await API.graphql(graphqlOperation(updateSolution, 
+            { input:{
+                id:mainClass.state.selectedSoln.id, 
+                backerCount: mainClass.state.selectedSoln.backerCount+1, 
+                filledP: mainClass.state.selectedSoln.filledP + currentUnitsSelected
+        }}));
+        //User has just bought a solution
+        const backerObject = await API.graphql(graphqlOperation(createSolutionBacked, 
+            { input:{
+                backerID: mainClass.state.user.id, 
+                solutionID: mainClass.state.selectedSoln.id,
+                money_amount: currentUnitsSelected*20,
+                credits: currentUnitsSelected
+        }}));
+        window.location.reload();
+        } catch (e) { console.error(e) }
+            
     
     }
     

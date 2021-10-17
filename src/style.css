@@ -94,8 +94,6 @@ h2 { /* This used to be headerText*/
     font-weight: var(--section_header_font_weight);
     color: var(--text_header_color);
     text-align: left;
-
-
 }
 
 h3 { 
