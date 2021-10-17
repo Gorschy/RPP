@@ -6,6 +6,7 @@ import './profile.css';
 import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
 import { listReports } from "../graphql/queries"; // For creating Reports
 import CarbonBreakdown from './carbonBreakdown.js';// Child component
+import { getUser } from "../graphql/queries";
 
 
 
@@ -61,10 +62,13 @@ const Profile = () => {
     
         const data = await Auth.currentUserPoolUser();
         const userInfo = { ...data.attributes };
-      
 
         const getData = await API.graphql(graphqlOperation(listReports, {filter: {userID: {eq: userInfo.sub}}})); 
         console.log(getData.data.listReports.items);
+
+
+        const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+        console.log(userData);
 
         setAllReports(getData.data.listReports.items);
         setAnalyticsData(getData.data.listReports.items);

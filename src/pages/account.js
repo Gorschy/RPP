@@ -4,7 +4,12 @@ import { UserContext } from './UserContext';
 import { Auth } from 'aws-amplify';
 import "./account.css";
 import "../style.css";
-import { Redirect } from 'react-router'
+import { Redirect } from 'react-router';
+
+
+import Amplify, { Analytics, Storage } from "aws-amplify";
+Storage.configure({ track: true, level: "protected" });
+
 const Account = () => { 
     //const { Option } = Select;
     const {loggedIn, setLoggedIn} = useContext(UserContext);
@@ -18,10 +23,56 @@ const Account = () => {
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
 
+    const [image, setImage] = useState();
+    let fileInput = React.createRef();
+
+    const onOpenFileDialog = () => {
+      fileInput.current.click();
+    };
+  
+    const onProcessFile = e => {
+      e.preventDefault();
+      let reader = new FileReader();
+      let file = e.target.files[0];
+      try {
+        reader.readAsDataURL(file);
+      } catch (err) {
+        console.log(err);
+      }
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      //Need to change profilePicture.png into userSub Id
+      Storage.put("profilePicture.png", file, {
+        contentType: "image/png"
+      })
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
+    };
+    
+      const onPageRendered = async () => {
+        getProfilePicture();
+      };
+    
+      const getProfilePicture = () => {
+        //Need to change profilePicture.png into userSub Id
+        Storage.get("profilePicture.png")
+          .then(url => {
+            var myRequest = new Request(url);
+            fetch(myRequest).then(function(response) {
+              if (response.status === 200) {
+                setImage(url);
+              }
+            });
+          })
+          .catch(err => console.log(err));
+      };
+
     const [errors, setErrors] = useState('');
 
     useEffect(() => {
         displayUserDetails();
+        onPageRendered();
     }, []);
 
     const displayUserDetails = async () => {
@@ -86,7 +137,6 @@ const Account = () => {
     { loggedIn ? (
         <Row justify="space-around" >
         <Card class='CardClass' title={<h1>Account Information</h1>} style={{width:'40%'}}>
-                
                 <Form
                 name="accountForm"
                 layout="vertical"
@@ -110,6 +160,17 @@ const Account = () => {
                                 onChange={e => setGivenName(e.target.value)}
                             />
                         </Form.Item>
+
+
+                <a href="#">
+                    <input
+                        type="file"
+                        onChange={onProcessFile}
+                        ref={fileInput}
+                    />
+                </a>
+                <img src={image} onClick={onOpenFileDialog} />
+
                     </Col>
                     <Col span={12}>
                         <Form.Item

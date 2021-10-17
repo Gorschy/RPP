@@ -72,8 +72,7 @@ const CarbonBreakdown = (report) => {
         ], 
         
       };
-
-
+      
       const pie = {
         labels: ['Transport Emissions', 'Electricity Emissions', 'Gas Emissions', 'Waste Emissions', 'Water Emissions', 'Paper Emissions', 'Food & Drink Emissions', 'Events Emissions'],
         datasets: [
@@ -107,7 +106,6 @@ const CarbonBreakdown = (report) => {
         // },
         maintainAspectRatio: false
       }
-
 
     return ( 
         <div>
@@ -148,7 +146,6 @@ const CarbonBreakdown = (report) => {
                   <span className="errorLabel">
                     {JSON.stringify(report.eventsCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
                 </Card>
             </div>
             <div className="column right">
