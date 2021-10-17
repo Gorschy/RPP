@@ -1,5 +1,5 @@
 #map {
-    height:700px;
+    height:90vh;
     width:1250px;
     background-color: var(--background_color);
     align-items: left;
@@ -10,6 +10,8 @@
 #solutionList {
     background-color: var(--foreground_color);
     width:max(750px, 100vw - 1310px);
+    height:90vh;
+    overflow: auto;
     margin-right: 10px;
     margin-left: 10px;
     padding:var(--card_standard_padding);
@@ -55,10 +57,8 @@
     font-weight: var(--unit_title_font_weight);
     color: var(--general_text_color);
     text-align: center;
-    line-height: 0px;
+    line-height: 20px;
     padding-bottom: 0px;
-    white-space: normal;
-    
 }
 
 .markerDescription {

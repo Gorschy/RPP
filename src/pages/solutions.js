@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { UserContext } from './UserContext';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import {listSolutions} from '../graphql/queries';
-import {createSolutionBacked, updateSolution} from '../graphql/mutations';
+import {createSolutionBacked, updateSolution, createSolution} from '../graphql/mutations';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, LayerGroup} from 'react-leaflet';
 import '../style.css';
@@ -124,6 +124,7 @@ function CreateList () {
     const {loggedIn, setLoggedIn} = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const showModal = (passedItem) => {
+        mainClass.setState({selectedSoln: passedItem});
         itemToPass = passedItem;
         setIsModalVisible(true);
     };
@@ -239,7 +240,10 @@ function populateMarkers(solutionsArray) {
             "filledP"       : parseFloat(solutionItem.filledP),
             "totalP"        : parseFloat(solutionItem.totalP),
             "type"          : solutionItem.type,
-            "backerCount"   : solutionItem.backerCount
+            "backerCount"   : solutionItem.backerCount,
+            "goal"          : solutionItem.goal,
+            "funding"       : solutionItem.funding
+
         })
     });
 
@@ -252,6 +256,26 @@ function populateMarkers(solutionsArray) {
         else {console.log(waypoint.title + " is of type " + waypoint.type);}
     })
 };
+
+function makeSolnFromSelected() {
+    console.log("Making New Solution From The Following Solution:")
+    console.log(mainClass.state.selectedSoln);
+    return {
+        title: mainClass.state.selectedSoln.title,
+        desc: mainClass.state.selectedSoln.desc,
+        coordX: mainClass.state.selectedSoln.coords[1],
+        coordY: mainClass.state.selectedSoln.coordY[0],
+        filledP: mainClass.state.selectedSoln.filledP,
+        totalP: mainClass.state.selectedSoln.totalP,
+        type: mainClass.state.selectedSoln.type,
+        goal: mainClass.state.selectedSoln.goal,
+        funding: mainClass.state.selectedSoln.funding,
+        backerCount: parseInt(mainClass.state.selectedSoln.backerCount),
+        visibility: true,
+        priority: false
+    }
+
+}
 
 var mainClass;
 // Finally, the actual section that renders the page.
@@ -267,7 +291,8 @@ class Solutions extends Component {
         loaded: false,
         currentUnitsSelected: 1,
         carbonScore: 20,
-        carbonOffset: 140
+        carbonOffset: 140,
+        selectedSoln: null
     }
 
     async componentDidMount () {
@@ -282,31 +307,50 @@ class Solutions extends Component {
             {return (a.totalP - a.filledP) - (b.totalP - b.filledP)}
             return a.priority < b.priority ? 1 : -1 ;
         });
-
-
+        
         populateMarkers(sortArray)
         this.setState({loaded: true})
     }
 
+    
+
     async makePurchase () {
+        console.log(mainClass.state.selectedSoln);
+        try {
+            /*
+        //----- Create Solution [if user is login] -----
+        const object = await API.graphql(graphqlOperation(createSolution, { input: {
+            title: "String!",
+            desc: "String!",
+            coordX: "String!",
+            coordY: "String!",
+            filledP: "String!",
+            totalP: "String!",
+            type: "String!",
+            goal: "String!",
+            funding: "String!",
+            backerCount: 0,
+            visibility: true,
+            priority: false
+        }}));
+        */
         console.log(mainClass.state.user.attributes.sub)
         mainClass.setState({carbonScore: mainClass.state.carbonScore - mainClass.state.currentUnitsSelected})
         mainClass.setState({carbonOffset: mainClass.state.carbonOffset + mainClass.state.currentUnitsSelected})
-        try {
+        
             // update soln
-            await API.graphql(graphqlOperation(updateSolution, {input: {filledP: 10 + mainClass.state.currentUnitsSelected}}))
+            //await API.graphql(graphqlOperation(updateSolution, {input: {filledP: 10 + mainClass.state.currentUnitsSelected}}))
 
-
-            Auth.currentUserInfo().then((userInfo) => {
+            console.log(Auth.currentUserInfo())
+            //Auth.currentUserInfo().then((userInfo) => {
                 // This shouldn't happen as the purchase button is inaccessible to users who are not logged in.
-                if(userInfo == null){console.error("User Is NULL?")}
-            })
+                //if(userInfo == null){console.error("User Is NULL?")}
+            //})
             //User has just bought a solution
-            const object = await API.graphql(graphqlOperation(createSolutionBacked, { input:{backer: mainClass.state.user.username, solutionID: object.data.createSolutionBacked.id }}));
+            //const object = await API.graphql(graphqlOperation(createSolutionBacked, { input:{backer: mainClass.state.user.username, solutionID: object.data.createSolutionBacked.id }}));
             }
-        catch { 
-            console.log(mainClass.state.user.username)
-            console.error("User Doesn't Exist")}
+        catch (e) { 
+            console.error(e)}
     
     }
     
