@@ -21,7 +21,8 @@
 .solListItem {
     background-color: var(--foreground_color);
     animation: lightenOffHover 0.1s linear;
-    
+    padding-left: 10px;
+    padding-right: 10px;
 
 }
 
