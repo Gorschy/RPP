@@ -24,6 +24,8 @@ type User @model
 
 
 type Project @model @key(name: "byCreator", fields:["creatorID"])
+@auth(rules: [
+{ allow: private, operations: [read, create, update, delete]}])
 {
   id: ID!
   creatorID: ID!
@@ -31,7 +33,6 @@ type Project @model @key(name: "byCreator", fields:["creatorID"])
   editors: [ProjectEditor] @connection(keyName: "byProject", fields: ["id"])
   title: String!
   description: String
-  carbon_reports: [ProjectReport] @connection(keyName: "byProject", fields: ["id"])
 }
 
 
@@ -54,6 +55,8 @@ type ProjectReport @model @key(name: "byProject", fields: ["projectID"])
 
 # Can only query ProjectEditor through Project.editors and User.projects
 type ProjectEditor
+  @auth(rules: [
+{ allow: private, operations: [read, create, update, delete]}])
   @model(queries: null)
   @key(name: "byProject", fields: ["projectID", "editorID"])
   @key(name: "byEditor", fields: ["editorID", "projectID"])     
@@ -62,7 +65,9 @@ type ProjectEditor
   projectID: ID!
   editorID: ID!
   project: Project! @connection(fields: ["projectID"])
-  editor: User! @connection(fields: ["editorID"])
+  editor: User! @connection(fields: ["editorID"])  
+  carbon_reports: [ProjectReport] @connection(keyName: "byProject", fields: ["projectID"])
+
 }
 
 type Solution @model 
