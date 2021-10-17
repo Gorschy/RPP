@@ -34,7 +34,7 @@ export const getUser = /* GraphQL */ `
           id
           creatorID
           title
-          content
+          description
           createdAt
           updatedAt
         }
@@ -147,7 +147,7 @@ export const getProject = /* GraphQL */ `
         nextToken
       }
       title
-      content
+      description
       createdAt
       updatedAt
     }
@@ -180,7 +180,86 @@ export const listProjects = /* GraphQL */ `
           nextToken
         }
         title
-        content
+        description
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getProjectReport = /* GraphQL */ `
+  query GetProjectReport($id: ID!) {
+    getProjectReport(id: $id) {
+      id
+      projectID
+      project {
+        id
+        creatorID
+        creator {
+          id
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
+          createdAt
+          updatedAt
+        }
+        editors {
+          nextToken
+        }
+        title
+        description
+        createdAt
+        updatedAt
+      }
+      date
+      totalCarbon
+      transportCarbon
+      electricityCarbon
+      gasCarbon
+      wasteCarbon
+      waterCarbon
+      paperCarbon
+      foodDrinkCarbon
+      eventsCarbon
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listProjectReports = /* GraphQL */ `
+  query ListProjectReports(
+    $filter: ModelProjectReportFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listProjectReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        projectID
+        project {
+          id
+          creatorID
+          title
+          description
+          createdAt
+          updatedAt
+        }
+        date
+        totalCarbon
+        transportCarbon
+        electricityCarbon
+        gasCarbon
+        wasteCarbon
+        waterCarbon
+        paperCarbon
+        foodDrinkCarbon
+        eventsCarbon
         createdAt
         updatedAt
       }
