@@ -7,7 +7,7 @@
     margin-right: 25px;
     width: clamp(600px, 50vw, 1000px);
     
-
+    overflow: auto;
     height: 950px;
     padding: var(--card_standard_padding);
     background-color: var(--foreground_color);

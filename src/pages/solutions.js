@@ -10,7 +10,7 @@ import { MapContainer, TileLayer, Marker, Popup, LayersControl, LayerGroup} from
 import '../style.css';
 import './solutions.css';
 import 'leaflet/dist/leaflet.css';
-import treeIcon from '../assets/treeIcon50x50.png';
+//import treeIcon from '../assets/treeIcon50x50.png';
 import leafRed from '../assets/leaf-red.png';
 import leafOrange from '../assets/leaf-orange.png';
 import leafGreen from '../assets/leaf-green.png';
@@ -27,12 +27,14 @@ const startVariables = [
     0, //Start Latitude
     0, //Start Longitude
 ];
+/*
 const waypointIcon = L.icon({ 
     iconUrl: treeIcon,
     iconSize: [50,50],
     iconAnchor: [25.5, 50],
     popupAnchor: [0, -50]
 })
+*/
 var greenIcon = L.icon({
     iconUrl: leafGreen,
     iconSize:     [38, 95], // size of the icon
@@ -309,6 +311,7 @@ class Solutions extends Component {
         if (userFinal.carbon_units == null) {userFinal.carbon_units = 0;}
         this.setState({user: userFinal})
         pageUser = userFinal;
+        
 
         const getSols = await API.graphql(graphqlOperation(listSolutions));
         const returnArray = getSols.data.listSolutions.items;
@@ -336,6 +339,7 @@ class Solutions extends Component {
                 offsetted_units: mainClass.state.user.offsetted_units + currentUnitsSelected
         }}));
         
+        
         const solnObject = await API.graphql(graphqlOperation(updateSolution, 
             { input:{
                 id:mainClass.state.selectedSoln.id, 
@@ -350,6 +354,7 @@ class Solutions extends Component {
                 money_amount: currentUnitsSelected*20,
                 credits: currentUnitsSelected
         }}));
+        console.log("User " + userObject + " has updated solution " + solnObject + " and has created " + backerObject);
         window.location.reload();
         } catch (e) { console.error(e) }
             
