@@ -234,6 +234,7 @@ function populateMarkers(solutionsArray) {
     solutionsArray.forEach(solutionItem => {
         waypointList.push(
         {
+            "id"            : solutionItem.id,
             "title"         : solutionItem.title,
             "desc"          : solutionItem.desc,
             "coords"        : [parseFloat(solutionItem.coordY), parseFloat(solutionItem.coordX)],
@@ -338,8 +339,11 @@ class Solutions extends Component {
         mainClass.setState({carbonScore: mainClass.state.carbonScore - mainClass.state.currentUnitsSelected})
         mainClass.setState({carbonOffset: mainClass.state.carbonOffset + mainClass.state.currentUnitsSelected})
         
-            // update soln
-            //await API.graphql(graphqlOperation(updateSolution, {input: {filledP: 10 + mainClass.state.currentUnitsSelected}}))
+        // update soln
+        //await API.graphql(graphqlOperation(updateSolution, {input: {
+        //                                                            filter: mainClass.state.selectedSoln.id,
+        //                                                            set: 
+        //}, condition: }))
 
             console.log(Auth.currentUserInfo())
             //Auth.currentUserInfo().then((userInfo) => {
