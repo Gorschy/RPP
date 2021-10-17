@@ -50,6 +50,7 @@ const SignIn = ({ onSignin }) => {
                     id="username"
                     label="Username" 
                     value={username}
+                    maxLength="40"
                     onChange={e => setUsername(e.target.value)}
                 />
                 
@@ -61,6 +62,7 @@ const SignIn = ({ onSignin }) => {
                     id="password"
                     label="Password" 
                     value={password}
+                    maxLength="30"
                     onChange={e => setPassword(e.target.value)}
                 />
 
@@ -68,7 +70,7 @@ const SignIn = ({ onSignin }) => {
                 <a className="forgotPassword" onClick={forgotPassword}>Forgot Password? </a> 
                 <span className="errorLabel">{errors}</span>
                 <br/><br/>
-                <Button className="loginButton" onClick={signIn} type="primary">Log In</Button>
+                <Button className="loginButton" onClick={signIn} type="primary" > Log In </Button>
             </Card> 
         </div>
     );

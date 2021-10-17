@@ -662,6 +662,7 @@ const Calculator = () => {
                       id="vehicleTravelAdv"
                       name="description"
                       onChange={handleEmission}
+                      maxLength="60"
                       placeholder="Description (eg. Landcruiser)"
                     />
 
