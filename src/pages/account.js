@@ -5,14 +5,7 @@ import { Auth,API, graphqlOperation  } from 'aws-amplify';
 import "./account.css";
 import "../style.css";
 import { Redirect } from 'react-router';
-<<<<<<< HEAD
 import {updateUser} from '../graphql/mutations';
-=======
-
-
-import Amplify, { Analytics, Storage } from "aws-amplify";
-Storage.configure({ track: true, level: "protected" });
->>>>>>> 6d15ce0c8c347b927895d1cc323c0a2d05ec19de
 
 const Account = () => { 
     //const { Option } = Select;
