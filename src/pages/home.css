@@ -7,24 +7,12 @@
     margin-right: 25px;
     width: clamp(600px, 50vw, 1000px);
     
-
-    height: 550px;
+    overflow: auto;
+    height: 950px;
     padding: var(--card_standard_padding);
     background-color: var(--foreground_color);
 }
 
-.homeFAQCard {
-    margin-left: 25px;
-    margin-right: 25px;
-    width: clamp(650px, 75%, 1000px);
-    height: 400px;
-    font-size: 0.75vw;
-
-    justify-items: right;
-    padding: var(--card_standard_padding);
-    background-color: var(--foreground_color);
-    margin-bottom: 25px;
-}
 
 /*  Image Stylings   */
 @media screen and (max-width: 1400px) {
@@ -74,11 +62,11 @@
 
 #img2Wrapper {
     width: 750px;
-    height: 400px;
-    overflow: hidden;
-    margin-left: 25px;
-    margin-right: 25px;
+    height: 800px;
+    margin-top: 15px;
     margin-bottom: 25px;
+    margin-right: 25px;
+    overflow: hidden;
 }
 
 /* Text Control */

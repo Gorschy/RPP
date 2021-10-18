@@ -148,25 +148,6 @@ export const getProject = /* GraphQL */ `
       }
       title
       description
-      carbon_reports {
-        items {
-          id
-          projectID
-          date
-          totalCarbon
-          transportCarbon
-          electricityCarbon
-          gasCarbon
-          wasteCarbon
-          waterCarbon
-          paperCarbon
-          foodDrinkCarbon
-          eventsCarbon
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -200,9 +181,6 @@ export const listProjects = /* GraphQL */ `
         }
         title
         description
-        carbon_reports {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -236,9 +214,6 @@ export const getProjectReport = /* GraphQL */ `
         }
         title
         description
-        carbon_reports {
-          nextToken
-        }
         createdAt
         updatedAt
       }

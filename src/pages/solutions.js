@@ -1,15 +1,19 @@
-import React, { useMemo, useState, useContext, Component } from 'react';
+import React, { useState, useContext, Component } from 'react';
 import { List, Row, Col, Modal, Button, Divider, Progress, Tooltip, InputNumber } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserContext } from './UserContext';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
-import {listSolutions} from '../graphql/queries';
+import {getUser, listSolutions} from '../graphql/queries';
+import {createSolutionBacked, updateSolution, updateUser} from '../graphql/mutations';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, LayerGroup} from 'react-leaflet';
 import '../style.css';
 import './solutions.css';
 import 'leaflet/dist/leaflet.css';
-import treeIcon from '../assets/treeIcon50x50.png';
+//import treeIcon from '../assets/treeIcon50x50.png';
+import leafRed from '../assets/leaf-red.png';
+import leafOrange from '../assets/leaf-orange.png';
+import leafGreen from '../assets/leaf-green.png';
 
 /* ========================================
 COMMENTS BY: Zachary O'Reilly-Fullerton
@@ -17,57 +21,129 @@ COMMENTS BY: Zachary O'Reilly-Fullerton
 
 const startingZoom = 2; 
 var waypointList = [];
-var usersName;
+var pageUser={"given_name":""};
+var currentUnitsSelected = 1;
 const startVariables = [
     0, //Start Latitude
     0, //Start Longitude
 ];
+/*
 const waypointIcon = L.icon({ 
     iconUrl: treeIcon,
     iconSize: [50,50],
     iconAnchor: [25.5, 50],
     popupAnchor: [0, -50]
 })
+*/
+var greenIcon = L.icon({
+    iconUrl: leafGreen,
+    iconSize:     [38, 95], // size of the icon
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+var orangeIcon = L.icon({
+    iconUrl: leafOrange,
+    iconSize:     [38, 95], // size of the icon
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+var redIcon = L.icon({
+    iconUrl: leafRed,
+    iconSize:     [38, 95], // size of the icon
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
 var itemToPass = {
     "title"             : "",
     "desc"              : "",
     "Position"          : [0, 0],
-    "MaxPurchases"      : 100,
-    "CurrentPurchases"  : 0
+    "filledP"           : 0,
+    "totalP"            : 100
+    
 }
-const calcPercent = (CurrentPurchases, MaxPurchases) => { return Math.floor((CurrentPurchases / MaxPurchases)* 100); }
+const updateCost = (inputVal) => {
+    currentUnitsSelected = inputVal;
+    mainClass.doUpdate();
+}
+const calcPercent = (currentPurchases, maxPurchases) => { 
+    if (currentPurchases === 0 && maxPurchases === 0) {return 100;} else{
+        return Math.floor((currentPurchases / maxPurchases)* 100); 
+    }
+}
 const calcRemainingSpots = (val1, val2) => { return (val1-val2); }
-const updateCost = (inputVal) => {document.getElementById("costDiv").innerHTML = 20* inputVal + ".00";}
-var firstName;
-var carbonScore = 20;
-var carbonOffset = 140;
 
-function Waypoints () {
-    console.log(waypointList);
-    return (
-        waypointList.map((LOI) => (
-            <React.Fragment key={LOI.title}>
-            <Marker position={LOI.coords} icon={waypointIcon}>
-                <Popup>
-                    <div className="markerHeader"><b>{LOI.title}</b></div> 
-                    <br/>
-                    <div className="markerDescription">{LOI.desc}</div>
-                </Popup>
-            </Marker>
-            </React.Fragment>
-        ))
-    );
+
+
+function Waypoints (props) {
+    if (props.arrayToShow === 'trees') {
+        return (
+            // For clarification, LOI === Location of Interest.
+            treesWaypointList.map((LOI) => (
+                <React.Fragment key={LOI.title}>
+                <Marker position={LOI.coords} icon={greenIcon}>
+                    <Popup>
+                        <div className="markerHeader"><b>{LOI.title}</b></div> 
+                        <br/>
+                        <div className="markerDescription">{LOI.desc}</div>
+                    </Popup>
+                </Marker>
+                </React.Fragment>
+            ))
+        );
+    }
+    else if (props.arrayToShow === "land") {
+        return (
+            // For clarification, LOI === Location of Interest.
+            landWaypointList.map((LOI) => (
+                <React.Fragment key={LOI.title}>
+                <Marker position={LOI.coords} icon={orangeIcon}>
+                    <Popup>
+                        <div className="markerHeader"><b>{LOI.title}</b></div> 
+                        <br/>
+                        <div className="markerDescription">{LOI.desc}</div>
+                    </Popup>
+                </Marker>
+                </React.Fragment>
+            ))
+        );
+    }
+    else if (props.arrayToShow === "animal") {
+        return (
+            // For clarification, LOI === Location of Interest.
+            animalWaypointList.map((LOI) => (
+                <React.Fragment key={LOI.title}>
+                <Marker position={LOI.coords} icon={redIcon}>
+                    <Popup>
+                        <div className="markerHeader"><b>{LOI.title}</b></div> 
+                        <br/>
+                        <div className="markerDescription">{LOI.desc}</div>
+                    </Popup>
+                </Marker>
+                </React.Fragment>
+            ))
+        );
+    }
+    else {return(null);}
+
+    
 }
+
+//setLoggedIn(true);
 
 function CreateList () {
     const {loggedIn, setLoggedIn} = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [showPurchaseButton, setPurchaseButton] = useState(true);
     const showModal = (passedItem) => {
+        mainClass.setState({selectedSoln: passedItem});
         itemToPass = passedItem;
+        if (passedItem.totalP <= passedItem.filledP) {setPurchaseButton(false)}
+        else {setPurchaseButton(true);}
         setIsModalVisible(true);
     };
     const handleCancel = () => {setIsModalVisible(false);}
-
+    const getCost = () => { return (20* currentUnitsSelected + ".00"); }
+    const calcSuccess = () => {return itemToPass.filledP + currentUnitsSelected}
     return(
         <div>
         
@@ -80,7 +156,7 @@ function CreateList () {
         renderItem={item => (
             <List.Item className="solListItem" onClick={() => showModal(item)}>
                 <List.Item.Meta
-                    title={<h2>{item.title}</h2>}
+                    title={<div><h2>{item.title}</h2><b><h3 className="backerCountText">Backed By: {item.backerCount} donors!</h3></b></div>}
                     description={<div className="standardText">{item.desc}</div>}
                 />     
                 <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{item.filledP} of {item.totalP} units purchased.</h3>}
@@ -88,7 +164,6 @@ function CreateList () {
                     <Progress   className="progressBar" showInfo={false} percent={calcPercent(item.filledP, item.totalP)} 
                                 strokeColor={{"0%" : "#4A7634","100%" : "#134A2C",}} />
                 </Tooltip>
-                
             </List.Item>
         )}
         ></List>
@@ -105,8 +180,8 @@ function CreateList () {
                     <h3><b>{itemToPass.desc}</b></h3>
                     <br/>
                     <Row>
-                        <Col span={6}><Progress type="circle" strokeColor={{"0%" : "#4A7634","100%" : "#134A2C",}} 
-                            percent={calcPercent(itemToPass.filledP, itemToPass.totalP)}/></Col>
+                        <Col span={6}><Progress type="circle" strokeColor="#4A7634" success={{percent: calcPercent(itemToPass.filledP, itemToPass.totalP), strokeColor:"#134A2C"}}
+                            percent={calcSuccess()}/></Col>
                         <Col span={18}><h2>
                             {itemToPass.filledP} spaces have been filled out of the needed {itemToPass.totalP}.<br/>
                             {calcRemainingSpots(itemToPass.totalP, itemToPass.filledP)} spaces remain. <br/>
@@ -115,12 +190,24 @@ function CreateList () {
                         </h2></Col>
                     </Row>
                     <br/>
-                    <Row><Col span={12}>
-                        <h3>How many units would you like to purchase? </h3> </Col><Col span={12}>
+                    
+                    
+                    {showPurchaseButton ? (
+                        <React.Fragment>
+                        <h3>Total Cost: ${getCost()}</h3>
+                        <Row><Col span={14}>
+                        <h3>How many carbon tonnes would you like to offset? </h3> </Col><Col span={10}>
                         <InputNumber id="purchaseNumberInput" min={1} max={calcRemainingSpots(itemToPass.totalP, itemToPass.filledP)} 
                             defaultValue = {1} onChange={updateCost} step={1}/>
-                    </Col></Row>
-                    <h3>Total Cost: $<span id="costDiv">20.00</span></h3>
+                        </Col></Row>
+                        <Button className="purchaseButton" onClick={mainClass.makePurchase}>Purchase</Button>
+                        </React.Fragment>
+                    ) : (
+                        <h3>This solution has been completely funded.</h3>
+                    )}
+                    
+                    <br/><br/>
+                    <h3 className="disclaimerText">DISCLAIMER: The project client has requested that we refrain from implementing a proper payment system. Pressing the "Purchase" button simulates a successful payment.</h3>
 
                     </Col>
                     <Divider type="vertical" id="solutionModalVertDivider"/>
@@ -129,16 +216,16 @@ function CreateList () {
                     
                     <Row>
                     <Col span={18}>
-                        <h2>Hello, <b>{usersName}</b>.<br/>
-                        You have <b>{carbonScore}</b> tonnes of excess carbon 
+                        <h2>Hello, <b>{pageUser.given_name}</b>.<br/>
+                        You have <b>{pageUser.carbon_units}</b> tonnes of excess carbon 
                         emission that hasn't been offset. <br/>
-                        You have offset a total of <b>{carbonOffset}</b> tonnes
+                        You have offset a total of <b>{pageUser.offsetted_units}</b> tonnes
                         of carbon.<br/></h2>
                     </Col>
                     <Col span={6}>
-                        <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{carbonOffset}/{carbonOffset+carbonScore} Carbon Tonnes offset.</h3>}
+                        <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{pageUser.offsetted_units}/{pageUser.offsetted_units+pageUser.carbon_units} Carbon Tonnes offset.</h3>}
                             color={"#ffffff"}>
-                        <Progress className="progressBar" percent={calcPercent(carbonOffset, (carbonOffset+carbonScore))} 
+                        <Progress className="progressBar" percent={calcPercent(pageUser.offsetted_units, (pageUser.offsetted_units+pageUser.carbon_units))} 
                             strokeColor={{"0%" : "#4A7634","100%" : "#134A2C",}} type="circle"/>
                         </Tooltip>
                     </Col>
@@ -161,61 +248,118 @@ function CreateList () {
     );
 
 }
-
+var treesWaypointList = [];
+var landWaypointList = [];
+var animalWaypointList = [];
 function populateMarkers(solutionsArray) {
     solutionsArray.forEach(solutionItem => {
         waypointList.push(
         {
+            "id"            : solutionItem.id,
             "title"         : solutionItem.title,
             "desc"          : solutionItem.desc,
-            "coords"        : [parseFloat(solutionItem.coordX), parseFloat(solutionItem.coordY)],
+            "coords"        : [parseFloat(solutionItem.coordY), parseFloat(solutionItem.coordX)],
             "filledP"       : parseFloat(solutionItem.filledP),
             "totalP"        : parseFloat(solutionItem.totalP),
             "type"          : solutionItem.type,
-            //"funding"       :
-            "backerCount"   : solutionItem.backerCount
-        }
-    ) 
+            "backerCount"   : solutionItem.backerCount,
+            "goal"          : solutionItem.goal,
+            "funding"       : solutionItem.funding
+
+        })
     });
+
+    waypointList.forEach(waypoint => {
+        // Now we have a full list, lets also create sub lists for sorting based on type. There is a degree of user ease
+        // in that we are kind to singular and plural versions of the type where applicable.
+        if (waypoint.type === "trees" || waypoint.type === "tree"){ treesWaypointList.push(waypoint); }
+        else if (waypoint.type === "land"){ landWaypointList.push(waypoint); }
+        else if (waypoint.type === "animal" || waypoint.type === "animals"){ animalWaypointList.push(waypoint); } 
+        else {console.log(waypoint.title + " is of type " + waypoint.type);}
+    })
 };
 
+var mainClass;
 // Finally, the actual section that renders the page.
 class Solutions extends Component { 
     constructor(props) {
         super(props)
         this.deleteInput = null;
+        mainClass = this;
     }
 
     state = {
         user: null,
-        loaded: false
+        loaded: false,
+        carbonScore: 20,
+        carbonOffset: 140,
+        selectedSoln: null,
+        purchaseButtonVisible: true
+    }
+
+    doUpdate = () => {
+        this.forceUpdate();
     }
 
     async componentDidMount () {
+        try {
         var currentUser = await Auth.currentAuthenticatedUser();
-        const { attributes } = currentUser;
-        this.setState({user: currentUser})
-        usersName = this.state.user.attributes.given_name
+        const userID = currentUser.attributes.sub;
+        const userForUpdate = await API.graphql(graphqlOperation(getUser,  {id: userID}))
+        const userFinal = userForUpdate.data.getUser;
+        if (userFinal.offsetted_units == null) {userFinal.offsetted_units = 0;}
+        if (userFinal.carbon_units == null) {userFinal.carbon_units = 0;}
+        this.setState({user: userFinal})
+        pageUser = userFinal;
+        
 
         const getSols = await API.graphql(graphqlOperation(listSolutions));
         const returnArray = getSols.data.listSolutions.items;
-
-        console.log("RA: ");
-        console.log(returnArray);
-        console.log("SA: ");
         const sortArray = returnArray.sort((a, b) => {
-            if (a.priority === b.priority) {return (a.totalP - a.filledP) - (b.totalP - b.filledP)}
+            if (a.priority === b.priority) 
+            {return (a.totalP - a.filledP) - (b.totalP - b.filledP)}
             return a.priority < b.priority ? 1 : -1 ;
-
-
         });
-        console.log(sortArray);
-
-
-        populateMarkers(returnArray)
+        
+        populateMarkers(sortArray)
         this.setState({loaded: true})
+        } catch (e) { console.error(e); }
     }
 
+    
+
+    async makePurchase () {
+        try {
+        mainClass.setState({carbonScore: mainClass.state.carbonScore - currentUnitsSelected})
+        mainClass.setState({carbonOffset: mainClass.state.carbonOffset + currentUnitsSelected})
+        const userObject = await API.graphql(graphqlOperation(updateUser, 
+            { input:{
+                id: mainClass.state.user.id, 
+                carbon_units: mainClass.state.user.carbon_units - currentUnitsSelected,
+                offsetted_units: mainClass.state.user.offsetted_units + currentUnitsSelected
+        }}));
+        
+        
+        const solnObject = await API.graphql(graphqlOperation(updateSolution, 
+            { input:{
+                id:mainClass.state.selectedSoln.id, 
+                backerCount: mainClass.state.selectedSoln.backerCount+1, 
+                filledP: mainClass.state.selectedSoln.filledP + currentUnitsSelected
+        }}));
+        //User has just bought a solution
+        const backerObject = await API.graphql(graphqlOperation(createSolutionBacked, 
+            { input:{
+                backerID: mainClass.state.user.id, 
+                solutionID: mainClass.state.selectedSoln.id,
+                money_amount: currentUnitsSelected*20,
+                credits: currentUnitsSelected
+        }}));
+        console.log("User " + userObject + " has updated solution " + solnObject + " and has created " + backerObject);
+        window.location.reload();
+        } catch (e) { console.error(e) }
+            
+    
+    }
     
     render() {
         return(
@@ -229,22 +373,27 @@ class Solutions extends Component {
                     maxBounds={[[-90, -180],[90, 180]]}
                     >
                     <TileLayer  
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                        attribution= '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         minZoom='2'
                         noWrap="true"
+                        bounds={[[-90, -180],[90, 180]]}
                     />
                     <LayersControl position="topright">
-                        <LayersControl.Overlay checked name="Solution Type 1">
+                        <LayersControl.Overlay checked name="Tree Solutions">
                             <LayerGroup>
-                            <Waypoints />
+                            <Waypoints arrayToShow="trees"/>
                             </LayerGroup>
                         </LayersControl.Overlay>
-                        <LayersControl.Overlay checked name="Solution Type 2">
+                        <LayersControl.Overlay checked name="Land Solutions">
+                            <LayerGroup>
+                            <Waypoints arrayToShow="land"/>
+                            </LayerGroup>
                         </LayersControl.Overlay>
-                        <LayersControl.Overlay checked name="Solution Type 3">
-                        </LayersControl.Overlay>
-                        <LayersControl.Overlay checked name="Solution Type 4">
+                        <LayersControl.Overlay checked name="Animal Solutions">
+                            <LayerGroup>
+                            <Waypoints arrayToShow="animal"/>
+                            </LayerGroup>
                         </LayersControl.Overlay>
                     </LayersControl>
                     

@@ -1,6 +1,6 @@
 #map {
-    height:700px;
-    width:1250px;
+    height:90vh;
+    width:1000px;
     background-color: var(--background_color);
     align-items: left;
     margin-bottom:25px;
@@ -9,17 +9,22 @@
 
 #solutionList {
     background-color: var(--foreground_color);
-    width:max(750px, 100vw - 1310px);
+    width:max(850px, 100vw - 1150px);
+    height:90vh;
+    overflow: auto;
     margin-right: 10px;
     margin-left: 10px;
     padding:var(--card_standard_padding);
+    padding-top: 10px;
+    padding-bottom: 10px;
     
 }
 
 .solListItem {
     background-color: var(--foreground_color);
     animation: lightenOffHover 0.1s linear;
-    
+    padding-left: 10px;
+    padding-right: 10px;
 
 }
 
@@ -38,9 +43,9 @@
     to      {background-color: #cdcdcd}
 }
 
-@media screen and (max-width: 2050px) {
+@media screen and (max-width: 1900px) {
     #solutionList {
-        width:calc(100vw - 40px);
+        width:calc(100vw - 50px);
         margin-right: 100px;
     }
     #map {
@@ -55,10 +60,8 @@
     font-weight: var(--unit_title_font_weight);
     color: var(--general_text_color);
     text-align: center;
-    line-height: 0px;
+    line-height: 20px;
     padding-bottom: 0px;
-    white-space: normal;
-    
 }
 
 .markerDescription {
@@ -71,7 +74,7 @@
 
 }
 
-Button.investButton, Button.cancelButton {
+Button.investButton, Button.cancelButton, Button.purchaseButton {
     width: 100px;
     height: 4vh;
     border-radius: 8px;
@@ -129,5 +132,16 @@ Button.investButton, Button.cancelButton {
 
 #solutionModalVertDivider {
     height: 500px;
+
+}
+
+
+h3.backerCountText {
+    font-family: var(--general_font_family);
+    font-size: var(--unit_title_font_size);
+    font-weight: var(--unit_title_font_weight);
+    color: var(--general_text_color);
+    text-align: right;
+    line-height: 0px;
 
 }

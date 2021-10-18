@@ -5,7 +5,14 @@ import { Auth,API, graphqlOperation  } from 'aws-amplify';
 import "./account.css";
 import "../style.css";
 import { Redirect } from 'react-router';
+<<<<<<< HEAD
 import {updateUser} from '../graphql/mutations';
+=======
+
+
+import Amplify, { Analytics, Storage } from "aws-amplify";
+Storage.configure({ track: true, level: "protected" });
+>>>>>>> 6d15ce0c8c347b927895d1cc323c0a2d05ec19de
 
 const Account = () => { 
     //const { Option } = Select;
@@ -20,10 +27,56 @@ const Account = () => {
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
 
+    const [image, setImage] = useState();
+    let fileInput = React.createRef();
+
+    const onOpenFileDialog = () => {
+      fileInput.current.click();
+    };
+  
+    const onProcessFile = e => {
+      e.preventDefault();
+      let reader = new FileReader();
+      let file = e.target.files[0];
+      try {
+        reader.readAsDataURL(file);
+      } catch (err) {
+        console.log(err);
+      }
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      //Need to change profilePicture.png into userSub Id
+      Storage.put("profilePicture.png", file, {
+        contentType: "image/png"
+      })
+        .then(result => console.log(result))
+        .catch(err => console.log(err));
+    };
+    
+      const onPageRendered = async () => {
+        getProfilePicture();
+      };
+    
+      const getProfilePicture = () => {
+        //Need to change profilePicture.png into userSub Id
+        Storage.get("profilePicture.png")
+          .then(url => {
+            var myRequest = new Request(url);
+            fetch(myRequest).then(function(response) {
+              if (response.status === 200) {
+                setImage(url);
+              }
+            });
+          })
+          .catch(err => console.log(err));
+      };
+
     const [errors, setErrors] = useState('');
 
     useEffect(() => {
         displayUserDetails();
+        onPageRendered();
     }, []);
 
     const displayUserDetails = async () => {
@@ -90,7 +143,6 @@ const Account = () => {
     { loggedIn ? (
         <Row justify="space-around" >
         <Card class='CardClass' title={<h1>Account Information</h1>} style={{width:'40%'}}>
-                
                 <Form
                 name="accountForm"
                 layout="vertical"
@@ -111,9 +163,21 @@ const Account = () => {
                                 id="firstName"
                                 label="firstName" 
                                 value={givenName}
+                                maxLength="30"
                                 onChange={e => setGivenName(e.target.value)}
                             />
                         </Form.Item>
+
+
+                <a href="#">
+                    <input
+                        type="file"
+                        onChange={onProcessFile}
+                        ref={fileInput}
+                    />
+                </a>
+                <img src={image} onClick={onOpenFileDialog} />
+
                     </Col>
                     <Col span={12}>
                         <Form.Item
@@ -124,6 +188,7 @@ const Account = () => {
                                 id='lastName'
                                 label="lastName" 
                                 value={familyName}
+                                maxLength="30"
                                 onChange={e => setFamilyName(e.target.value)}
                              />
                         </Form.Item>
@@ -141,6 +206,7 @@ const Account = () => {
                                 id="email"
                                 label="email" 
                                 value={email}
+                                maxLength="40"
                                 onChange={e => setEmail(e.target.value)}
                             />
                         </Form.Item>
@@ -154,6 +220,7 @@ const Account = () => {
                                 id='phoneNumber'
                                 label="phoneNumber" 
                                 value={phoneNumber}
+                                maxLength="12"
                                 onChange={e => setPhoneNumber(e.target.value)} 
                                 /*addonBefore={prefixSelector} style={{ width: '100%' }}*/
                             />
@@ -172,6 +239,7 @@ const Account = () => {
                                 id='currentPassword'
                                 label="currentPassword" 
                                 value={currentPassword}
+                                maxLength="30"
                                 onChange={e => setCurrentPassword(e.target.value)} 
                                 /*addonBefore={prefixSelector} style={{ width: '100%' }}*/
                             />
@@ -182,7 +250,7 @@ const Account = () => {
                     name="newPW"
                     rules={[{ required: false, message: 'Please input your new password!' }]}
                 >
-                    <Input.Password className="inputFieldLong"/>
+                    <Input.Password className="inputFieldLong" maxLength="30"/>
                 </Form.Item>
 
                 <Form.Item className="space"
@@ -190,8 +258,7 @@ const Account = () => {
                     name="newPWConfirm"
                     rules={[{ required: false, message: 'Please confirm your new password!' }]}
                 >
-                    <Input.Password className="inputFieldLong"/>
-                
+                    <Input.Password className="inputFieldLong" maxLength="30"/>
                 </Form.Item>
                 <span className="errorLabel">{errors}</span>
                     <Form.Item>

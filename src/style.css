@@ -10,6 +10,7 @@
     --color_green: #4A7634;
     --color_white: #FFFFFF;
     --color_link_blue: #0645AD;
+    --color_deep_red: #8b0000;
 
     /*  =============================   */
 
@@ -17,6 +18,7 @@
     --general_text_color: var(--color_deep_black);
     --general_link_color: var(--color_link_blue);
     --text_header_color: var(--color_forest_green);
+    --disclaimer_text_color: var(--color_deep_red);
     --foreground_color: var(--color_white);
     --background_color: var(--color_forest_green);
 
@@ -92,8 +94,6 @@ h2 { /* This used to be headerText*/
     font-weight: var(--section_header_font_weight);
     color: var(--text_header_color);
     text-align: left;
-
-
 }
 
 h3 { 
@@ -134,5 +134,15 @@ label {
 
 body {
     background-color: var(--background_color);
+
+}
+
+h3.disclaimerText {
+    font-family: var(--general_font_family);
+    font-size: var(--unit_title_font_size);
+    font-weight: var(--unit_title_font_weight);
+    color: var(--disclaimer_text_color);
+    text-align: left;
+    line-height: 32px;
 
 }

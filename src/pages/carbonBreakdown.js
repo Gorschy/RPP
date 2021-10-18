@@ -1,43 +1,11 @@
-import {useState, useEffect, useContext} from "react";
 import {CChart}  from "@coreui/react-chartjs";
-import { Card, Button } from "antd";
+import { Card,  } from "antd";
 import '../style.css';
 import './carbonBreakdown.css';
-import { ReportContext } from "./ReportContext";
 
+const CarbonBreakdown = (report) => {
 
-const CarbonBreakdown = () => {
-    //Add breakdown to start of array.
-    //Display breakdown at the start by default.
-    //when you click on other reports display those instead.
-
-    /* Carbon Reduction Tips
-    Travel
-      - Use less impactful fuel sources - Ideally electric + solar
-      - Use public transport where possible?
-      - Car Pooling?
-
-    Electricity
-      - Solar panels
-      - Other clean energies
-      - Use less electricity??
-    Gas
-      -
-    Water
-      - Quicker showers aim for ~4min, maybe use music as a timer.
-      - Rainwater??
-
-    Waste
-      - Composting.
-      - Proper Recycling.
-      - Reduce plastic wastes by using more reusable products.
-    Paper
-      - Dont use paper?
-    */
-
-    const { report, setReport } = useContext(ReportContext);
-
-    //Not sure how accurate this is.
+    //Not sure how accurate this is. need to update this.
     const carbonAverage = {
       totalCarbon: 17,
       transportCarbon: 2.89,
@@ -61,30 +29,63 @@ const CarbonBreakdown = () => {
     };
    
     const bar = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: ['Total Carbon', 'Transport Emissions', 'Electricity Emissions', 'Gas Emissions', 'Waste Emissions', 'Water Emissions', 'Paper Emissions', 'Food & Drink Emissions', 'Events Emissions'],
         datasets: [
           {
-            label: 'My First dataset',
+            label: 'Carbon Average',
+            backgroundColor: 'rgb(154,208,245,0.2)',
+            borderColor: 'rgb(130,205,255,1)',
+            borderWidth: 1,
+            hoverBackgroundColor: 'rgba(130,205,255,0.4)',
+            hoverBorderColor: 'rgba(130,205,255,1)',
+            data: [
+              carbonAverage.totalCarbon, 
+              carbonAverage.transportCarbon, 
+              carbonAverage.electricityCarbon, 
+              carbonAverage.gasCarbon, 
+              carbonAverage.wasteCarbon, 
+              carbonAverage.waterCarbon, 
+              carbonAverage.paperCarbon, 
+              carbonAverage.foodDrinkCarbon,
+              carbonAverage.eventsCarbon
+            ],
+          },
+          {
+            label: 'Your Emissions',
             backgroundColor: 'rgba(255,99,132,0.2)',
             borderColor: 'rgba(255,99,132,1)',
             borderWidth: 1,
             hoverBackgroundColor: 'rgba(255,99,132,0.4)',
             hoverBorderColor: 'rgba(255,99,132,1)',
-            data: null,
+            data: [              
+              report.totalCarbon, 
+              report.transportCarbon, 
+              report.electricityCarbon, 
+              report.gasCarbon, 
+              report.wasteCarbon, 
+              report.waterCarbon, 
+              report.paperCarbon, 
+              report.foodDrinkCarbon,
+              report.eventsCarbon
+            ],
           },
-        ],
+        ], 
+        
       };
-
-
+      
       const pie = {
-        labels: [
-          'Red',
-          'Green',
-          'Yellow',
-        ],
+        labels: ['Transport Emissions', 'Electricity Emissions', 'Gas Emissions', 'Waste Emissions', 'Water Emissions', 'Paper Emissions', 'Food & Drink Emissions', 'Events Emissions'],
         datasets: [
           {
-            data: [300, 50, 100],
+            data: [
+              report.transportCarbon, 
+              report.electricityCarbon, 
+              report.gasCarbon, 
+              report.wasteCarbon, 
+              report.waterCarbon, 
+              report.paperCarbon, 
+              report.foodDrinkCarbon,
+              report.eventsCarbon],
             backgroundColor: [
               '#FF6384',
               '#36A2EB',
@@ -106,13 +107,45 @@ const CarbonBreakdown = () => {
         maintainAspectRatio: false
       }
 
-
     return ( 
         <div>
             <div className="column middle">
-                
                 <Card id="carbonBreakdown" title={<h1>Carbon Breakdown</h1>} bordered={true}>
-                  <span className="errorLabel">{report} I am the sickest out</span>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.totalCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.transportCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.electricityCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.gasCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.wasteCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.waterCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.paperCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.foodDrinkCarbon)}
+                  </span>
+                  <div class="divider div-transparent"></div>
+                  <span className="errorLabel">
+                    {JSON.stringify(report.eventsCarbon)}
+                  </span>
                 </Card>
             </div>
             <div className="column right">
