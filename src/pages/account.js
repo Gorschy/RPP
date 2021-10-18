@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Card, Col, Row, Form, Input, Button, Divider, Select} from 'antd';
 import { UserContext } from './UserContext';
-import { Auth } from 'aws-amplify';
+import { Auth,API, graphqlOperation  } from 'aws-amplify';
 import "./account.css";
 import "../style.css";
-import { Redirect } from 'react-router'
+import { Redirect } from 'react-router';
+import {updateUser} from '../graphql/mutations';
+
 const Account = () => { 
     //const { Option } = Select;
     const {loggedIn, setLoggedIn} = useContext(UserContext);
@@ -70,6 +72,8 @@ const Account = () => {
             'phone_number': phoneNumber
         });
 
+
+        await API.graphql(graphqlOperation(updateUser,{input: {id: user.id, email: email, given_name: givenName, family_name: familyName, phone_number:phoneNumber }} )); // Execute Delete
 
     };
    
