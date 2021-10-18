@@ -19,7 +19,8 @@ type User @model
   carbon_units: Int 
   offsetted_units: Int
   my_solutions: [SolutionBacked] @connection(keyName: "byBacker", fields: ["id"])
-  
+  project_carbon_reports: [ProjectReport] @connection(keyName: "byUser", fields: ["id"])
+
 }
 
 
@@ -33,14 +34,20 @@ type Project @model @key(name: "byCreator", fields:["creatorID"])
   editors: [ProjectEditor] @connection(keyName: "byProject", fields: ["id"])
   title: String!
   description: String
+  project_carbon_reports: [ProjectReport] @connection(keyName: "byProject", fields: ["id"])
+
 }
 
 
-type ProjectReport @model @key(name: "byProject", fields: ["projectID"])
-{
+type ProjectReport
+@model(queries: null)
+  @key(name: "byProject", fields: ["projectID", "userID"])
+  @key(name: "byUser", fields: ["userID", "projectID"])    {
   id: ID!
   projectID: ID!
   project: Project @connection(fields: ["projectID"])
+  userID: ID!
+  user: User! @connection(fields: ["userID"])
   date: String!
   totalCarbon: String!
   transportCarbon: String!
@@ -66,8 +73,6 @@ type ProjectEditor
   editorID: ID!
   project: Project! @connection(fields: ["projectID"])
   editor: User! @connection(fields: ["editorID"])  
-  carbon_reports: [ProjectReport] @connection(keyName: "byProject", fields: ["projectID"])
-
 }
 
 type Solution @model 

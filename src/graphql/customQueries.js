@@ -22,30 +22,37 @@ export const listProjects = /* GraphQL */ `
           updatedAt
         }
         editors {
-          nextToken
           items {
+          id
+          projectID
           editorID
-          carbon_reports {
-            items{
-              date
-              totalCarbon
-              transportCarbon
-              electricityCarbon
-              gasCarbon
-              wasteCarbon
-              waterCarbon
-              paperCarbon
-              foodDrinkCarbon
-              eventsCarbon
-              createdAt
-              updatedAt
-            }
+          createdAt
+          updatedAt
         }
-        }
+          nextToken
         }
         title
         description
-        
+        project_carbon_reports {
+          items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -53,6 +60,12 @@ export const listProjects = /* GraphQL */ `
     }
   }
 `;
+
+
+
+
+
+
 export const getID = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
