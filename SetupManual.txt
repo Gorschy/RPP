@@ -21,3 +21,12 @@ npm install emailjs-com --save
 
 npm install react-bootstrap@next bootstrap@5.1.1
 npm install -g reactstrap
+
+npm install react-bootstrap@next bootstrap@5.1.1
+npm install -g reactstrap
+npm install @coreui/react
+npm install @coreui/coreui
+npm install @coreui/react-chartjs
+npm i @coreui/icons-react
+npm i --save @fortawesome/free-brands-svg-icons
+npm i emailjs-com 
