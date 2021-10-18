@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Card, Col, Row, Form, Input, Button, Divider, Select} from 'antd';
 import { UserContext } from './UserContext';
-import { Auth,API, graphqlOperation  } from 'aws-amplify';
+import { Auth,API, graphqlOperation, Storage  } from 'aws-amplify';
 import "./account.css";
 import "../style.css";
 import { Redirect } from 'react-router';
 import {updateUser} from '../graphql/mutations';
+
+Storage.configure({ track: true, level: "private" });
 
 const Account = () => { 
     //const { Option } = Select;

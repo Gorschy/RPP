@@ -500,7 +500,6 @@ const Calculator = () => {
       }catch(e){
         console.error("Error in calculator.js report method: ", e)
       }
-    
   };
 
   function resetForms(id) {
