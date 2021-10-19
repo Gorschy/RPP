@@ -26,11 +26,9 @@ const Navbar = () => {
     const [image, setImage] = useState(Avatar);
 
     const getProfilePicture = async () => {
-        
         //Need to change profilePicture.png into userSub Id
         let user = await Auth.currentAuthenticatedUser();
         let temp = user.attributes.sub + ".png";
-        console.log("Temp from navbar yeet");
         Storage.get(temp)
             .then(url => {
             var myRequest = new Request(url);
