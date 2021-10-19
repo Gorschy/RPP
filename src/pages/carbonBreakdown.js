@@ -74,7 +74,7 @@ const CarbonBreakdown = (report) => {
       };
       
       const pie = {
-        labels: ['Transport Emissions', 'Electricity Emissions', 'Gas Emissions', 'Waste Emissions', 'Water Emissions', 'Paper Emissions', 'Food & Drink Emissions', 'Events Emissions'],
+        labels: ['Transport', 'Electricity', 'Gas', 'Waste', 'Water', 'Paper', 'Food & Drink', 'Events'],
         datasets: [
           {
             data: [
@@ -100,10 +100,10 @@ const CarbonBreakdown = (report) => {
       };
 
       const options = {
-        // tooltips: {
-        //   enabled: false,
-        //   custom: customTooltips
-        // },
+         tooltips: {
+          enabled: false,
+           custom: ['yeet']
+         },
         maintainAspectRatio: false
       }
 
@@ -149,7 +149,7 @@ const CarbonBreakdown = (report) => {
                 </Card>
             </div>
             <div className="column right">
-                <CChart id="barChart" type="bar" datasets={bar.datasets} options={options} labels="months"/>
+                <CChart id="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels}/>
                 <CChart id="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} />
             </div>
         </div>

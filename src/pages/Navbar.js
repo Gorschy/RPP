@@ -1,11 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
 import { Link } from 'react-router-dom';
 import { Menu, Button } from 'antd';
 import './Navbar.css';
 import '../style.css';
 import logo from '../assets/LOTT rd.png';
-import { Auth } from 'aws-amplify';
+import { Auth, Storage } from 'aws-amplify';
+import Avatar from '../assets/avatar.png';
+
+
 const { Item } = Menu;
 
 /* TODO:
@@ -17,16 +20,43 @@ const { Item } = Menu;
 
 const Navbar = () => {
 
-        const {loggedIn, setLoggedIn} = useContext(UserContext);
+    //Not sure if this needs to be braces vs brackets???
+    const {loggedIn, setLoggedIn} = useContext(UserContext);
+
+    const [image, setImage] = useState(Avatar);
+
+    const getProfilePicture = async () => {
         
-        const signOut = async () => {
-            try {
-                await Auth.signOut();
-                setLoggedIn(false);
-            } catch (error) {
-                console.log('error signing out: ', error);
-            }
-        };
+        //Need to change profilePicture.png into userSub Id
+        let user = await Auth.currentAuthenticatedUser();
+        let temp = user.attributes.sub + ".png";
+        console.log("Temp from navbar yeet");
+        Storage.get(temp)
+            .then(url => {
+            var myRequest = new Request(url);
+            fetch(myRequest).then(function(response) {
+                if (response.status === 200) {
+                setImage(url);
+                }
+            });
+            })
+            .catch(err => console.log(err));
+    };
+ 
+    const signOut = async () => {
+        try {
+            await Auth.signOut();
+            setLoggedIn(false);
+        } catch (error) {
+            console.log('error signing out: ', error);
+        }
+    };
+
+    useEffect(() => {
+        getProfilePicture();
+    }, []);
+
+   
 
     return (
         <div>
@@ -57,7 +87,14 @@ const Navbar = () => {
                                                 
                             <Item key="ContactUs">
                                 <Link to='/contactUs'>Contact Us</Link>
-                            </Item>                 
+                            </Item>
+
+                            
+                            {loggedIn ? (
+                                <Item key="profileImage">        
+                                      <img src={image} />
+                                </Item>
+                            ) : null }   
                         </Menu>
 
                         <Menu theme="light" mode="horizontal" className="rightStyle">
@@ -78,6 +115,7 @@ const Navbar = () => {
                                                 Login
                                             </Button>
                                         </Link>
+                                        
                                     </div>
                                 )}
                         </Menu>     

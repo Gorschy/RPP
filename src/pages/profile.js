@@ -95,12 +95,6 @@ const Profile = () => {
       setTotalCarbonArray(tempTotals);
       setDateArray(tempDates);
   }
-    
-    const log = () => {
-        console.log(dateArray);
-        console.log(totalCarbonArray);
-    }
-
     const submit = (item) => {
 
       const tempReport = allReports.filter(obj => { if(obj.id === item.target.id) return obj });
@@ -120,7 +114,6 @@ const Profile = () => {
     return ( 
         <div>
           <CChart type="line" datasets={line.datasets} options={options} />
-          <button onClick={setAnalyticsData}>Test</button>
             <div className="column left">
                 <Card id="reportList" title={<h1>List of Reports</h1>} bordered={true}>   
                 { allReports.map((item, index) => (
