@@ -1,7 +1,6 @@
-import React, { useState, useContext, Component } from 'react';
+import React, { Component } from 'react';
 import { List, Row, Col, Modal, Button, Divider, Progress, Tooltip, InputNumber } from 'antd';
 import { Link } from 'react-router-dom';
-import { UserContext } from './UserContext';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import {getUser, listSolutions} from '../graphql/queries';
 import {createSolutionBacked, updateSolution, updateUser} from '../graphql/mutations';
@@ -71,109 +70,26 @@ const calcPercent = (currentPurchases, maxPurchases) => {
     }
 }
 const calcRemainingSpots = (val1, val2) => { return (val1-val2); }
-
-
-
-function Waypoints (props) {
-    if (props.arrayToShow === 'trees') {
-        return (
-            // For clarification, LOI === Location of Interest.
-            treesWaypointList.map((LOI) => (
-                <React.Fragment key={LOI.title}>
-                <Marker position={LOI.coords} icon={greenIcon}>
-                    <Popup>
-                        <div className="markerHeader"><b>{LOI.title}</b></div> 
-                        <br/>
-                        <div className="markerDescription">{LOI.desc}</div>
-                    </Popup>
-                </Marker>
-                </React.Fragment>
-            ))
-        );
-    }
-    else if (props.arrayToShow === "land") {
-        return (
-            // For clarification, LOI === Location of Interest.
-            landWaypointList.map((LOI) => (
-                <React.Fragment key={LOI.title}>
-                <Marker position={LOI.coords} icon={orangeIcon}>
-                    <Popup>
-                        <div className="markerHeader"><b>{LOI.title}</b></div> 
-                        <br/>
-                        <div className="markerDescription">{LOI.desc}</div>
-                    </Popup>
-                </Marker>
-                </React.Fragment>
-            ))
-        );
-    }
-    else if (props.arrayToShow === "animal") {
-        return (
-            // For clarification, LOI === Location of Interest.
-            animalWaypointList.map((LOI) => (
-                <React.Fragment key={LOI.title}>
-                <Marker position={LOI.coords} icon={redIcon}>
-                    <Popup>
-                        <div className="markerHeader"><b>{LOI.title}</b></div> 
-                        <br/>
-                        <div className="markerDescription">{LOI.desc}</div>
-                    </Popup>
-                </Marker>
-                </React.Fragment>
-            ))
-        );
-    }
-    else {return(null);}
-
-    
+const getCost = () => { return (20* currentUnitsSelected + ".00"); }
+const calcSuccess = () => {return itemToPass.filledP + currentUnitsSelected}
+const setPurchaseButton = (boolVal) => {mainClass.setState({purchaseButtonVisible: boolVal})}
+const handleCancel = () => {mainClass.setState({modalVisible: false});}
+const setModalVals = (passedItem) => {
+    mainClass.setState({selectedSoln: passedItem});
+    itemToPass = passedItem;
+    if (passedItem.totalP <= passedItem.filledP) {mainClass.setState({purchaseButtonVisible:(false)})}
+    else {mainClass.setState({purchaseButtonVisible:(true)})}
+    mainClass.setState({modalVisible: true});
 }
 
-//setLoggedIn(true);
+function CreateModal () {
 
-function CreateList () {
-    const {loggedIn, setLoggedIn} = useContext(UserContext);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [showPurchaseButton, setPurchaseButton] = useState(true);
-    const showModal = (passedItem) => {
-        mainClass.setState({selectedSoln: passedItem});
-        itemToPass = passedItem;
-        if (passedItem.totalP <= passedItem.filledP) {setPurchaseButton(false)}
-        else {setPurchaseButton(true);}
-        setIsModalVisible(true);
-    };
-    const handleCancel = () => {setIsModalVisible(false);}
-    const getCost = () => { return (20* currentUnitsSelected + ".00"); }
-    const calcSuccess = () => {return itemToPass.filledP + currentUnitsSelected}
-    return(
-        <div>
-        
-        <List 
-        rowKey = {"id"}
-        id="solutionList"
-        dataSource={waypointList}
-        itemLayout={'vertical'}
-        header={<div><h1>Solutions</h1><br/><h3>Click a solution to invest.</h3></div>}
-        renderItem={item => (
-            <List.Item className="solListItem" onClick={() => showModal(item)}>
-                <List.Item.Meta
-                    title={<div><h2>{item.title}</h2><b><h3 className="backerCountText">Backed By: {item.backerCount} donors!</h3></b></div>}
-                    description={<div className="standardText">{item.desc}</div>}
-                />     
-                <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{item.filledP} of {item.totalP} units purchased.</h3>}
-                    color={"#ffffff"}>
-                    <Progress   className="progressBar" showInfo={false} percent={calcPercent(item.filledP, item.totalP)} 
-                                strokeColor={{"0%" : "#4A7634","100%" : "#134A2C",}} />
-                </Tooltip>
-            </List.Item>
-        )}
-        ></List>
-        
-
-        <Modal className="purchaseModal" title={<h1>Invest in: {itemToPass.title}</h1>} centred visible={isModalVisible} width="90vw" closable={false}
+    return (
+        <Modal className="purchaseModal" title={<h1>Invest in: {itemToPass.title}</h1>} centred visible={mainClass.state.modalVisible} width="90vw" closable={false}
             footer={[<Button className="cancelButton" onClick={handleCancel}>Back</Button>]} 
         >
 
-            { loggedIn ? ( /* If the user is logged in... */
+            { (mainClass.state.user != null) ? ( /* If the user is logged in... */
                 <div>
                     <Row justify="space-around">
                     <Col span={12}>
@@ -192,7 +108,7 @@ function CreateList () {
                     <br/>
                     
                     
-                    {showPurchaseButton ? (
+                    {mainClass.state.purchaseButtonVisible ? (
                         <React.Fragment>
                         <h3>Total Cost: ${getCost()}</h3>
                         <Row><Col span={14}>
@@ -244,6 +160,102 @@ function CreateList () {
             )}
         </Modal>
 
+    )
+}
+
+function Waypoints (props) {
+    if (props.arrayToShow === 'trees') {
+        return (
+            // For clarification, LOI === Location of Interest.
+            treesWaypointList.map((LOI) => (
+                <React.Fragment key={LOI.title}>
+                <Marker position={LOI.coords} icon={greenIcon}>
+                    <Popup>
+                        <div className="markerHeader"><b>{LOI.title}</b></div> 
+                        <br/>
+                        <div className="markerDescription">{LOI.desc}</div>
+                        <br/>
+                        <div className="centreInvestButton">
+                        <Button className="investButton" onClick={() => setModalVals(LOI)}>Invest</Button>
+                        </div>
+                    </Popup>
+                </Marker>
+                </React.Fragment>
+            ))
+        );
+    }
+    else if (props.arrayToShow === "land") {
+        return (
+            // For clarification, LOI === Location of Interest.
+            landWaypointList.map((LOI) => (
+                <React.Fragment key={LOI.title}>
+                <Marker position={LOI.coords} icon={orangeIcon}>
+                    <Popup>
+                        <div className="markerHeader"><b>{LOI.title}</b></div> 
+                        <br/>
+                        <div className="markerDescription">{LOI.desc}</div>
+                        <br/>
+                        <div className="centreInvestButton">
+                        <Button className="investButton" onClick={() => setModalVals(LOI)}>Invest</Button>
+                        </div>
+                    </Popup>
+                </Marker>
+                </React.Fragment>
+            ))
+        );
+    }
+    else if (props.arrayToShow === "animal") {
+        return (
+            // For clarification, LOI === Location of Interest.
+            animalWaypointList.map((LOI) => (
+                <React.Fragment key={LOI.title}>
+                <Marker position={LOI.coords} icon={redIcon}>
+                    <Popup>
+                        <div className="markerHeader"><b>{LOI.title}</b></div> 
+                        <br/>
+                        <div className="markerDescription">{LOI.desc}</div>
+                        <br/>
+                        <div className="centreInvestButton">
+                        <Button className="investButton" onClick={() => setModalVals(LOI)}>Invest</Button>
+                        </div>
+                    </Popup>
+                </Marker>
+                </React.Fragment>
+            ))
+        );
+    }
+    else {return(null);}
+
+    
+}
+
+//setLoggedIn(true);
+function CreateList () {
+    return(
+        <div>
+        
+        <List 
+        rowKey = {"id"}
+        id="solutionList"
+        dataSource={waypointList}
+        itemLayout={'vertical'}
+        header={<div><h1>Solutions</h1><br/><h3>Click a solution to invest.</h3></div>}
+        renderItem={item => (
+            <List.Item className="solListItem" onClick={() => setModalVals(item)}>
+                <List.Item.Meta
+                    title={<div><h2>{item.title}</h2><b><h3 className="backerCountText">Backed By: {item.backerCount} donors!</h3></b></div>}
+                    description={<div className="standardText">{item.desc}</div>}
+                />     
+                <Tooltip autoAdjustOverflow = {true} className="progressTT" title={<h3>{item.filledP} of {item.totalP} units purchased.</h3>}
+                    color={"#ffffff"}>
+                    <Progress   className="progressBar" showInfo={false} percent={calcPercent(item.filledP, item.totalP)} 
+                                strokeColor={{"0%" : "#4A7634","100%" : "#134A2C",}} />
+                </Tooltip>
+            </List.Item>
+        )}
+        ></List>
+        <CreateModal />
+
         </div>
     );
 
@@ -294,7 +306,8 @@ class Solutions extends Component {
         carbonScore: 20,
         carbonOffset: 140,
         selectedSoln: null,
-        purchaseButtonVisible: true
+        purchaseButtonVisible: true,
+        modalVisible: false
     }
 
     doUpdate = () => {

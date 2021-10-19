@@ -74,6 +74,10 @@
 
 }
 
+div.centreInvestButton {
+    text-align: center;
+}
+
 Button.investButton, Button.cancelButton, Button.purchaseButton {
     width: 100px;
     height: 4vh;
