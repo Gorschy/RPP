@@ -1,4 +1,5 @@
 import {useState, useEffect} from "react";
+import { useHistory } from "react-router"
 import {CChart}  from "@coreui/react-chartjs";
 import { Card } from "antd";
 import '../style.css';
@@ -8,14 +9,16 @@ import { listReports } from "../graphql/queries"; // For creating Reports
 import CarbonBreakdown from './carbonBreakdown.js';// Child component
 import Graphs from './graphs.js';//Child component
 import { getUser } from "../graphql/queries";
-
+import {deleteReport} from '../graphql/mutations';
 
 
 const Profile = () => {
 
     const [allReports, setAllReports] = useState([]); //Used to store all carbon reports related to the logged in user.
     const [selectedReport, setSelectedReport] = useState({}); //Used to store a selected carbon report.
-   
+    const [carbonOwing, setCarbonOwing] = useState();
+    const [offsetCarbon, setCarbonOffset] = useState();
+
     useEffect(() => {
       init();
     }, []);
@@ -33,13 +36,16 @@ const Profile = () => {
     
         const data = await Auth.currentUserPoolUser();
         const userInfo = { ...data.attributes };
-
+        
         const getData = await API.graphql(graphqlOperation(listReports, {filter: {userID: {eq: userInfo.sub}}})); 
         console.log(getData.data.listReports.items);
 
 
         const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+        console.log("User Data Below");
         console.log(userData);
+        setCarbonOwing(userData.data.getUser.carbon_units);
+        setCarbonOffset(userData.data.getUser.offsetted_units);
 
         setAllReports(getData.data.listReports.items);
 
@@ -47,6 +53,25 @@ const Profile = () => {
         console.error("Error in profile.js report method: ", e)
       }
     };
+
+    const deleteSelectedReport = async () => {
+
+      console.log("Deleting Report -> " + selectedReport.id);
+      try {
+          const report_to_delete = selectedReport.id;
+          await API.graphql(graphqlOperation(deleteReport, { input: { id: report_to_delete }}));
+
+      } catch(err) { console.log("Report could not be deleted -> " + err) }
+      
+  }
+
+  
+  const history = useHistory();
+
+  const createReport = () => {
+      let path = "/calculator";
+      history.push(path);
+  }
 
   
     const submit = (item) => {
@@ -68,6 +93,8 @@ const Profile = () => {
     return ( 
         <div>
             <div className="column left">
+              <span>{carbonOwing}</span>
+              <span>{offsetCarbon}</span>
                 <Card id="reportList" title={<h1>List of Reports</h1>} bordered={true}>   
                 { allReports.map((item, index) => (
                         <div key = {index}>
@@ -75,6 +102,8 @@ const Profile = () => {
                         </div>
                     ))}
 
+                <button onClick = { createReport }>Create Report</button>
+                <button className = "delete-btn" onClick = { deleteSelectedReport }>Delete Report</button>
                 </Card>
                 
             </div>

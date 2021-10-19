@@ -8,13 +8,13 @@ import { Redirect } from 'react-router';
 import {updateUser} from '../graphql/mutations';
 import {getUser} from '../graphql/queries';
 
+
 Storage.configure({ track: false, level: "public" });
 
 
 const Account = () => { 
     //const { Option } = Select;
     const {loggedIn, setLoggedIn} = useContext(UserContext);
-
     const [givenName, setGivenName] = useState('Test');
     const [familyName, setFamilyName] = useState('');
     const [email, setEmail] = useState('');
@@ -23,8 +23,9 @@ const Account = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [errors, setErrors] = useState('');
-
     const [image, setImage] = useState();
+
+
     let fileInput = React.createRef();
 
     const onOpenFileDialog = () => {
