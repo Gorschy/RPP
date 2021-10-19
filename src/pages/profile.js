@@ -6,6 +6,7 @@ import './profile.css';
 import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
 import { listReports } from "../graphql/queries"; // For creating Reports
 import CarbonBreakdown from './carbonBreakdown.js';// Child component
+import Graphs from './graphs.js';//Child component
 import { getUser } from "../graphql/queries";
 
 
@@ -14,37 +15,7 @@ const Profile = () => {
 
     const [allReports, setAllReports] = useState([]); //Used to store all carbon reports related to the logged in user.
     const [selectedReport, setSelectedReport] = useState({}); //Used to store a selected carbon report.
-    const [totalCarbonArray, setTotalCarbonArray] = useState([]); //Used to store all total carbon individually accross all reports.
-    const [dateArray, setDateArray] = useState([]); //Used to store all dates accross all reports.
-
-    //Line Graph Inputs
-    const line = {
-      labels: dateArray,
-      datasets: [
-        {
-          label: 'Total Carbon Over Time',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(75,192,192,0.4)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 1,
-          pointHitRadius: 10,
-          data: totalCarbonArray,
-        },
-      ],
-    };
-
+   
     useEffect(() => {
       init();
     }, []);
@@ -71,30 +42,13 @@ const Profile = () => {
         console.log(userData);
 
         setAllReports(getData.data.listReports.items);
-        setAnalyticsData(getData.data.listReports.items);
 
       }catch(e){
         console.error("Error in profile.js report method: ", e)
       }
     };
 
-    const setAnalyticsData = (reports) => {
-
-      console.log("Hello From Set Analytics");
-      const tempDates = [];
-      const tempTotals = [];
-
-      for(let i = 0; i < reports.length; i++) {
-          
-          tempDates.push(reports[i].date);
-          tempTotals.push(reports[i].totalCarbon);
-
-          console.log(i);
-
-      }
-      setTotalCarbonArray(tempTotals);
-      setDateArray(tempDates);
-  }
+  
     const submit = (item) => {
 
       const tempReport = allReports.filter(obj => { if(obj.id === item.target.id) return obj });
@@ -113,7 +67,6 @@ const Profile = () => {
 
     return ( 
         <div>
-          <CChart type="line" datasets={line.datasets} options={options} />
             <div className="column left">
                 <Card id="reportList" title={<h1>List of Reports</h1>} bordered={true}>   
                 { allReports.map((item, index) => (
@@ -125,7 +78,8 @@ const Profile = () => {
                 </Card>
                 
             </div>
-              <CarbonBreakdown {...selectedReport} />
+            <CarbonBreakdown {...selectedReport} />
+            <Graphs {...selectedReport} />
         </div>
     );
 }

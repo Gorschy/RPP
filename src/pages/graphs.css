@@ -1,0 +1,25 @@
+#barChart {
+    height: 30vh;
+    width: 30vw;
+    float: right;
+}
+
+#pieChart {
+    height: 30vh;
+    width: 30vw;
+    float: right;
+}
+
+#lineGraph {
+    height: 10vh;
+    width: 10vw;
+    float: left;
+}
+
+.column {
+    float: left;
+}
+  
+.left, .right {
+    width: 19.5%;
+}

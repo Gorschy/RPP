@@ -28,85 +28,7 @@ const CarbonBreakdown = (report) => {
       food: []
     };
    
-    const bar = {
-        labels: ['Total Carbon', 'Transport Emissions', 'Electricity Emissions', 'Gas Emissions', 'Waste Emissions', 'Water Emissions', 'Paper Emissions', 'Food & Drink Emissions', 'Events Emissions'],
-        datasets: [
-          {
-            label: 'Carbon Average',
-            backgroundColor: 'rgb(154,208,245,0.2)',
-            borderColor: 'rgb(130,205,255,1)',
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(130,205,255,0.4)',
-            hoverBorderColor: 'rgba(130,205,255,1)',
-            data: [
-              carbonAverage.totalCarbon, 
-              carbonAverage.transportCarbon, 
-              carbonAverage.electricityCarbon, 
-              carbonAverage.gasCarbon, 
-              carbonAverage.wasteCarbon, 
-              carbonAverage.waterCarbon, 
-              carbonAverage.paperCarbon, 
-              carbonAverage.foodDrinkCarbon,
-              carbonAverage.eventsCarbon
-            ],
-          },
-          {
-            label: 'Your Emissions',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderColor: 'rgba(255,99,132,1)',
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-            hoverBorderColor: 'rgba(255,99,132,1)',
-            data: [              
-              report.totalCarbon, 
-              report.transportCarbon, 
-              report.electricityCarbon, 
-              report.gasCarbon, 
-              report.wasteCarbon, 
-              report.waterCarbon, 
-              report.paperCarbon, 
-              report.foodDrinkCarbon,
-              report.eventsCarbon
-            ],
-          },
-        ], 
-        
-      };
-      
-      const pie = {
-        labels: ['Transport', 'Electricity', 'Gas', 'Waste', 'Water', 'Paper', 'Food & Drink', 'Events'],
-        datasets: [
-          {
-            data: [
-              report.transportCarbon, 
-              report.electricityCarbon, 
-              report.gasCarbon, 
-              report.wasteCarbon, 
-              report.waterCarbon, 
-              report.paperCarbon, 
-              report.foodDrinkCarbon,
-              report.eventsCarbon],
-            backgroundColor: [
-              '#FF6384',
-              '#36A2EB',
-              '#FFCE56',
-            ],
-            hoverBackgroundColor: [
-              '#FF6384',
-              '#36A2EB',
-              '#FFCE56',
-            ],
-          }],
-      };
-
-      const options = {
-         tooltips: {
-          enabled: false,
-           custom: ['yeet']
-         },
-        maintainAspectRatio: false
-      }
-
+   
     return ( 
         <div>
             <div className="column middle">
@@ -147,10 +69,6 @@ const CarbonBreakdown = (report) => {
                     {JSON.stringify(report.eventsCarbon)}
                   </span>
                 </Card>
-            </div>
-            <div className="column right">
-                <CChart id="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels}/>
-                <CChart id="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} />
             </div>
         </div>
     );
