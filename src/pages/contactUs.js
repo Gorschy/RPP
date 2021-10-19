@@ -1,4 +1,4 @@
-//import emailjs from 'emailjs-com';
+import emailjs from 'emailjs-com';
 import React from 'react';
 import '../style.css';
 import { Form, Input, Row, Col, Select, Card, Image, Divider} from 'antd';
@@ -11,7 +11,7 @@ export default function contactUs() {
 
         /* We get 200 emails a month with the free tier DON"T SPAM THE SEND MESSAGE BOX
         Fields ServiceID, templateID, e.target (refers to what the user is submiting through the form), UserID (this is the user api key) >> https://www.emailjs.com/  */
-/*
+
         emailjs.sendForm('service_8vz2gxx', 'template_abxoegl', e.target, 'user_IiRHYUwqWVSGke3woZlnQ')
             .then((result) => {
                 console.log(result.text);
@@ -19,7 +19,7 @@ export default function contactUs() {
                 console.log(error.text);
             });
         e.target.reset();
-        */
+        
     }
 
 
