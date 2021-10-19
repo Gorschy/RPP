@@ -17,7 +17,7 @@ import leafGreen from '../assets/leaf-green.png';
 /* ========================================
 COMMENTS BY: Zachary O'Reilly-Fullerton
 ======================================== */
-
+const nonNegativeUserCarbon = true;
 const startingZoom = 2; 
 var waypointList = [];
 var pageUser={"given_name":""};
@@ -72,7 +72,6 @@ const calcPercent = (currentPurchases, maxPurchases) => {
 const calcRemainingSpots = (val1, val2) => { return (val1-val2); }
 const getCost = () => { return (20* currentUnitsSelected + ".00"); }
 const calcSuccess = () => {return itemToPass.filledP + currentUnitsSelected}
-const setPurchaseButton = (boolVal) => {mainClass.setState({purchaseButtonVisible: boolVal})}
 const handleCancel = () => {mainClass.setState({modalVisible: false});}
 const setModalVals = (passedItem) => {
     mainClass.setState({selectedSoln: passedItem});
@@ -339,19 +338,37 @@ class Solutions extends Component {
         } catch (e) { console.error(e); }
     }
 
-    
-
     async makePurchase () {
         try {
         mainClass.setState({carbonScore: mainClass.state.carbonScore - currentUnitsSelected})
         mainClass.setState({carbonOffset: mainClass.state.carbonOffset + currentUnitsSelected})
-        const userObject = await API.graphql(graphqlOperation(updateUser, 
-            { input:{
-                id: mainClass.state.user.id, 
-                carbon_units: mainClass.state.user.carbon_units - currentUnitsSelected,
-                offsetted_units: mainClass.state.user.offsetted_units + currentUnitsSelected
-        }}));
-        
+        var userObject;
+        if (nonNegativeUserCarbon) {
+            if (mainClass.state.user.carbon_units - currentUnitsSelected <= 0) {
+                userObject = await API.graphql(graphqlOperation(updateUser, 
+                    { input:{
+                        id: mainClass.state.user.id, 
+                        carbon_units: 0,
+                        offsetted_units: mainClass.state.user.offsetted_units + currentUnitsSelected
+                }}));
+            }
+            else {
+                userObject = await API.graphql(graphqlOperation(updateUser, 
+                { input:{
+                    id: mainClass.state.user.id, 
+                    carbon_units: mainClass.state.user.carbon_units - currentUnitsSelected,
+                    offsetted_units: mainClass.state.user.offsetted_units + currentUnitsSelected
+                }}));
+            }
+        }
+        else {
+            userObject = await API.graphql(graphqlOperation(updateUser, 
+                { input:{
+                    id: mainClass.state.user.id, 
+                    carbon_units: mainClass.state.user.carbon_units - currentUnitsSelected,
+                    offsetted_units: mainClass.state.user.offsetted_units + currentUnitsSelected
+            }}));
+        }
         
         const solnObject = await API.graphql(graphqlOperation(updateSolution, 
             { input:{
