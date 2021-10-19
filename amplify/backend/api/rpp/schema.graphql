@@ -41,6 +41,7 @@ type Project @model @key(name: "byCreator", fields:["creatorID"])
 
 type ProjectReport
 @model(queries: null)
+  @auth(rules :[{ allow: private}])
   @key(name: "byProject", fields: ["projectID", "userID"])
   @key(name: "byUser", fields: ["userID", "projectID"])    {
   id: ID!
@@ -76,7 +77,7 @@ type ProjectEditor
 }
 
 type Solution @model 
-@auth(rules :[{ allow: groups, groups: ["Admin"], operations: [create, delete, update]}])
+@auth(rules :[{ allow: private, groups: ["Admin"], operations: [create, delete, update]}])
 {
   id:ID!
   title: String!
@@ -96,6 +97,7 @@ type Solution @model
 
 # Can only query SolutionBacked through Solution.backers and User.my_solutions
 type SolutionBacked
+  @auth(rules :[{ allow: private}])
   @model(queries: null)
   @key(name: "bySolution", fields: ["solutionID", "backerID"])
   @key(name: "byBacker", fields: ["backerID", "solutionID"])     

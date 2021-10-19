@@ -1,38 +1,76 @@
-.logo {
+#LOTTLogo, #LOTTLogoBurger {
     float: left;
-    width: auto;
-    height: 30px;
-    margin: 16px 24px 16px 0;
-    justify-content: center;
+    width: 50px;
+    height: 50px;
+    margin: 7px 15px 7px;
+    justify-content: left;
+    background-color: transparent;
+
 }
   
 .loginButtonNav {
     width: 150px;
     height: 40px;
+    border-radius: 8px;
+
+    background-color: var(--color_green);
+
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    font-weight: var(--heading_text_font_weight);
+    color: var(--color_white);
 }
 
 .leftStyle {
-    height: 65px;
+    height: 64px;
+    background-color:var(--foreground_color);
 }
 
 .rightStyle {
     position: absolute;
     top: 0;
     right: 0;
-    height: 0; /* fix this - leaves a small clickable line above sign out button */
+    height: 0; /* fix this - leaves a small clickable line above sign out button */ /* I sorta fixed it? ~Zac */
 }
 
-#navButton {
-    width: 12vw;
-    height: 4vh;
-    border-radius: 8px;
-
-    color: var(--color_green);
-
+h3.navbarHeaders {
     font-family: var(--general_font_family);
-    font-size: var(--general_font_size);
-    font-weight: var(--heading_text_font_weight);
-    color: var(--color_white);
+    font-size: var(--unit_title_font_size);
+    font-weight: var(--unit_title_font_weight);
+    color: var(--general_text_color);
+    text-align: center;
+    line-height: 32px;
+    padding-top: 20px;
 
+}
+
+
+h3.navbarHeadersBurger {
+    font-family: var(--general_font_family);
+    font-size: var(--unit_title_font_size);
+    font-weight: var(--unit_title_font_weight);
+    color: var(--general_text_color);
+    text-align: center;
+    line-height: 24px;
+    padding-top: 10px;
+
+}
+
+.burgerList {
+    display: none;
+    height: 64px;
+    background-color:var(--foreground_color);
+}
+
+@media screen and (max-width: 900px) {
+
+    .leftStyle {
+        display: none;
+
+    }
+
+    .burgerList {
+        display: block;
+    }
 
 }

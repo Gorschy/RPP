@@ -9,4 +9,6 @@
 .site-layout-header {
   min-width: 100vh;
   padding: 0;
+  background-color: var(--foreground_color);
+  cursor:default;
 }
