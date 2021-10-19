@@ -8,7 +8,7 @@ import { Redirect } from 'react-router';
 import {updateUser} from '../graphql/mutations';
 import {getUser} from '../graphql/queries';
 
-Storage.configure({ track: true, level: "protected" });
+Storage.configure({ track: false, level: "public" });
 
 
 const Account = () => { 
