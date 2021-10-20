@@ -176,6 +176,7 @@ const Helper = () => {
 
 const Calculator = () => {
 
+  const history = useHistory();
   const [emission, setEmissions] = useState([]);
   const [emissionData, setEmissionData] = useState([]);
 
@@ -325,8 +326,7 @@ const Calculator = () => {
 
         //Basic Public Travel Case
         case emissionData[i].hasOwnProperty("publicTravel"):
-          let tempTransportMethod =
-            emissionData[i].publicTravel.transportMethod;
+          let tempTransportMethod = emissionData[i].publicTravel.transportMethod;
           let tempTransportType = emissionData[i].publicTravel.transportType;
           let tempDistancePub = emissionData[i].publicTravel.pubDistance;
 
@@ -388,6 +388,85 @@ const Calculator = () => {
 
         //Basic Gas Case
         case emissionData[i].hasOwnProperty("gas"):
+          //Measurement is unused
+          let tempUnitOfMeasurement = emissionData[i].gas.unitOfMeasurement;
+          let tempState = emissionData[i].gas.stateOrTerritory;
+          
+              if(emissionData[i].hasOwnProperty("gasConsumption")){
+                switch (tempState) {
+                  case "ACT":
+                    totalCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NSW":
+                    totalCarbon += 0.00175015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00175015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NT":
+                    totalCarbon += 0.00135015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00135015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "QLD":
+                    totalCarbon += 0.00125015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00125015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "SA":
+                    totalCarbon += 0.00185015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00185015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "TAS":
+                    totalCarbon += 0.00195015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00195015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "VIC":
+                    totalCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "WA":
+                    totalCarbon += 0.001675015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.001675015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  default:
+                    console.log("-- gas error --");
+                }
+              }else if(emissionData[i].hasOwnProperty("lpgConsumption")) {
+                switch (tempState) {
+                  case "ACT":
+                    totalCarbon += 0.00115015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00115015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NSW":
+                    totalCarbon += 0.00134015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00134015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NT":
+                    totalCarbon += 0.001655015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.001665015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "QLD":
+                    totalCarbon += 0.0165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.0165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "SA":
+                    totalCarbon += 0.000165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.000165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "TAS":
+                    totalCarbon += 0.001365015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.001365015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "VIC":
+                    totalCarbon += 0.0014565015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.0014565015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "WA":
+                    totalCarbon += 0.0016528015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.0016528015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  default:
+                    console.log("-- gas error --");
+                }
+              }
           break;
 
         //Basic Waste Case
@@ -548,21 +627,15 @@ const Calculator = () => {
           if (temp < 0) {
             temp = 0;
           }
-
           totalCarbon += temp;
           eventsCarbon += temp;
-
           break;
-
         //Add Adv Case
-
         default:
           console.log("-- main switch error --");
       }
     }
 
-
-    //Hello message from nathan test.
     let tempTotalCarbon = totalCarbon.toString();
     let tempTransportCarbon = transportCarbon.toString();
     let tempElectricityCarbon = electricityCarbon.toString();
@@ -577,8 +650,6 @@ const Calculator = () => {
       const data = await Auth.currentUserPoolUser();
       const userInfo = { ...data.attributes }; // userInfo.sub == user ID
       const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
-
-
 
       //Set user carbon owning += carbontotal 
       if(projectID != undefined) {
@@ -621,7 +692,6 @@ const Calculator = () => {
           foodDrinkCarbon: tempFoodDrinkCarbon,
           eventsCarbon: tempEventsCarbon
         };
-
         console.log(report);
         //history.push('carbon_report'); // MUST FIX; should send user to carbon report
         await API.graphql(graphqlOperation(createReport, { input: report}));
@@ -629,10 +699,9 @@ const Calculator = () => {
         const userObject = await API.graphql(graphqlOperation(updateUser, 
           { input:{
               id: userInfo.sub, 
-              carbon_units: userData.data.getUser.carbon_units + totalCarbon,
+              carbon_units: userData.data.getUser.carbon_units + Math.round(totalCarbon),
         }}));
-    
-     //history.push('carbon_report'); // MUST FIX; should send user to carbon report
+        history.push('/profile'); // MUST FIX; should send user to carbon report
   }
 };
 
@@ -1354,8 +1423,8 @@ const Calculator = () => {
                       <option value="" selected hidden>
                         Please Select
                       </option>
-                      <option value="">Kilowatt Hours</option>
-                      <option value="">Megajoules</option>
+                      <option value="Kilowatt Hours">Kilowatt Hours</option>
+                      <option value="Megajoules">Megajoules</option>
                     </select>
 
                     <label>State or Territory</label>
@@ -1369,14 +1438,14 @@ const Calculator = () => {
                       <option value="" selected hidden>
                         Please Select
                       </option>
-                      <option value="23.27">ACT</option>
-                      <option value="23.27">NSW</option>
-                      <option value="21.68">NT</option>
-                      <option value="21.72">QLD</option>
-                      <option value="22.4">SA</option>
-                      <option value="21.68">TAS</option>
-                      <option value="19.99">VIC</option>
-                      <option value="20.03">WA</option>
+                      <option value="ACT">ACT</option>
+                      <option value="NSW">NSW</option>
+                      <option value="NT">NT</option>
+                      <option value="QLD">QLD</option>
+                      <option value="SA">SA</option>
+                      <option value="TAS">TAS</option>
+                      <option value="VIC">VIC</option>
+                      <option value="WA">WA</option>
                     </select>
 
                     <div>
