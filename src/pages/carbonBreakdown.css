@@ -1,25 +1,7 @@
-
-
-#reportList {
-    height: 80vh;
-    width: 18vw;
-}
-
 #carbonBreakdown {
-    height: 80vh;
-    width: 48vw;
-}
-
-.column {
-    float: left;
-}
-  
-.left, .right {
-    width: 19.5%;
-}
-  
-.middle {
-    width: 49.5%;
+    height: 50vh;
+    width: 40vw;
+	display:block 
 }
 
 .divider
@@ -29,29 +11,21 @@
 	height: 1px;
 }
 
-.div-transparent:before
-{
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 5%;
-	right: 5%;
-	width: 90%;
-	height: 1px;
-	background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
-}
+.column {
+	flex-direction: column;
+	width: auto;
+  }
 
-.div-arrow-down:after
-{
-	content: "";
-	position: absolute;
-	z-index: 1;
-	top: -7px;
-	left: calc(50% - 7px);
-	width: 14px;
-	height: 14px;
-	transform: rotate(45deg);
+.card {
+	margin: 1em;
+	  padding-top: 0.5em;
 	background-color: white;
-	border-bottom: 1px solid rgb(48,49,51);
-	border-right: 1px solid rgb(48,49,51);
-}
+	border-radius: 0.5em;
+	  box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
+  }
+
+
+  .btn-group button {
+	display: block; /* Make the buttons appear below each other */
+  }
+  

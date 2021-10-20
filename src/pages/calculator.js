@@ -18,7 +18,7 @@ import "../style.css";
 import { useHistory } from "react-router-dom"; // redirects
 import { Button as BootButton } from "react-bootstrap"; // For Modal
 import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
-import { createReport, createProjectReport } from "../graphql/mutations"; // For creating Reports
+import { createReport, createProjectReport, updateUser } from "../graphql/mutations"; // For creating Reports
 import { getID } from "../graphql/customQueries"; // For creating Reports
 import { getUser, getProject } from "../graphql/queries";
 import { UserContext } from "./UserContext";
@@ -573,26 +573,14 @@ const Calculator = () => {
     let tempFoodDrinkCarbon = foodDrinkCarbon.toString();
     let tempEventsCarbon = eventsCarbon.toString();
 
-    try {
-      Auth.currentUserInfo().then((userInfo) => {
-        if (userInfo == null) { // If not signed in head to login page
-          localStorage.setItem('calculate_data', 'true') // Add to local storage. And will be removed when user is tasken to Carbon reports
-          // history.push('login');
-        }
-      })
-      // If the user is still here they must be logged in 
-      // thus we send the data to DB
-
+  
       const data = await Auth.currentUserPoolUser();
       const userInfo = { ...data.attributes }; // userInfo.sub == user ID
-
-      
-
       const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
 
 
-      //Set user carbon owning += carbontotal 
 
+      //Set user carbon owning += carbontotal 
       if(projectID != undefined) {
 
         console.log("creating project report -> projectID should be defined: " + projectID);
@@ -615,7 +603,7 @@ const Calculator = () => {
         console.log(report);
         await API.graphql(graphqlOperation(createProjectReport, { input: report }));
         //history.push('carbon_report'); // MUST FIX; should send user to carbon report
-
+        
       } else {
         
         console.log("creating personal report -> projectID should be undefined: " + projectID);
@@ -635,17 +623,18 @@ const Calculator = () => {
         };
 
         console.log(report);
-        await API.graphql(graphqlOperation(createReport, { input: report }));
         //history.push('carbon_report'); // MUST FIX; should send user to carbon report
-      }
-
-     
-
-    } catch (e) {
-      console.error("Error in calculator.js report method: ", e)
-    }
-
-  };
+        await API.graphql(graphqlOperation(createReport, { input: report}));
+        
+        const userObject = await API.graphql(graphqlOperation(updateUser, 
+          { input:{
+              id: userInfo.sub, 
+              carbon_units: userData.data.getUser.carbon_units + totalCarbon,
+        }}));
+    
+     //history.push('carbon_report'); // MUST FIX; should send user to carbon report
+  }
+};
 
   function resetForms(id) {
     console.log(id);
@@ -800,17 +789,6 @@ const Calculator = () => {
                   <div>
                     <h2>Vehicle</h2>
 
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="vehicleTravelAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      maxLength="60"
-                      placeholder="Description (eg. Landcruiser)"
-                    />
-
                     <label>Number of Vehicles</label>
                     <input
                       className="userInput"
@@ -927,16 +905,6 @@ const Calculator = () => {
 
                     <h2>Air Travel</h2>
 
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="airTravelAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Conference Trip)"
-                    />
-
                     <label>Cabin Class</label>
                     <select
                       required
@@ -1046,16 +1014,6 @@ const Calculator = () => {
                     <br />
 
                     <h2>Public Transport</h2>
-
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="publicTravelAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Trip to the city)"
-                    />
 
                     <label>Transport Method</label>
                     <select
@@ -1276,16 +1234,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED ELECTRICITY FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="electricityAdv"
-                      name="electricityDescription"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Office Lighting)"
-                    />
-
                     <label>Electricity Utility Location</label>
                     <select
                       required
@@ -1369,16 +1317,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED GAS FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="gasAdv"
-                      name="gasDescription"
-                      onChange={handleEmission}
-                      placeholder="Description (ed. Workplace Gas Usage)"
-                    />
-
                     <Divider />
 
                     <label>Gas Consumption</label>
@@ -1574,16 +1512,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED WASTE FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="wasteAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Office General Waste)"
-                    />
-
                     <label>Waste Type</label>
                     <select
                       required
@@ -1790,16 +1718,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED PAPER FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="paperAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Office Printing)"
-                    />
-
                     <label>Source</label>
                     <select
                       required
@@ -1910,16 +1828,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED FOOD AND DRINK FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="foodAndDrinkAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Shopping)"
-                    />
-
                     <label>Food Type</label>
                     <select
                       required
@@ -2017,18 +1925,7 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED EVENTS FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="eventsAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Concert)"
-                    />
-
                     <h2>Accommodation</h2>
-
                     <label>Number of Attendees in Accomodation</label>
                     <input
                       className="userInput"

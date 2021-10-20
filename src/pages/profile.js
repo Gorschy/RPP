@@ -92,10 +92,12 @@ const Profile = () => {
 
     return ( 
         <div>
-            <div className="column left">
-              <span>{carbonOwing}</span>
-              <span>{offsetCarbon}</span>
-                <Card id="reportList" title={<h1>List of Reports</h1>} bordered={true}>   
+            <div className="column">
+                <Card className="card">
+                <p>Your Total Carbon Owed Is  {carbonOwing}</p>
+                <p>Your Total Offset Carbon Is {offsetCarbon}</p>
+                </Card>
+                <Card className="reports-list-card" title={<h1>List of Reports</h1>} bordered={true}>   
                 { allReports.map((item, index) => (
                         <div key = {index}>
                             <a onClick= {submit.bind(item)} id = {item.id}>{item.date}</a>
@@ -104,8 +106,7 @@ const Profile = () => {
 
                 <button onClick = { createReport }>Create Report</button>
                 <button className = "delete-btn" onClick = { deleteSelectedReport }>Delete Report</button>
-                </Card>
-                
+                </Card> 
             </div>
             <CarbonBreakdown {...selectedReport} />
             <Graphs {...selectedReport} />
