@@ -323,8 +323,9 @@ class Solutions extends Component {
         if (userFinal.carbon_units == null) {userFinal.carbon_units = 0;}
         this.setState({user: userFinal})
         pageUser = userFinal;
-        
+        } catch (e) { console.error(e); }
 
+        try {
         const getSols = await API.graphql(graphqlOperation(listSolutions));
         const returnArray = getSols.data.listSolutions.items;
         const sortArray = returnArray.sort((a, b) => {

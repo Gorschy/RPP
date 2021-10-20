@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
 import { Link } from 'react-router-dom';
-import { Menu, Button, Image, Dropdown } from 'antd';
+import { Menu, Button, Image, Dropdown, Row, Col } from 'antd';
 import './Navbar.css';
 import '../style.css';
 import logo from '../assets/LOTT rd.png';
 import { Auth, Storage } from 'aws-amplify';
 import Avatar from '../assets/avatar.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 const { Item } = Menu;
 const { SubMenu } = Menu;
 /* TODO:
@@ -53,17 +54,18 @@ const Navbar = () => {
     }, []);
 
     return (
-        <div>
+        <React.Fragment>
             {/* The Hidden Burger Model */}
+            
             <Menu className="burgerList" mode="horizontal" defaultSelectedKeys={["Home"]}>
                 <Item key="Home"><Link to='/home'><Image src={logo} id="LOTTLogo" preview={false}/></Link></Item>
-                <Menu.Item> <SubMenu key="SubMenu" mode="vertical" title={<h3 className="navbarHeaders">Burger</h3>}>
+                <SubMenu mode="vertical" title={<h3 className="navbarHeaders"><FontAwesomeIcon icon={faBars} /></h3>}>
                 {loggedIn ? ( <Item key="Dashboard"> <Link to='/dashboard'><h3 className="navbarHeadersBurger">Dashboard</h3></Link> </Item>) : null }   
                 <Item key="Calculator"> <Link to='/calculator'><h3 className="navbarHeadersBurger">Calculator</h3></Link> </Item>
                 {loggedIn ? (<Item key="Projects"> <Link to='/projects'><h3 className="navbarHeadersBurger">Projects</h3></Link> </Item>) : null }
                 <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeadersBurger">Solutions</h3></Link> </Item>
                 <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeadersBurger">Contact Us</h3></Link> </Item>
-                </SubMenu> </Menu.Item> 
+                </SubMenu>
                 
             </Menu>
 
@@ -75,33 +77,19 @@ const Navbar = () => {
                 <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeaders">Solutions</h3></Link> </Item>
                 <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeaders">Contact Us</h3></Link> </Item>
 
-                {loggedIn ? ( <Item key="profileImage"> <img className = "profile-pic" src={image} /> </Item> ) : null }   
+                 
 
             </Menu>
 
-        <Menu theme="light" mode="horizontal" className="rightStyle">
+            <Menu theme="light" mode="horizontal" className="rightStyle">
+            { loggedIn ? ( <Item key="profileImage"> <img className = "profile-pic" src={image} /> </Item> ) : null }  
+            { loggedIn ? (<Item><Link to="/"><Button onClick={signOut} className="loginButtonNav" type="primary">Sign out</Button></Link></Item>) : null }
+                
+            { !loggedIn ? (<Item><Link to='/register'><Button type="link" ><div className="standardTextLink">Need an Account?</div></Button></Link></Item>) : null }
+            { !loggedIn ? (<Item><Link to="/login"><Button  className="loginButtonNav" type="primary">Login</Button></Link></Item>) : null }
 
-            { loggedIn ? (
-                    <Link to="/">  
-                        <Button onClick={signOut} className="loginButtonNav" type="primary">
-                            Sign out
-                        </Button>
-                    </Link> 
-                ) : ( 
-                    <div>
-                        <Link to='/register'>
-                            <Button type="link" style={{paddingRight: 30}}><div className="standardTextLink">Need an Account?</div></Button>
-                        </Link>
-                        <Link to="/login">    
-                            <Button  className="loginButtonNav" type="primary">
-                                Login
-                            </Button>
-                        </Link>
-                        
-                    </div>
-                )}
-        </Menu>     
-        </div>
+            </Menu>
+        </React.Fragment>
     );
 }
 

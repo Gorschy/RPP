@@ -1,5 +1,4 @@
 type User @model
-
 {
   id: ID!
   email: String!
@@ -16,8 +15,8 @@ type User @model
   # unregisted User from Project [invites]
   hasRegistered: Boolean!
   # Carbon Units
-  carbon_units: Int 
-  offsetted_units: Int
+  carbon_units: Float 
+  offsetted_units: Float
   my_solutions: [SolutionBacked] @connection(keyName: "byBacker", fields: ["id"])
   project_carbon_reports: [ProjectReport] @connection(keyName: "byUser", fields: ["id"])
 
@@ -26,7 +25,8 @@ type User @model
 
 type Project @model @key(name: "byCreator", fields:["creatorID"])
 @auth(rules: [
-{ allow: private, operations: [read, create, update, delete]}])
+   {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]},
+  {allow: private, operations: [read, create, update, delete]}])
 {
   id: ID!
   creatorID: ID!
@@ -41,7 +41,9 @@ type Project @model @key(name: "byCreator", fields:["creatorID"])
 
 type ProjectReport
 @model(queries: null)
-  @auth(rules :[{ allow: private}])
+  @auth(rules :[
+    {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]},
+    { allow: private, operations: [read, create, update, delete]}])
   @key(name: "byProject", fields: ["projectID", "userID"])
   @key(name: "byUser", fields: ["userID", "projectID"])    {
   id: ID!
@@ -63,8 +65,6 @@ type ProjectReport
 
 # Can only query ProjectEditor through Project.editors and User.projects
 type ProjectEditor
-  @auth(rules: [
-{ allow: private, operations: [read, create, update, delete]}])
   @model(queries: null)
   @key(name: "byProject", fields: ["projectID", "editorID"])
   @key(name: "byEditor", fields: ["editorID", "projectID"])     
@@ -77,7 +77,11 @@ type ProjectEditor
 }
 
 type Solution @model 
-@auth(rules :[{ allow: private, groups: ["Admin"], operations: [create, delete, update]}])
+  @auth(rules: [
+    { allow: groups, groups: ["Admin"], operations: [read, create, update, delete]},
+    {allow: private, operations: [read]},
+    { allow: public, operations: [read] }
+])  
 {
   id:ID!
   title: String!
@@ -97,7 +101,6 @@ type Solution @model
 
 # Can only query SolutionBacked through Solution.backers and User.my_solutions
 type SolutionBacked
-  @auth(rules :[{ allow: private}])
   @model(queries: null)
   @key(name: "bySolution", fields: ["solutionID", "backerID"])
   @key(name: "byBacker", fields: ["backerID", "solutionID"])     
@@ -108,13 +111,13 @@ type SolutionBacked
   solution: Solution! @connection(fields: ["solutionID"])
   backer: User! @connection(fields: ["backerID"])
   money_amount: Float!
-  credits: Int!
+  credits: Float!
 }
 
 
 type Report @model @key(name: "byUser", fields: ["userID"])
 @auth(rules: [
-{ allow: groups, groups: ["Admin"]},
+{ allow: groups, groups: ["Admin"],operations: [read, create, update, delete]},
 { allow: owner, ownerField: "userID", operations: [read, create, update, delete]}])
 {
   id: ID!

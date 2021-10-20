@@ -22,8 +22,8 @@
 }
 
 .profile-pic {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -35,9 +35,10 @@
 
 .rightStyle {
     position: absolute;
-    top: 0;
-    right: 0;
-    height: 0; /* fix this - leaves a small clickable line above sign out button */ /* I sorta fixed it? ~Zac */
+    top: 0px;
+    right:0px;
+    height: 64px;
+    width: auto;
 }
 
 h3.navbarHeaders {
@@ -50,7 +51,6 @@ h3.navbarHeaders {
     padding-top: 20px;
 
 }
-
 
 h3.navbarHeadersBurger {
     font-family: var(--general_font_family);

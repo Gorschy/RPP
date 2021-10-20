@@ -62,7 +62,15 @@
               "userPoolId": "authrppc25d3b1a"
             }
           },
-          "additionalAuthenticationProviders": []
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 365,
+                "description": "public access to db"
+              }
+            }
+          ]
         }
       }
     }

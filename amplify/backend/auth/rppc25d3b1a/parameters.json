@@ -1,6 +1,6 @@
 {
     "identityPoolName": "rppc25d3b1a_identitypool_c25d3b1a",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "rppc25d3b1a",
     "userPoolName": "rppc25d3b1a_userpool_c25d3b1a",
     "autoVerifiedAttributes": [

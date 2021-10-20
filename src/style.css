@@ -57,15 +57,6 @@
 
 }
 
-h1 { /* This used to be cardHeader*/
-    font-family: var(--general_font_family);
-    font-size: var(--unit_title_font_size);
-    font-weight: var(--unit_title_font_weight);
-    color: var(--general_text_color);
-    text-align: left;
-    line-height: 32px;
-}
-
 div.standardText {
     font-family: var(--general_font_family);
     font-size: var(--general_font_size);
@@ -84,6 +75,14 @@ div.standardTextLink {
 
 }
 
+h1 { /* This used to be cardHeader*/
+    font-family: var(--general_font_family);
+    font-size: var(--card_header_font_size);
+    font-weight: var(--card_header_font_weight);
+    color: var(--card_header_color);
+    text-align: left;
+    line-height: 24px;
+}
 
 h2 { /* This used to be headerText*/
     font-family: var(--general_font_family);
