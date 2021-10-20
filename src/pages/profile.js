@@ -48,6 +48,7 @@ const Profile = () => {
         setCarbonOffset(userData.data.getUser.offsetted_units);
 
         setAllReports(getData.data.listReports.items);
+        setSelectedReport(getData.data.listReports.items[0]);
 
       }catch(e){
         console.error("Error in profile.js report method: ", e)
@@ -91,7 +92,7 @@ const Profile = () => {
     }
 
     return ( 
-        <div>
+        <div className="container">
             <div className="column">
                 <Card className="card">
                 <p>Your Total Carbon Owed Is  {carbonOwing}</p>

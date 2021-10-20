@@ -58,6 +58,11 @@ const CarbonBreakdown = (report) => {
     };
 
 
+    useEffect(() => {
+      totalCarbon();
+    }, []);
+
+
     //Onclick for each button
     const totalCarbon = () => {
       let temp = 0;
@@ -78,11 +83,11 @@ const CarbonBreakdown = (report) => {
       temp = report.gasCarbon - carbonAverage.gasCarbon;
       temp = temp/carbonAverage.gasCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.gas);
+      setPercentageDifference(temp);
       setCarbonValue(report.gasCarbon);
       setTipState(tips.gas);
     }
@@ -90,13 +95,13 @@ const CarbonBreakdown = (report) => {
     const paperCarbon = () => {
       let temp = 0;
       temp = report.paperCarbon - carbonAverage.paperCarbon;
-      percentDiff.paper = temp/carbonAverage.paperCarbon * 100; 
+      temp = temp/carbonAverage.paperCarbon * 100; 
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.paper);
+      setPercentageDifference(temp);
       setCarbonValue(report.paperCarbon);
       setTipState(tips.paper);
     }
@@ -104,13 +109,13 @@ const CarbonBreakdown = (report) => {
     const transportCarbon = () => {
       let temp = 0;
       temp = report.transportCarbon - carbonAverage.transportCarbon;
-      percentDiff.transport = temp/carbonAverage.transportCarbon * 100;
+      temp = temp/carbonAverage.transportCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.transport);
+      setPercentageDifference(temp);
       setCarbonValue(report.transportCarbon);
       setTipState(tips.transport);
     }
@@ -118,13 +123,13 @@ const CarbonBreakdown = (report) => {
     const wasteCarbon = () => {
       let temp = 0;
       temp = report.wasteCarbon - carbonAverage.wasteCarbon;
-      percentDiff.waste = temp/carbonAverage.wasteCarbon * 100;
+      temp = temp/carbonAverage.wasteCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.waste);
+      setPercentageDifference(temp);
       setCarbonValue(report.wasteCarbon);
       setTipState(tips.waste);
     }
@@ -132,13 +137,13 @@ const CarbonBreakdown = (report) => {
     const foodDrinkCarbon = () => {
       let temp = 0;
       temp = report.foodDrinkCarbon - carbonAverage.foodDrinkCarbon;
-      percentDiff.foodDrink = temp/carbonAverage.foodDrinkCarbon * 100; 
+      temp = temp/carbonAverage.foodDrinkCarbon * 100; 
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.foodDrink);
+      setPercentageDifference(temp);
       setCarbonValue(report.foodDrinkCarbon);
       setTipState(tips.foodDrink);
     }
@@ -146,13 +151,13 @@ const CarbonBreakdown = (report) => {
     const electrictyCarbon = () => {
       let temp=0;
       temp = report.electricityCarbon - carbonAverage.electricityCarbon;
-      percentDiff.electricity = temp/carbonAverage.electricityCarbon;
+      temp = temp/carbonAverage.electricityCarbon;
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.electricity);
+      setPercentageDifference(temp);
       setCarbonValue(report.electricityCarbon);
       setTipState(tips.electricity);
     }
@@ -160,13 +165,13 @@ const CarbonBreakdown = (report) => {
     const waterCarbon = () => {
       let temp = 0;
       temp = report.waterCarbon - carbonAverage.waterCarbon;
-      percentDiff.water = temp/carbonAverage.waterCarbon * 100;
+      temp = temp/carbonAverage.waterCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.water);
+      setPercentageDifference(temp);
       setCarbonValue(report.waterCarbon);
       setTipState(tips.water);
     }
@@ -174,13 +179,13 @@ const CarbonBreakdown = (report) => {
     const eventsCarbon = () => {
       let temp = 0;
       temp = report.eventsCarbon - carbonAverage.eventsCarbon;
-      percentDiff.events = temp/carbonAverage.eventsCarbon * 100;  
+      temp = temp/carbonAverage.eventsCarbon * 100;  
       if(temp > 0){ 
-        temp = " +" + temp;
-      }else{
-        temp = " -" + temp;
+        temp = " +" + temp + " Increase";
+      } else {
+        temp = + temp + " Decrease";
       }
-      setPercentageDifference(percentDiff.events);
+      setPercentageDifference(temp);
       setCarbonValue(report.eventsCarbon);
       setTipState(tips.events);
     }
@@ -190,7 +195,7 @@ const CarbonBreakdown = (report) => {
    
     return ( 
 
-          <div className="column">
+          <div className="column container">
             <Card className="card" bordered={true}>
             <div className="column">
                 <div className="btn-group">
@@ -220,7 +225,7 @@ const CarbonBreakdown = (report) => {
             <Card id="carbonBreakdown" title={<h1>Carbon Breakdown</h1>} bordered={true}>
             { tipState.map((item, index) => (
                         <div key = {index}>
-                            <a>{item}</a>
+                            <p>{item}</p>
                         </div>
                     ))}
             </Card>

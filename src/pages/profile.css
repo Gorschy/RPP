@@ -30,4 +30,6 @@
     text-align: center;
 }
 
-  
+.container { 
+    overflow-x: hidden;
+}
