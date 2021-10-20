@@ -673,7 +673,7 @@ const Calculator = () => {
 
         console.log(report);
         await API.graphql(graphqlOperation(createProjectReport, { input: report }));
-        //history.push('carbon_report'); // MUST FIX; should send user to carbon report
+        history.push('/projects'); // MUST FIX; should send user to carbon report
         
       } else {
         

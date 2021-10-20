@@ -184,15 +184,10 @@ const Account = () => {
             <br/><br/>
             <Button className="loginButton"  type="primary" onClick={updateUserDetails} > Update Account Details </Button>
         </Card> 
-        
-
-        
-       
-
-
+    
       
     </div>
-    ) : (<Redirect to="/home"/>) }
+    ) : null }
     </div>
 ); }
 
