@@ -1,112 +1,19 @@
 import "../../style.css";
 import "./projects.css";
-import placeholderImg from "../../assets/plant.jpg"
-import React, { useContext, useEffect, useState } from "react";
+import CarbonBreakdown from '../carbonBreakdown.js';
+import Graphs from "../graphs";
+import { Modal } from "antd";
+import { useContext, useEffect, useReducer, useState } from "react";
 import { UserContext } from "../UserContext";
-import { Redirect } from "react-router"
-import { Auth, API, graphqlOperation } from "aws-amplify";
-import { List, Modal } from "antd";
-import {getUser} from '../../graphql/queries';
+import { useHistory } from "react-router"
+import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
+import { listProjects } from "../../graphql/customQueries"; 
+import { getUser, listUsers, getProject } from "../../graphql/queries";
+import { createProject, createProjectEditor, deleteProjectReport, deleteProject, deleteProjectEditor } from '../../graphql/mutations';
 
-/* MOCK DATA TESTING (ignore)
---------------------------------------------------------------------------------- */
+Storage.configure({ track: true, level: "public" });
 
-const users = [
-    {
-        id: "036f3547-e001-467f-9a82-7095c9bff202",
-        email: "bb923@uowmail.edu.au",
-        first_name: "Brandon",
-        last_name: "Britton",
-        projects_list: [1, 3, 5],
-        pending_invites: [6,7]
-        //carbon_reports: [1]
-    },
-    {
-        id: "1",
-        email: "a@a.com",
-        first_name: "A",
-        last_name: "a",
-        projects_list: [1, 2, 3, 4, 5],
-        pending_invites: []
-        //carbon_reports: [1]
-    },
-    {
-        id: "2",
-        email: "b@b.com",
-        first_name: "B",
-        last_name: "b",
-        projects_list: [3, 4, 5],
-        pending_invites: []
-        //carbon_reports: [1,2]
-    },
-    {
-        id: "3",
-        email: "c@c.com",
-        first_name: "C",
-        last_name: "c",
-        projects_list: [4, 5],
-        pending_invites: []
-        //carbon_reports: [1,2,3]
-    },
-];
-
-const projects = [
-    {
-        id: 1,
-        name: "Current User Project1",
-        description: "1",
-        creation_date: "",
-        admin_user: "036f3547-e001-467f-9a82-7095c9bff202",
-        users: ["036f3547-e001-467f-9a82-7095c9bff202", "1"],
-        //carbon_reports: [],
-        //total_report: "
-    },
-    {
-        id: 2,
-        name: "Not Current Users Project1",
-        description: "2",
-        creation_date: "",
-        admin_user: "",
-        users: [],
-        //carbon_reports: [],
-        //total_report: "
-    },
-    {
-        id: 3,
-        name: "Current User Project2",
-        description: "3",
-        creation_date: "",
-        admin_user: "1",
-        users: ["036f3547-e001-467f-9a82-7095c9bff202", "1", "2"],
-        //carbon_reports: [],
-        //total_report: "
-    },
-    {
-        id: 4,
-        name: "Not Current Users Project2",
-        description: "4",
-        creation_date: "",
-        admin_user: "",
-        users: [],
-        //carbon_reports: [],
-        //total_report: "
-    },
-    {
-        id: 5,
-        name: "Current User Project3",
-        description: "5",
-        creation_date: "",
-        admin_user: "3",
-        users: ["036f3547-e001-467f-9a82-7095c9bff202", "1", "2", "3"],
-        //carbon_reports: [],
-        //total_report: "
-    }
-];
-
-const carbonreports = [
-
-];
-
+// initialises current logged in users data
 function GetUserData() {
     
     const [currentUser, setCurrentUser] = useState({});
@@ -132,28 +39,76 @@ function GetUserData() {
     return [currentUser, isLoading];
 }
 
-function GetProjects(currentUser) {
-    
-    const userData = users.filter(obj => { if(obj.id === currentUser.id) return obj.projects_list });
-    const tempList = userData[0].projects_list
-    const projectsList = []; 
 
-    for(let i = 0; i < tempList.length; i++){
-        const temp = projects.filter(obj => {
-            if(obj.id === tempList[i]) return obj;
-        });
-        projectsList.push(...temp);
+// handles projects functionality
+async function GetProjects(currentUser) {
+
+    try {
+
+        // gets all projects the user has created
+        const user_created_projects = await API.graphql(graphqlOperation(listProjects, { filter: {creatorID: {contains: currentUser.id}}}));
+        const created_projects = [...user_created_projects.data.listProjects.items];
+
+        // gets all project id's the user is editor_in
+        const temp = [...currentUser.projects_in.items];
+        const editor_projects = [];
+        
+        // gets all projects the user is editor_in and processes
+        if(temp.length > 0) {
+            
+            // requests project object for each projectID
+            for(let i = 0; i < temp.length; i++) {
+                
+                const temp_project = await API.graphql(graphqlOperation(getProject, { id: temp[i].projectID}));
+                editor_projects.push(temp_project.data.getProject);
+            }
+        }
+
+        // creates the users project list from created and editor_in projects
+        const projects_list = [...created_projects, ...editor_projects];
+
+        // returns every project the user is a part of to the project_list state
+        return projects_list;
+
+    } catch(err) {
+        console.log("error: ", err);
     }
-    
-    return projectsList
 }
 
 
+
+
+// main component
 const UserLists = (currentUser) => {
+    
+    // projects state control
+    const [projects_list, set_projects_list] = useState([]);    // handles state of projects user is part of
+    const [global_report, set_global_report] = useState([]);    // stores all selected project reports
+    const [team_members, set_team_members] = useState([]);      // handles state of team members in a selected project
+    const [selected_project, select_project] = useState();      // handles state for which project is selected currently
+    const [project_vars, set_project_vars] = useState({});      // controls form vars for creating new project
+    const [user_reports, set_user_reports] = useState([]);      // stores all selected project reports made by current user 
+    const [selected_report, select_report] = useState([]);      // handles state for which report is selected currently
+    const [no_projects, is_projects] = useState();              // handles whether a user has any projects
+    const [emails, set_emails] = useState();                    // handles email inputs
+    const [admin, is_admin] = useState();                       // handles whether a user is an admin of a selected project or not
+
+    const [admin_image, set_admin_image] = useState();
+    const [image, set_image] = useState();
+
+    const [forceConceal, setConceal] = useState(true);
+
+    
+    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
     // modal state control
     const [visible, setVisible] = useState(false);
+    const [inviteVisible, setInviteVisible] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+
+    const showInvite = () => {
+        setInviteVisible(true);
+    };
 
     const showModal = () => {
         setVisible(true);
@@ -161,189 +116,661 @@ const UserLists = (currentUser) => {
 
     const handleCancel = () => {
         setVisible(false);
+        setInviteVisible(false);
     };
-    
-    // new project state control
-    const [projectVars, setProjectVars] = useState({});
-    const [newProject, setNewProject] = useState({});
 
-    const generateProjectID = () => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
+    // updates email state onchange
+    const updateEmails = (e) => {
+        const { value } = e.target;
+        set_emails(value);
+    } 
+
+
+    // initialises projects functonality on render
+    const init = () => {
+        
+        // gets all projects user is part of and selects first project in list
+        const projectsList = GetProjects(currentUser);
+        
+        // resolves promise returned by above
+        projectsList.then(function(result) {
+            
+            console.log(result);
+            
+            if(result.length > 0){
+                
+                is_projects(false);
+
+                set_projects_list(result);
+
+                
+                // state issues major bugs.
+
+                // getAdminProfilePicture(result[0].creatorID);
+                // getProfilePicture(result[0]);
+                // //handleProjectSelect(result[0].id);
+                // //select_project(result[0]);
+                // if(result[0].creatorID === currentUser.id) is_admin(true);
+                // if(result[0].project_carbon_reports.length > 0) set_global_report(generateGlobalReport(result[0].project_carbon_reports.items));
+                
+
+            } else { 
+                console.log("User has no projects created"); 
+                is_projects(true);
+            }
         });
     }
 
+    useEffect(() => {
+        init();
+    }, []);
+
+
+    // handles grabbing a users profile picture from the s3 bucket
+    const getAdminProfilePicture = async (id) => { 
+
+        console.log(id);
+        const temp = id + ".png";
+
+        Storage.get(temp)
+        .then(url => {
+            const request = new Request(url);
+            fetch(request).then(function(response) { if(response.status === 200) set_admin_image(url) });
+        })
+        .catch(err => console.log(err));
+    }
+
+    // gets users profile pic url -- state bug - must double click to get correct img
+    const getProfilePicture = async (id) => { 
+
+        console.log(id);
+        const temp = id + ".png";
+
+        Storage.get(temp)
+        .then(url => {
+        
+            const request = new Request(url);
+            fetch(request).then(function(response) { if(response.status === 200) set_image(url); });
+            
+        })
+        .catch(err => console.log(err));
+        
+        
+    }
+
+
+    // handles generating the global report
+    const generateGlobalReport = (reports) => {
+    
+        const modified_reports = reports.map(({createdAt, date, id, updatedAt, userID, projectID, ...item}) => item);
+    
+        modified_reports.sum = function(items, prop){
+            return items.reduce( function(a, b){
+                return (parseFloat(a) + parseFloat(b[prop]));
+            }, 0);
+        };
+    
+        const global_report = {
+            transportCarbon: modified_reports.sum(modified_reports, "transportCarbon").toString(),
+            electricityCarbon: modified_reports.sum(modified_reports, "electricityCarbon").toString(),
+            gasCarbon: modified_reports.sum(modified_reports, "gasCarbon").toString(),
+            wasteCarbon: modified_reports.sum(modified_reports, "wasteCarbon").toString(),
+            waterCarbon: modified_reports.sum(modified_reports, "waterCarbon").toString(),
+            paperCarbon: modified_reports.sum(modified_reports, "paperCarbon").toString(),
+            foodDrinkCarbon: modified_reports.sum(modified_reports, "foodDrinkCarbon").toString(),
+            eventsCarbon: modified_reports.sum(modified_reports, "eventsCarbon").toString(),
+            totalCarbon: modified_reports.sum(modified_reports, "totalCarbon").toString()
+        }
+
+        return global_report;
+    }
+
+
+    // handles deleting the selected project from the system
+    const deleteSelectedProject = async () => {
+        
+        console.log("Deleting Project -> " + selected_project.id);
+        
+        try {
+            
+            const reports_to_delete = selected_project.project_carbon_reports.items;
+            const editors_to_delete = selected_project.editors.items;
+            const project_to_delete = selected_project.id;
+            
+            for(let i = 0; i < reports_to_delete.length; i++) {
+                await API.graphql(graphqlOperation(deleteProjectReport, { input: { id: reports_to_delete[i].id }})); 
+            }
+            
+            for(let i = 0; i < editors_to_delete.length; i++) {
+                await API.graphql(graphqlOperation(deleteProjectEditor, { input: { id: editors_to_delete[i].id }})); 
+            }
+            
+            await API.graphql(graphqlOperation(deleteProject, { input: { id: project_to_delete }}));
+            
+            init();
+
+        } catch(err) { console.log("Project could not be deleted -> " + err) }
+    }
+
+
+    // handles deleting the selected report from a project
+    const deleteSelectedReport = async () => {
+        
+        console.log("Deleting Report -> " + selected_report.id);
+
+        try {
+            
+            const report_to_delete = selected_report.id;
+            await API.graphql(graphqlOperation(deleteProjectReport, { input: { id: report_to_delete }}));
+            
+            init();
+
+        } catch(err) { console.log("Report could not be deleted -> " + err) }
+    }
+
+
+    // handles state of selected project from list
+    const handleProjectSelect = async (e) => {
+        try {
+            setConceal(false);
+            e.preventDefault();
+            const projectID = e.target.id;
+            
+            // if(typeof e === "string" || e instanceof String) {
+            //     projectID = e
+            // } else {
+            //     
+            // }
+
+            console.log(projectID);
+            
+            const temp = projects_list.filter(obj => { if(obj.id === projectID) return obj });
+            const [project] = [...temp];
+            //console.log(project);
+            const team_member_IDs = project.editors.items;
+            const team_members = [];
+                        
+            for(let i = 0; i < team_member_IDs.length; i++) {
+                const temp = await API.graphql(graphqlOperation(getUser, { id: team_member_IDs[i].editorID }));
+                const team_member = temp.data.getUser;
+                 
+                getProfilePicture(team_member.id);
+                forceUpdate();
+                console.log(image);
+                team_member["url"] = image;
+                //console.log(image);
+                
+                console.log(team_member);
+                team_members.push(team_member);
+            }
+
+            //console.log(team_members);
+
+            const project_reports = [...project.project_carbon_reports.items];
+            const user_project_reports = project_reports.filter(obj => { if(obj.userID === currentUser.id) return obj });
+            
+            if(project.creatorID === currentUser.id) {
+                is_admin(true);
+            } else { is_admin(false); }
+
+            // sets state for project details
+            getAdminProfilePicture(project.creatorID);
+            //getProfilePicture(project);
+            set_global_report(generateGlobalReport(project_reports));
+            set_user_reports(user_project_reports);
+            select_report(user_project_reports[0]);
+            select_project(project);
+            set_team_members(team_members);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+    // handles report selection from project
+    const handleReportSelect = (e) => {
+
+        e.preventDefault();
+        const report = user_reports.filter(obj => { if(obj.id === e.target.id) return obj });
+        select_report(...report);
+    }
+
+
+    // handles form values for new projects
     const handleChange = (e) => {
-
+        
+        e.preventDefault();
         const { name, value } = e.target;
-
-        setProjectVars(prevState => (
+        
+        set_project_vars(prevState => (
             { ...prevState, [name]: value }
         ));
     }
 
-    const handleSubmit = () => {
 
-        /* TODO: 
-          - store project in db
-          - save project in current users projectList
-        */
-
-        const project = {
-            id: generateProjectID(),
-            admin: currentUser.sub,
-            name: projectVars.project_name,
-            description: projectVars.project_description,
-            creation_date: new Date().toLocaleDateString(),
-            users: [currentUser.sub],
-            carbon_reports: [],
-            total_carbon: 0
+    // handles creating a new user project
+    async function handleSubmit() {  
+        set_image([]);
+        is_projects(false);
+        console.log(project_vars);
+        
+        const newProject = {
+            creatorID: currentUser.id,
+            title: project_vars.project_name,
+            description: project_vars.project_description
         }
 
-        setNewProject(project);
-        setProjectVars({});
+        await API.graphql(graphqlOperation(createProject, { input: newProject}));
 
         setConfirmLoading(true);
         setTimeout(() => {
             setVisible(false);
             setConfirmLoading(false);
+            init();
         }, 2000);
+    }
 
-        document.getElementById("new_project_form").reset();
-        //console.log("new project created: " + project.name);
+
+    // handles invite system for inviting users to a created project
+    async function inviteUsers() {
+ 
+        if(emails === undefined) { return }
+        // invalid argument containers
+        const invalid_emails = [];
+        const invalid_accounts = [];
+       
+        // RFC 2822 standard email validation regex - regex input handling (removes all whitespace and splits via ',')
+        var validation = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+        const temp = emails.replace(/ /g,'');
+        const test = temp.split(",");
+
+        // invites all valid emails to the project
+        for(let i = 0; i < test.length; i++) {
+            
+            // validates each email string to ensure they are correct
+            if(test[i].match(validation)) {
+
+                // check if this email has an account
+                const temp = await API.graphql(graphqlOperation(listUsers, { filter: {email: {contains: test[i]}}}));
+                const user = temp.data.listUsers.items;
+
+                // if the user has an account
+                if(user.length != 0 && test[i] == user[0].email) {
+                    
+                    // if the user isn't the project admin
+                    if(currentUser.id != user[0].id ) {
+                        
+                        // add user to the selected project
+                        console.log(selected_project.id);
+                        alert("User Invited!");
+                        await API.graphql(graphqlOperation(createProjectEditor, {input: {editorID: user[0].id, projectID: selected_project.id }}));
+
+                        setConfirmLoading(true);
+                        setTimeout(() => {
+                            setInviteVisible(false);
+                            setConfirmLoading(false);
+                            init();
+                        }, 2000);
+
+                    } else { invalid_accounts.push(test[i]); }
+                } else { invalid_accounts.push(test[i]); }
+            } else { invalid_emails.push(test[i]); }
+        }
+
+        if(invalid_emails.length > 0 || invalid_accounts > 0) {
+            console.log("these emails are invalid: \n" + JSON.stringify(invalid_emails, null, 2) + "\nthese emails dont have an account: \n" + JSON.stringify(invalid_accounts, null, 2));
+            alert("Sorry it looks like some of the\nusers you tried to invite don't\nhave an account or their email\nwas incorrect. Please try again! ");
+        } 
+    }
+
+    // redirect handling
+    const history = useHistory();
+
+    const createReport = () => {
+        let path = "/calculator";
+        history.push(path);
+    }
+
+    const declineProject = () => {
+        let path = "/home";
+        history.push(path);
     }
     
-    // users projects operations
-    const projectsList = GetProjects(currentUser);
-    // const [selected_project, select_project] = useState({});
-    // const [pending_invites, any_pending_invites] = useState(false);
-    //console.log(projectsList);
-    
-    const handleProjectSelect = (e) => {
-        e.preventDefault();
-        const projectID = e.target.id;
-        console.log(projectID);
-        
+    const getImage = (id) => {
+       const user_url = image.filter(obj => { if(obj.id === id) return obj.url });
+        console.log(user_url.url);
+       return user_url;
+
     }
-    
+
 
     return (
+        
         <div className = "container">
 
-            <Modal
-                title="Create Project"
-                visible={visible}
-                onOk={handleSubmit}
-                okText="Create New Project"
-                confirmLoading={ confirmLoading }
-                onCancel={ handleCancel }
-                centered
-            >
-                <div>
-                    <form id="new_project_form">
-                        <label>Project Name</label>
-                        <input
-                            className = "form_input"
-                            type = "text"
-                            name = "project_name"
-                            onChange = { handleChange }
-                        />
-                        <label>Project Description</label>
-                        <input
-                            className = "form_input"
-                            type = "text"
-                            name = "project_description"
-                            onChange = { handleChange }
-                        />
-                    </form>
-                </div>
-            </Modal>
+            {
+                no_projects ? (
 
-            <div className="column">
-                <div id="projectListCard">
-                    <h3 className="centerContent">Projects</h3>
-                    { projectsList.map((item, index) => (
-                        <div key = {index}>
-                            <a className = "projects-list-item" id = {item.id} onClick = { handleProjectSelect.bind(item) }>{item.name}</a>
-                        </div>
-                    ))}
-                    <button className = "create-project-btn" onClick = { showModal }>Create Project</button>
-                </div>
-
-                <div id="carbonReportListCard">
-                    <h3 className="centerContent">Carbon Reports</h3>
-                </div>
-            </div>
-
-            <div className = "column">
-                <div className="projectBreakdown">
-                    <h3>Project Breakdown</h3>
-                </div>
-            </div>
-
-            <div className = "column">                
-                <div className="projectAnalytics">
-                    <h3>Project Summary</h3>
-                    <p>{JSON.stringify(currentUser, null, 2)}</p>
-                </div>
-            </div>
-                    
-
-                
-
-            <div className="column">
-                <div id="projectAdminCard">
-                    <h4 className="projectAdminHead">Project Admin</h4>
-                    <img className="adminPicture" src={placeholderImg} alt="Display Picture" />
-                    <h3>{}</h3>
-                    
-                    <button>Invite to Project</button>
-                    <button className = "delete-project-btn">Delete Project</button>
-                </div>
-
-                <div id="membersList">
-                    <div className="teamMember">
-                        <img className="teamMemberPicture" src={placeholderImg} alt="Display Picture" />
-                        <h5 className="teamMemberLabel">{currentUser.given_name} {currentUser.family_name}</h5>
-                        <h5 className="teamMemberLabel">{currentUser.email}</h5>
+                    <div>
+                        <Modal
+                            visible = { no_projects }
+                            onOk = { handleSubmit }
+                            okText = "Create Project"
+                            cancelText = "No Thanks"
+                            confirmLoading = { confirmLoading }
+                            onCancel = { declineProject }
+                            closable = { false }
+                            className = "custom-modal"
+                            centered
+                        >
+                            <div className = "center-text">
+                                <h1>Looks like you don't have any Projects...</h1>
+                                <h2>Would you like to create one?</h2>
+                                <h3>We just need a few details...</h3>
+                            </div>
+                            <form className = "new-project-form">
+                                <label className = "form-label">Project Name</label>
+                                <input
+                                    className = "form-input"
+                                    type = "text"
+                                    name = "project_name"
+                                    onChange = { handleChange }
+                                />
+                                <label>Project Description</label>
+                                <textarea
+                                    className = "form-input"
+                                    type = "text"
+                                    name = "project_description"
+                                    onChange = { handleChange }
+                                />
+                            </form>
+                        </Modal>
                     </div>
-                </div>
-            </div>
 
+                ) : no_projects === false ? (
+                    
+                    <div className = "container">
+                    
+                        {
+                            forceConceal ? (
+
+                                <div>  
+                                    <Modal
+                                        visible = { visible }
+                                        onOk = { handleSubmit }
+                                        okText = "Create Project"
+                                        confirmLoading = { confirmLoading }
+                                        onCancel = { handleCancel }
+                                        closable = { false }
+                                        className = "custom-modal"
+                                        centered
+                                    >
+                                        <div className = "center-text">
+                                            <h2>Create a new Project!</h2>
+                                            <h3>We just need a few details...</h3>
+                                        </div>
+                                        <form className = "new-project-form">
+                                            <label className = "form-label">Project Name</label>
+                                            <input
+                                                className = "form-input"
+                                                type = "text"
+                                                name = "project_name"
+                                                onChange = { handleChange }
+                                            />
+                                            <label>Project Description</label>
+                                            <textarea
+                                                className = "form-input"
+                                                type = "text"
+                                                name = "project_description"
+                                                onChange = { handleChange }
+                                            />
+                                        </form>
+                                    </Modal>
+
+                                    <Modal
+                                        visible = { inviteVisible }
+                                        onOk = { inviteUsers }
+                                        okText = "Invite User"
+                                        confirmLoading = { confirmLoading }
+                                        onCancel = { handleCancel }
+                                        closable = { false }
+                                        className = "custom-modal"
+                                        centered
+                                    >
+                                        <div className = "center-text">
+                                            <h1>Invite a Team Member!</h1>
+                                            <h3 className>Just enter their account email...</h3>
+                                            <input
+                                                className = "form-input"
+                                                type = "text"
+                                                name = "email"
+                                                placeholder = "Team Member Email"
+                                                onChange = { updateEmails }
+                                            />
+                                            <label>Tip: You can add multiple users at once<br/> by seperating their emails by a comma!</label>
+                                        </div>
+                                        
+                                        
+                                    </Modal>
+                                
+                                    <div className = "column">
+                                        
+                                        <div className = "projects-list-card card">
+                                            <h2>Projects</h2>
+                                            <div className = "lists">
+                                                <ul>
+                                                    { projects_list.map((item, index) => (
+                                                        <li className = "lists-item" id = { item.id } onClick = { handleProjectSelect.bind(item) } key = { index }>
+                                                            <span className = "label" id = { item.id } onClick = { handleProjectSelect.bind(item) }>{ item.title }</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <button className = "create-project-btn" onClick = { showModal }>Create Project</button>
+                                        </div>
+
+                                        <div className = "reports-list-card card">
+                                            <h2>Carbon Reports</h2>
+                                            <div className = "lists">
+                                                <ul>
+                                                    { user_reports.map((item, index) => (
+                                                        <li className = "lists-item" id = { item.id } onClick = { handleReportSelect.bind(item) } key = { index }>
+                                                            <span className = "label" id = { item.id } onClick = { handleReportSelect.bind(item) }>{ item.date }</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <button onClick = { createReport }>Create Report</button>
+                                        </div>
+
+                                    </div>
+
+                                    <div className = "center">
+                                        <p>Select a project to get started!</p>
+                                    </div>
+                                </div>
+
+                            ) : forceConceal === false ? (
+
+                                <div>
+
+                                    <Modal
+                                        visible = { visible }
+                                        onOk = { handleSubmit }
+                                        okText = "Create Project"
+                                        confirmLoading = { confirmLoading }
+                                        onCancel = { handleCancel }
+                                        closable = { false }
+                                        className = "custom-modal"
+                                        centered
+                                    >
+                                        <div className = "center-text">
+                                            <h2>Create a new Project!</h2>
+                                            <h3>We just need a few details...</h3>
+                                        </div>
+                                        <form className = "new-project-form">
+                                            <label className = "form-label">Project Name</label>
+                                            <input
+                                                className = "form-input"
+                                                type = "text"
+                                                name = "project_name"
+                                                onChange = { handleChange }
+                                            />
+                                            <label>Project Description</label>
+                                            <textarea
+                                                className = "form-input"
+                                                type = "text"
+                                                name = "project_description"
+                                                onChange = { handleChange }
+                                            />
+                                        </form>
+                                    </Modal>
+
+                                    <Modal
+                                        visible = { inviteVisible }
+                                        onOk = { inviteUsers }
+                                        okText = "Invite User"
+                                        confirmLoading = { confirmLoading }
+                                        onCancel = { handleCancel }
+                                        closable = { false }
+                                        className = "custom-modal"
+                                        centered
+                                    >
+                                        <div className = "center-text">
+                                            <h1>Invite a Team Member!</h1>
+                                            <h3 className>Just enter their account email...</h3>
+                                            <input
+                                                className = "form-input"
+                                                type = "text"
+                                                name = "email"
+                                                placeholder = "Team Member Email"
+                                                onChange = { updateEmails }
+                                            />
+                                            <label>Tip: You can add multiple users at once<br/> by seperating their emails by a comma!</label>
+                                        </div>
+                                        
+                                        
+                                    </Modal>
+                                
+                                    <div className = "column">
+                                        
+                                        <div className = "projects-list-card card">
+                                            <h2>Projects</h2>
+                                            <div className = "lists">
+                                                <ul>
+                                                    { projects_list.map((item, index) => (
+                                                        <li className = "lists-item" id = { item.id } onClick = { handleProjectSelect.bind(item) } key = { index }>
+                                                            <span className = "label" id = { item.id } onClick = { handleProjectSelect.bind(item) }>{ item.title }</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <button className = "create-project-btn" onClick = { showModal }>Create Project</button>
+                                        </div>
+
+                                        <div className = "reports-list-card card">
+                                            <h2>Carbon Reports</h2>
+                                            <div className = "lists">
+                                                <ul>
+                                                    { user_reports.map((item, index) => (
+                                                        <li className = "lists-item" id = { item.id } onClick = { handleReportSelect.bind(item) } key = { index }>
+                                                            <span className = "label" id = { item.id } onClick = { handleReportSelect.bind(item) }>{ item.date }</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <button onClick = { createReport }>Create Report</button>
+                                        </div>
+
+                                    </div>
+
+                                    <div className = "column">   
+                                        <CarbonBreakdown { ...selected_report } />
+                                    </div>
+
+                                    <div className = "column">                
+                                        <div className = "project-analytics-card card">
+                                            <h2>{ selected_project && selected_project.title } Summary</h2>
+                                            <h3>About</h3>
+                                            <p>{ selected_project && selected_project.description }</p>
+                                            <h3>Total Carbon</h3>
+                                            <h1>{ global_report && parseInt(global_report.totalCarbon).toString() }t CO<sub>2</sub></h1>
+                                            <h3>Analytics</h3>
+                                            {/*  core ui graphs don't work.  */}
+                                            {/* <div>
+                                                <canvas id="pieChart" className = "chart" role="img"></canvas>
+                                                <canvas id="barChart" className = "chart" role="img"></canvas>
+                                                <canvas id="lineChart" className = "chart" role="img"></canvas>
+                                            </div> */}
+                                            {/* <Graphs { ...selected_report } /> */}
+                                        </div>
+                                    </div>
+
+                                    <div className = "column">
+                                        
+                                        <div className = "project-admin-card card">
+                                            <h4 className = "project-admin-header">Project Admin</h4>
+                                            <img className = "admin-pic" src = { admin_image } alt = "Display Picture" />
+                                            <h3>{ selected_project && selected_project.creator.given_name} { selected_project && selected_project.creator.family_name}</h3>
+                                            <h4>{ selected_project && selected_project.creator.email }</h4>
+                                            {
+                                                admin ? (
+
+                                                    <div> 
+                                                        <button onClick = { showInvite }>Invite Users</button><br/>                           
+                                                        <button className = "delete-btn" onClick = { deleteSelectedProject }>Delete Project</button>
+                                                        <button className = "delete-btn" onClick = { deleteSelectedReport }>Delete Report</button>
+                                                    </div>
+
+                                                ) : null
+                                            }
+                                        </div>
+                                        <div className = "members-list-card card">             
+                                            { team_members.map((item, index) => (
+                                                <div className = "team-member-item" key = {index}>
+                                                    <div className = "column">
+                                                        <img className = "team-member-pic" src = { item.url } alt = "" />
+                                                    </div>
+                                                    <div className = "column">
+                                                        <span>{ item.given_name } { item.family_name }</span><br/>
+                                                        <span>{ item.email }</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                    </div>        
+                                </div>            
+                            ) : null
+                        }
+
+                    </div>
+
+                ) : null
+            }
+            
         </div>
     );
 }
 
+
+// parent auth component
 const Projects = () => {
 
-    /* AUTH CURRENT USER
-    --------------------------------------------------------------------------------- */
     const { loggedIn } = useContext(UserContext);
     const [currentUser, isLoading] = GetUserData();
-    
-
-    /* CREATE NEW PROJECT HANDLERS
-    --------------------------------------------------------------------------------- */
-
-    
 
     return (
-        
-
         <div>
 
             {
                 loggedIn ? (
 
-                    <div className="container">
+                    <div className = "container">
                         { isLoading && <UserLists { ...currentUser } />}
-
-                        
-                        
                     </div>
 
-                ) : (<Redirect to="/home" />)
+                ) : null
             }
 
         </div>

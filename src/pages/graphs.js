@@ -81,7 +81,7 @@ const Graphs = (report) => {
     };
    
     const bar = {
-        labels: ['Total Carbon', 'Transport Emissions', 'Electricity Emissions', 'Gas Emissions', 'Waste Emissions', 'Water Emissions', 'Paper Emissions', 'Food & Drink Emissions', 'Events Emissions'],
+        labels: ['Total Carbon', 'Transport', 'Electricity', 'Gas', 'Waste', 'Water', 'Paper', 'Food & Drink', 'Events'],
         datasets: [
           {
             label: 'Carbon Average',
@@ -195,8 +195,8 @@ const Graphs = (report) => {
 
     return ( 
         <div className="column right">
-            <CChart id="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} />
-            <CChart id="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels}/>
+            <CChart id="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={{legend: {display: false}}} />
+            <CChart id="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
             <CChart id="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} />
         </div>
     );

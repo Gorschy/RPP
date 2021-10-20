@@ -36,35 +36,35 @@ const CarbonBreakdown = (report) => {
                   <span className="errorLabel">
                     {JSON.stringify(report.totalCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.transportCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.electricityCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.gasCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.wasteCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.waterCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.paperCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.foodDrinkCarbon)}
                   </span>
-                  <div class="divider div-transparent"></div>
+                  <div className="divider div-transparent"></div>
                   <span className="errorLabel">
                     {JSON.stringify(report.eventsCarbon)}
                   </span>

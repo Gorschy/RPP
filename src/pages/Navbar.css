@@ -7,7 +7,7 @@
     background-color: transparent;
 
 }
-  
+
 .loginButtonNav {
     width: 150px;
     height: 40px;
@@ -19,6 +19,13 @@
     font-size: var(--general_font_size);
     font-weight: var(--heading_text_font_weight);
     color: var(--color_white);
+}
+
+.profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .leftStyle {

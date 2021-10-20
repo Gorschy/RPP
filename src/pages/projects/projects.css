@@ -1,229 +1,286 @@
-:root {
-    --big_image_size: 60%;
-    
-}
-
 /* layout */
 
 .container {
-    display: flex;
-    width: 100%; 
-    height: 100%; 
-    justify-content: space-between;
-    overflow: hidden;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+	margin: 0;
+	padding: 0;
 }
 
 .column {
-    flex-direction: column;
-    margin: 0.5em;
+  flex-direction: column;
 }
 
-.row {
-    flex-direction: row;
-    margin: 0.5em;
+/* ignore this - just hard coded for functionality bandaid */
+.center {
+  overflow-x: hidden;
+  position: absolute;
+  font-family: var(--general_font_family);
+  font-size: 2em;
+  color: var(--color_hay_yellow);
+  margin-left: 40%;
+  margin-right: 40%;
+  height: 80% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+/* modal styling */
+
+/*global*/
+.ant-modal-content {
+	border-radius: 0.5em;
+}
+
+.custom-modal .ant-modal-content {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.custom-modal .ant-btn-primary {
+	color: #fff;
+	border-color: #4A7634;
+	background: #4A7634;
+}
+
+.custom-modal .ant-btn-primary:hover {
+	color: #fff;
+	border-color: #95C11F;
+	background: #95C11F;
+}
+
+/* form styling */
+
+.new-project-form {
+	text-align: left;
+	margin: auto;
+  width: 50%;
+}
+
+.form-input {
+	width: 300px;
+  display: block;
+  border: 1px solid #A3C586;
+  border-radius: 6px;
+  padding: 5px 9px;
+  margin: 1em;
+  margin-bottom:20px;
+}
+
+/* data styling */
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.label {
+  font-size: 15px;
+  cursor: pointer;
+}
+.lists {
+  overflow-y: hidden;
+  height: 340px;
+  border-bottom: solid 1px #f0f0f0;
+}
+
+.lists:hover, .lists:active, .lists:focus {
+	overflow-y: overlay;
+}
+
+.lists-item {
+  background: #fff;
+  padding: 0.4em;
+  padding-left: 0.7em;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.lists-item:nth-child(odd) {
+  background: #f0f0f0;
+}
+
+.lists-item:hover {
+  background: #4e6655;
+  color: white;
+}
+
+.team-member-item {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Card Stylings */
 
-#projectListCard {
-    background-color: var(--foreground_color);
-    width: 12vw;
-    height: 45.5vh;
-    border-radius: 0.5em;
-    margin: 0.5em;
-    flex-direction: column;
+.card {
+  margin: 1em;
+	padding-top: 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+	box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
 }
 
-#carbonReportListCard {
-    background-color: var(--foreground_color);
-    width: 12vw;
-    height: 45.5vh;
-    border-radius: 0.5em;
-    margin: 0.5em;
-    flex-direction: column;
+.projects-list-card {
+	width: auto;
+  min-width: 250px;
+  height: auto;
+  flex-direction: column;
+  text-align: center;
 }
 
-#currentProjectCard {
-    background-color: var(--foreground_color);
-    width: 70vw;
-    height: 91vh;
-    border-radius: 0.5em;
-    font: bold;
-    
+.projects-list-card h2 {
+  text-align: center;
 }
 
-#projectAdminCard {
-    text-align: center;
-    background-color: var(--foreground_color);
-    width: 17vw;
-    height: 45vh;
-    border-radius: 0.5em;
-    margin-bottom: 1vh;
+.reports-list-card {
+  width: auto;
+  min-width: 250px;
+  height: auto;
+  flex-direction: column;
+  text-align: center;
 }
 
-.projectAdminHead {
-    text-align: center;
-    padding-top: 1vh;
-    font-family: var(--general_font_family);
-    font-weight: bold;
+.reports-list-card h2 {
+  text-align: center;
 }
 
-#membersList {
-    background-color: var(--foreground_color);
-    width: 17vw;
-    height: 45vh;
-    border-radius: 0.5em;
-    padding: 0.5em;
-    display: flex;
+.project-admin-card {
+  text-align: center;
+  background-color: white;
+  width: auto;
+  min-height: 400px;
+  min-width: 300px;
+  height: auto;
+  border-radius: 0.5em;
+  margin-bottom: 1vh;
+  
+}
+
+.project-admin-card h3 {
+  text-align: center;
+}
+
+.members-list-card {
+  width: 17vw;
+  height: 45vh;
+  display: flex;
+	padding: 1em;
+}
+
+.members-list-card button {
+  margin-left: 70%;
+  margin-right: 50%;
+}
+
+.project-analytics-card {
+  padding: 1em;
+  height: auto;
+	max-height: 890px;
+  width: auto;
+  min-width: 300px;
 }
 
 /* Header ID stylings */
 
-#projectListHeader{
-    text-align: center;
+.center-text {
+	text-align: center;
 }
 
-#currentProjectHeader {
-    text-align: left;
+.project-list-header {
+  text-align: center;
 }
 
-#projectAdminHeader {
-    text-align: center;
-
+.current-project-header {
+  text-align: left;
 }
 
-/* Assorted Text Stylings */
-
-#projectListID {
-    height: 80%;
-    padding: var(--card_standard_padding)
-}
-
-#adminName {
-    text-align: center;
-}
-
-#adminEmail {
-    text-align: center;
-}
-
-/* Image CSS */
-#adminImageHolder {
-    display: flex;
-    justify-content: center;
-
-}
-
-#adminImage {
-    width: var(--big_image_size);
-
-}
-
-.imageIcon {
-    width: var(--icon_image_size);
-}
-
-
-.centerContent {
-    text-align: center;
-    padding-top: 1vh;
-    padding-bottom: 1vh;
-    border-bottom: solid 1px #F0F0F0;
-    border-top-left-radius: 0.4em;
-    border-top-right-radius: 0.4em;
-}
-
-
-
-.projectSummary {
-    padding: 1vh;
-    width: 100%; 
-    height: 91vh;
-    border-radius: 0.5em;
-    margin: 0.5em;
-    flex-direction: row;
-}
-
-.projectAnalytics {
-    padding: 1vh;
-    height: auto;
-    width: auto;
-    background-color: white; 
-    border-radius: 0.5em;
-    margin-bottom: 1vh;
-}
-
-.projectBreakdown {
-    height: 65vh;
-    width: 100%;
-    padding: 1vh;
-    background-color: white; 
-    border-radius: 0.5em;
-    margin-bottom: 1vh; 
+.project-admin-header {
+  text-align: center;
+  padding-top: 1vh;
+  font-family: var(--general_font_family);
+  font-weight: bold;
 }
 
 /* display pictures */
 
-.adminPicture {
-    margin: 0.5em;
-    width: 275px;
-    height: 275px;
-    border-radius: 50%;
-    object-fit: cover;    
+.admin-pic {
+  margin: 0.5em;
+  width: 275px;
+  height: 275px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-
-.teamMemberPicture {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
+.team-member-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 /* buttons */
 
 button {
-    color: #fff;
-    background: #5B7444;
-    border: none;
-    border-radius: 7px;
-    width: 120px;
-    height: 35px;
-    cursor: pointer;
-    font-size: small;
-    transition-duration: 0.2s;
-    margin: 0.25em
+  color: #fff;
+	background: #4A7634;
+	border: 1px solid transparent;
+  border-radius: 4px;
+  width: 120px;
+  height: 35px;
+  cursor: pointer;
+  font-size: small;
+  transition-duration: 0.2s;
+  margin: 0.5em;
+	text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+  box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
 }
 
 button:hover {
-    background-color: #134A2C;
-    color: #fff;
+  color: #fff;
+	border-color: #95C11F;
+	background: #95C11F;
 }
 
-.delete-project-btn {
-    background: #f94144;
-    color: #fff;
+.delete-btn {
+  background: #dc2f02;
+	border: 1px solid transparent;
+  color: #fff;
 }
 
-.delete-project-btn:hover {
-    background-color: #dc2f02;
-    color: #fff;
+.delete-btn:hover {
+  background-color: #f94144;
+	border: 1px solid transparent;
+  color: #fff;
 }
 
 button.ant-modal-close {
-    width: auto;
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
-    padding: 0;
-    color: rgba(0, 0, 0, 0.45);
-    font-weight: 700;
-    line-height: 1;
-    text-decoration: none;
-    background: transparent;
-    border: 0;
-    outline: 0;
-    cursor: pointer;
-    transition: color 0.3s;    
+  width: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.45);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.chart {
+  border: solid;
+  margin: 0.25em;
+  width: auto;
+  height: auto;
+  max-height: 250px;
+  max-width: 250px;
 }

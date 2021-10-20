@@ -75,7 +75,7 @@ const Navbar = () => {
                 <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeaders">Solutions</h3></Link> </Item>
                 <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeaders">Contact Us</h3></Link> </Item>
 
-                {loggedIn ? ( <Item key="profileImage"> <img src={image} /> </Item> ) : null }   
+                {loggedIn ? ( <Item key="profileImage"> <img className = "profile-pic" src={image} /> </Item> ) : null }   
 
             </Menu>
 

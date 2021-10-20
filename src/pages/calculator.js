@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTint,
@@ -10,17 +10,18 @@ import {
   faIcons,
   faRoute,
 } from "@fortawesome/free-solid-svg-icons";
-import { Card, Tabs, Layout, Divider } from "antd";
+import { Card, Tabs, Layout, Divider, Modal } from "antd";
 import "./calculator.css";
 import "../style.css";
 
 // Imports for Calculator DB ~Alex
 import { useHistory } from "react-router-dom"; // redirects
-import { Button as BootButton, Modal } from "react-bootstrap"; // For Modal
+import { Button as BootButton } from "react-bootstrap"; // For Modal
 import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
-import { createReport } from "../graphql/mutations"; // For creating Reports
+import { createReport, createProjectReport } from "../graphql/mutations"; // For creating Reports
 import { getID } from "../graphql/customQueries"; // For creating Reports
-import { getUser } from "../graphql/queries";
+import { getUser, getProject } from "../graphql/queries";
+import { UserContext } from "./UserContext";
 
 /*
 Added in the database API all ye need to do is;
@@ -60,9 +61,121 @@ const eventsIcon = (
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
+let projectID;
+
 /* ------------------------------------------------------------------ */
 
+// initialises current logged in users data
+async function GetUserData() {
+    
+      
+  const data = await Auth.currentUserPoolUser();
+  const userInfo = { ...data.attributes };
+  const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+  const user = userData.data.getUser;
+  
+  const created_projects = [...user.projects_created.items];
+  const temp = [...user.projects_in.items];
+  const editor_projects = [];
+  
+  // gets all projects the user is editor_in and processes
+  if(temp.length > 0) {
+      
+    // requests project object for each projectID
+    for(let i = 0; i < temp.length; i++) {
+        
+      const temp_project = await API.graphql(graphqlOperation(getProject, { id: temp[i].projectID}));
+      editor_projects.push(temp_project.data.getProject);
+    }
+  }
+
+  const projects = [...created_projects, ...editor_projects];
+
+  return projects;
+}
+
+const Helper = () => {
+
+  const { loggedIn } = useContext(UserContext);
+  const [projects_list, set_projects_list] = useState([]);  
+
+  const init = () => {
+      
+    const projects = GetUserData();
+    
+    // resolves promise returned by above
+    projects.then(function(result) {
+            
+      console.log(result);
+      
+      if(result.length > 0){
+          set_projects_list(result);
+      } else { console.log("User has no projects created"); }
+    });
+  }
+
+  useEffect(() => {
+      init();
+  }, []);
+
+  // modal state control
+  const [visible, setVisible] = useState(true);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const setProjectID = (e) => {
+    const { value } = e.target;
+    projectID = value;
+    setVisible(false);
+    console.log(projectID);
+  }
+
+  const handleCancel = () => {
+    setVisible(false);
+    console.log(projectID);
+  };
+
+  return (
+    
+    <div>
+      {
+        loggedIn ? (
+
+          <div className="container">          
+            
+            <Modal
+              visible={visible}
+              confirmLoading={ confirmLoading }
+              footer = {null}
+              closable={false}
+              centered
+            >
+              <div id = "userPrompt">
+                <h2>Tell us what this Report is for!</h2>
+                <div id = "buttons">
+                  <button onClick = { handleCancel }>Personal Report</button>
+                  <h3>or</h3>
+                  <label>Project Report</label>
+                  <select onChange={ setProjectID }>
+                    <option value="" selected hidden>Select a Project</option>
+                    { projects_list.map((item, index) => (
+                      <option key = {index} value = {item.id}>{item.title}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+            </Modal>
+
+          </div>
+
+        ) : null
+      }
+    </div>
+  )
+}
+
 const Calculator = () => {
+
   const [emission, setEmissions] = useState([]);
   const [emissionData, setEmissionData] = useState([]);
 
@@ -447,7 +560,7 @@ const Calculator = () => {
           console.log("-- main switch error --");
       }
     }
-    
+
 
     //Hello message from nathan test.
     let tempTotalCarbon = totalCarbon.toString();
@@ -460,19 +573,52 @@ const Calculator = () => {
     let tempFoodDrinkCarbon = foodDrinkCarbon.toString();
     let tempEventsCarbon = eventsCarbon.toString();
 
-      try{
-        Auth.currentUserInfo().then((userInfo) => {
-          if(userInfo == null){ // If not signed in head to login page
-            localStorage.setItem('calculate_data','true') // Add to local storage. And will be removed when user is tasken to Carbon reports
-           // history.push('login');
-          }
-        })   
-        // If the user is still here they must be logged in 
-        // thus we send the data to DB
-    
-        const data = await Auth.currentUserPoolUser();
-        const userInfo = { ...data.attributes }; // userInfo.sub == user ID
+    try {
+      Auth.currentUserInfo().then((userInfo) => {
+        if (userInfo == null) { // If not signed in head to login page
+          localStorage.setItem('calculate_data', 'true') // Add to local storage. And will be removed when user is tasken to Carbon reports
+          // history.push('login');
+        }
+      })
+      // If the user is still here they must be logged in 
+      // thus we send the data to DB
+
+      const data = await Auth.currentUserPoolUser();
+      const userInfo = { ...data.attributes }; // userInfo.sub == user ID
+
       
+
+      const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+
+
+      //Set user carbon owning += carbontotal 
+
+      if(projectID != undefined) {
+
+        console.log("creating project report -> projectID should be defined: " + projectID);
+        // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
+        const report = {
+          userID: userInfo.sub,
+          projectID: projectID,
+          date: date,
+          totalCarbon: tempTotalCarbon,
+          transportCarbon: tempTransportCarbon,
+          electricityCarbon: tempElectricityCarbon,
+          gasCarbon: tempGasCarbon,
+          wasteCarbon: tempWasteCarbon,
+          waterCarbon: tempWaterCarbon,
+          paperCarbon: tempPaperCarbon,
+          foodDrinkCarbon: tempFoodDrinkCarbon,
+          eventsCarbon: tempEventsCarbon
+        };
+
+        console.log(report);
+        await API.graphql(graphqlOperation(createProjectReport, { input: report }));
+        //history.push('carbon_report'); // MUST FIX; should send user to carbon report
+
+      } else {
+        
+        console.log("creating personal report -> projectID should be undefined: " + projectID);
         // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
         const report = {
           userID: userInfo.sub,
@@ -488,18 +634,17 @@ const Calculator = () => {
           eventsCarbon: tempEventsCarbon
         };
 
-        const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
-        
-
-        //Set user carbon owning += carbontotal 
-
         console.log(report);
-         await API.graphql(graphqlOperation(createReport, { input: report}));
-         //history.push('carbon_report'); // MUST FIX; should send user to carbon report
-    
-      }catch(e){
-        console.error("Error in calculator.js report method: ", e)
+        await API.graphql(graphqlOperation(createReport, { input: report }));
+        //history.push('carbon_report'); // MUST FIX; should send user to carbon report
       }
+
+     
+
+    } catch (e) {
+      console.error("Error in calculator.js report method: ", e)
+    }
+
   };
 
   function resetForms(id) {
@@ -537,7 +682,7 @@ const Calculator = () => {
   /* -------- Local Storage --------*/
   // OUTDATED
   // Add to Local Storage
-  React.useEffect(() => {
+  useEffect(() => {
     // Every time the emission data is changed this will trigger
     localStorage.setItem("emission_key", JSON.stringify(emission, null, 2));
   }, [emission]);
@@ -637,6 +782,7 @@ const Calculator = () => {
 
   return (
     <div className="calculatorContent">
+      <Helper />
       <Card
         id="calculatorCard"
         bordered={false}
@@ -2101,10 +2247,9 @@ const Calculator = () => {
           </Layout>
         </Tabs>
       </Card>
-
       <div>
-        <div class="switchContainer">
-          <label class="switch" for="advBasic">
+        <div className="switchContainer">
+          <label className="switch" for="advBasic">
             <input
               type="checkbox"
               id="advBasic"
@@ -2113,13 +2258,13 @@ const Calculator = () => {
                 handleAdvCalc(e.target.checked);
               }}
             />
-            <div class="slider round"></div>
+            <div className="slider round"></div>
           </label>
-          <h3 class="switchLabel">Advanced</h3>
+          <h3 className="switchLabel">Advanced</h3>
         </div>
 
-        <div class="switchContainer">
-          <label class="switch" for="uom">
+        <div className="switchContainer">
+          <label className="switch" for="uom">
             <input
               type="checkbox"
               id="uom"
@@ -2128,9 +2273,9 @@ const Calculator = () => {
                 handleUom(e.target.checked);
               }}
             />
-            <div class="slider round"></div>
+            <div className="slider round"></div>
           </label>
-          <h3 class="switchLabel">Imperial</h3>
+          <h3 className="switchLabel">Imperial</h3>
         </div>
       </div>
     </div>
