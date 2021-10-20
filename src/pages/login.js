@@ -66,8 +66,9 @@ const SignIn = ({ onSignin }) => {
                     onChange={e => setPassword(e.target.value)}
                 />
 
-
+                <br/>
                 <a className="forgotPassword" onClick={forgotPassword}>Forgot Password? </a> 
+                <br/>
                 <span className="errorLabel">{errors}</span>
                 <br/><br/>
                 <Button className="loginButton" onClick={signIn} type="primary" > Log In </Button>

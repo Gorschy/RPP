@@ -2144,7 +2144,7 @@ const Calculator = () => {
           </Layout>
         </Tabs>
       </Card>
-      <div>
+      <Card id="switchCard">
         <div className="switchContainer">
           <label className="switch" for="advBasic">
             <input
@@ -2174,7 +2174,7 @@ const Calculator = () => {
           </label>
           <h3 className="switchLabel">Imperial</h3>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

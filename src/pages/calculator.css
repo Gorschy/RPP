@@ -34,13 +34,17 @@ TODO:
 
 /* headers/tab labels/title */
 #totalCard {
-    width: 15vw;
-    height: 50vh;
+    width: min(450px, 40vw);
+    height: auto;
     padding: var(--card_standard_padding);
     background-color: var(--foreground_color);
     border: 1px solid var(--input_border_color);
 }
+#switchCard {
+    width: 200px;
+    height: 200px;
 
+}
 
 .userInput {
     font-family: var(--general_font_family);
@@ -48,7 +52,7 @@ TODO:
     color: var(--general_text_color);
     font-weight: var(--general_text_font_weight);
     text-align: left;
-    display: inline-block;
+    display: block;
     border: 1px solid #A3C586;
     box-sizing: border-box;
     width: 300px;
@@ -108,7 +112,8 @@ TODO:
 }
 
 #calculatorCard {
-    width: 50vw !important;
+    width: min(1000px, 90vw) !important;
+    height:auto;
 }
 
 .calculatorContent {

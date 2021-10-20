@@ -1,14 +1,16 @@
 .loginCard {
-    width: clamp(500px, 40vw, 1000px) !important;
-    position: fixed; /* or absolute */
+    width: min(1000px, 90vw) !important;
+    height:auto;
+    position: absolute; /* or absolute */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
 .loginField {
-    margin-left: 2vw;
-    width: clamp(460px, 36vw, 960px);
+    margin-left: 50px;
+    margin-right: 50px;
+    width: calc(100% - 100px);
     height: 40px;
     border-radius: 8px;
     display: inline-block;
@@ -35,23 +37,29 @@
     height: 4vh;
     border-radius: 8px;
 
-    color: var(--color_green);
+    background-color: var(--color_green);
 
     font-family: var(--general_font_family);
     font-size: var(--general_font_size);
     font-weight: var(--heading_text_font_weight);
     color: var(--color_white);
 }
+.loginButton:focus {
+    background-color: var(--color_forest_green);
+}
+
 
 #loginLabel {
-    margin-left: 4vw;
+    margin-left: 50px;
 }
 
 .errorLabel {
-    margin-left: 4vw;
+    text-align: center;
+    position:absolute;
     color: red;
+    width: fit-content;
 }
 
 .forgotPassword {
-    margin-left: 2vw;
+    margin-left: 50px;
 }
