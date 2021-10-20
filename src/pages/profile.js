@@ -48,7 +48,6 @@ const Profile = () => {
         setCarbonOffset(userData.data.getUser.offsetted_units);
 
         setAllReports(getData.data.listReports.items);
-        setSelectedReport(getData.data.listReports.items[0]);
 
       }catch(e){
         console.error("Error in profile.js report method: ", e)

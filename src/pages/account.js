@@ -54,6 +54,9 @@ const Account = () => {
         })
         .then(result => console.log(result))
         .catch(err => console.log(err));
+
+        window.location.reload(false);
+
     };
     
       const onPageRendered = async () => {
@@ -99,7 +102,6 @@ const Account = () => {
     }, []);
 
     const updateUserDetails = async () => {
-        
         //Dont let them change email.
         let user = await Auth.currentAuthenticatedUser();
         console.log(user);
@@ -169,7 +171,6 @@ const Account = () => {
                 onChange={e => setCurrentPassword(e.target.value)} 
                 /*addonBefore={prefixSelector} style={{ width: '100%' }}*/
             />
-
             <a href="#">
             <input
                 type="file"

@@ -189,10 +189,7 @@ const CarbonBreakdown = (report) => {
       setCarbonValue(report.eventsCarbon);
       setTipState(tips.events);
     }
-
-    
-   
-   
+  
     return ( 
 
           <div className="column container">
