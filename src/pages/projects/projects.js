@@ -9,7 +9,7 @@ import { useHistory } from "react-router"
 import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
 import { listProjects } from "../../graphql/customQueries"; 
 import { getUser, listUsers, getProject } from "../../graphql/queries";
-import { createProject, createProjectEditor, deleteProjectReport, deleteProject, deleteProjectEditor } from '../../graphql/mutations';
+import { createProject, createProjectEditor, deleteProjectReport, deleteProject, deleteProjectEditor, updateUser } from '../../graphql/mutations';
 
 Storage.configure({ track: true, level: "public" });
 
@@ -256,10 +256,10 @@ const UserLists = (currentUser) => {
     // handles deleting the selected report from a project
     const deleteSelectedReport = async () => {
         
-        console.log("Deleting Report -> " + selected_report.id);
+        
 
         try {
-            
+            console.log("Deleting Report -> " + selected_report.id);
             const report_to_delete = selected_report.id;
             await API.graphql(graphqlOperation(deleteProjectReport, { input: { id: report_to_delete }}));
             
@@ -322,6 +322,19 @@ const UserLists = (currentUser) => {
             select_project(project);
             set_team_members(team_members);
         } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+    // handles total carbon update
+    const payOffset = async () => {
+        try {
+            const total = parseInt(global_report.totalCarbon);
+            console.log("paying offset: " + total);
+            await API.graphql(graphqlOperation(updateUser, { input: { id: currentUser.id, carbon_units: currentUser.carbon_units + Math.round(total) }}));
+            history.push("/solutions");
+        } catch(err) {
             console.log(err);
         }
     }
@@ -430,6 +443,7 @@ const UserLists = (currentUser) => {
         let path = "/calculator";
         history.push(path);
     }
+
 
     const declineProject = () => {
         let path = "/home";
@@ -695,7 +709,7 @@ const UserLists = (currentUser) => {
                                             <p>{ selected_project && selected_project.description }</p>
                                             <h3>Total Carbon</h3>
                                             <h1>{ global_report && parseInt(global_report.totalCarbon).toString() }t CO<sub>2</sub></h1>
-                                            <h3>Analytics</h3>
+                                            {/* <h3>Analytics</h3> */}
                                             {/*  core ui graphs don't work.  */}
                                             {/* <div>
                                                 <canvas id="pieChart" className = "chart" role="img"></canvas>
@@ -715,8 +729,9 @@ const UserLists = (currentUser) => {
                                             <h4>{ selected_project && selected_project.creator.email }</h4>
                                             {
                                                 admin ? (
-
-                                                    <div> 
+                                                    
+                                                    <div>
+                                                        <button onClick = { payOffset }>Offset Carbon</button><br/>
                                                         <button onClick = { showInvite }>Invite Users</button><br/>                           
                                                         <button className = "delete-btn" onClick = { deleteSelectedProject }>Delete Project</button>
                                                         <button className = "delete-btn" onClick = { deleteSelectedReport }>Delete Report</button>
@@ -734,7 +749,7 @@ const UserLists = (currentUser) => {
                                                     <div className = "column">
                                                         <span>{ item.given_name } { item.family_name }</span><br/>
                                                         <span>{ item.email }</span>
-                                                    </div>
+                                                    </div><br/>
                                                 </div>
                                             ))}
                                         </div>
