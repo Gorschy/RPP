@@ -1,34 +1,60 @@
-#carbonBreakdown {
-    height: 50vh;
-    width: 40vw;
-	display:block 
+.carbonBreakdown {
+    height: 65vh;
+    width: 45vw;
+	display:block; 
 }
-
-.divider
-{
-	position: relative;
-	margin-top: 90px;
-	height: 1px;
-}
-
-.column {
-	flex-direction: column;
-	width: auto;
-  }
 
 .card {
 	margin: 1em;
-	  padding-top: 0.5em;
+	padding-top: 0.5em;
 	background-color: white;
 	border-radius: 0.5em;
-	  box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
-  }
-
-
-  .btn-group button {
-	display: block; /* Make the buttons appear below each other */
-  }
-  
-  .container { 
-    overflow-x: hidden;
+	box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
 }
+
+.column {
+    float: left;
+}
+  
+.left, .right {
+    width: 19.5%;
+}
+
+.btn-group button {
+	display: block; /* Make the buttons appear below each other */
+}
+  
+.container { 
+overflow-x: hidden;
+}
+
+
+.breakdownTips {
+	overflow-y: auto;
+}
+
+.columnLeft {
+    display:block;
+    float: left;
+}
+
+.columnRight {
+    display:block;
+    float: right;
+}
+
+.barChart {
+    height: 30vh;
+    width: 30vw;
+}
+
+.pieChart {
+    height: 30vh;
+    width: 30vw;
+}
+
+.lineGraph {
+    height: 30vh;
+    width: 30vw;
+}
+

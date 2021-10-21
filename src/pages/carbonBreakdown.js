@@ -3,6 +3,10 @@ import {CChart}  from "@coreui/react-chartjs";
 import { Card,  } from "antd";
 import '../style.css';
 import './carbonBreakdown.css';
+//import './graphs.css';
+import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
+import { listReports } from "../graphql/queries"; // For creating Reports
+import { getUser } from "../graphql/queries";
 
 const CarbonBreakdown = (report) => {
 
@@ -23,9 +27,66 @@ const CarbonBreakdown = (report) => {
       eventsCarbon: 0.89 
     };
 
+
+    const [totalCarbonArray, setTotalCarbonArray] = useState([]); //Used to store all total carbon individually accross all reports.
+    const [dateArray, setDateArray] = useState([]); //Used to store all dates accross all reports.
+
+
+    const setAnalyticsData = (reports) => {
+
+      console.log("Hello From Set Analytics");
+      const tempDates = [];
+      const tempTotals = [];
+
+      for(let i = 0; i < reports.length; i++) {
+          
+          tempDates.push(reports[i].date);
+          tempTotals.push(reports[i].totalCarbon);
+
+          console.log(i);
+
+      }
+      setTotalCarbonArray(tempTotals);
+      setDateArray(tempDates);
+    };
+
+    const init = async () => {
+      try{
+        await Auth.currentUserInfo().then((userInfo) => {
+          if(userInfo == null){ // If not signed in head to login page
+            localStorage.setItem('calculate_data','true') // Add to local storage. And will be removed when user is tasken to Carbon reports
+           // history.push('login');
+          }
+        })   
+        // If the user is still here they must be logged in 
+        // thus we send the data to DB
+    
+        const data = await Auth.currentUserPoolUser();
+        const userInfo = { ...data.attributes };
+
+        const getData = await API.graphql(graphqlOperation(listReports, {filter: {userID: {eq: userInfo.sub}}})); 
+        console.log(getData.data.listReports.items);
+
+
+        const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+        console.log(userData);
+        setAnalyticsData(getData.data.listReports.items);
+
+      }catch(e){
+        console.error("Error in profile.js report method: ", e)
+      }
+    };
+
     const tips = {
       total: [
-        "Temp data total tips"
+        'That largest contributors to your carbon footprint come from Energy, Agriculture, Waste, Land Alteration and Industrial Processing. Land Alteration and Industrial Processing cannot be impacted by an individual',
+        'As such to improve your carbon emission focus on reducing your energy, agricultural and waste impacts',
+        'This can be achieved through the following',
+        'Try to use less heating or cooling where possible instead aim to dress for the weather',
+        'Implementing solar or another renewable energy as your source will benefit your carbon footprint greatly',
+        'Consume local produce and reduce meat consumption especially meats like beef',
+        'Implement waste reduction methods like composting',
+        'When purchasing products look for less plastic packagaging'
       ],
       transport: [
         'For shorter trips, consider walking, riding or using public transport. Car-pooling is also a great option if you are travelling to the same place as others. ',
@@ -40,7 +101,17 @@ const CarbonBreakdown = (report) => {
         'Remove one globe from multi-globe fittings and turn off lights when you leave the room'
       ],
       gas: [
-        "Temp data gas tips"
+        'Heat your home selectively',
+        'Adjust your thermostat (or buy a new one)',
+        'Reduce hot water use',
+        'Switch to an instantaneous hot water system',
+        'Insulate your home',
+        'Replace your dishwasher and washing machine',
+        'Close curtains & doors',
+        'Layer up',
+        'Don’t preheat the oven',
+        'Get a better energy plan',
+        'Go Solar'
       ],
       waste: [
         'Most household waste comes from food and garden waste which can be reduced by composting',
@@ -76,6 +147,111 @@ const CarbonBreakdown = (report) => {
     };
 
 
+    const bar = {
+      labels: ['Total Carbon', 'Transport', 'Electricity', 'Gas', 'Waste', 'Water', 'Paper', 'Food & Drink', 'Events'],
+      datasets: [
+        {
+          label: 'Carbon Average',
+          backgroundColor: 'rgb(154,208,245,0.2)',
+          borderColor: 'rgb(130,205,255,1)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(130,205,255,0.4)',
+          hoverBorderColor: 'rgba(130,205,255,1)',
+          data: [
+            carbonAverage.totalCarbon, 
+            carbonAverage.transportCarbon, 
+            carbonAverage.electricityCarbon, 
+            carbonAverage.gasCarbon, 
+            carbonAverage.wasteCarbon, 
+            carbonAverage.waterCarbon, 
+            carbonAverage.paperCarbon, 
+            carbonAverage.foodDrinkCarbon,
+            carbonAverage.eventsCarbon
+          ],
+        },
+        {
+          label: 'Your Emissions',
+          backgroundColor: 'rgba(255,99,132,0.2)',
+          borderColor: 'rgba(255,99,132,1)',
+          borderWidth: 1,
+          hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+          hoverBorderColor: 'rgba(255,99,132,1)',
+          data: [              
+            report.totalCarbon, 
+            report.transportCarbon, 
+            report.electricityCarbon, 
+            report.gasCarbon, 
+            report.wasteCarbon, 
+            report.waterCarbon, 
+            report.paperCarbon, 
+            report.foodDrinkCarbon,
+            report.eventsCarbon
+          ],
+        },
+      ], 
+      
+    };
+    
+    const pie = {
+      labels: ['Transport', 'Electricity', 'Gas', 'Waste', 'Water', 'Paper', 'Food & Drink', 'Events'],
+      datasets: [
+        {
+          data: [
+            report.transportCarbon, 
+            report.electricityCarbon, 
+            report.gasCarbon, 
+            report.wasteCarbon, 
+            report.waterCarbon, 
+            report.paperCarbon, 
+            report.foodDrinkCarbon,
+            report.eventsCarbon],
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+          ],
+          hoverBackgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+          ],
+        }],
+    };
+
+  //Line Graph Inputs
+  const line = {
+      labels: dateArray,
+      datasets: [
+      {
+          label: 'Total Carbon Over Time',
+          fill: false,
+          lineTension: 0.1,
+          backgroundColor: 'rgba(75,192,192,0.4)',
+          borderColor: 'rgba(75,192,192,1)',
+          borderCapStyle: 'butt',
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: 'rgba(75,192,192,1)',
+          pointBackgroundColor: '#fff',
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+          pointHoverBorderColor: 'rgba(220,220,220,1)',
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data: totalCarbonArray,
+      },
+      ],
+  };
+
+  useEffect(() => {
+      init();
+    }, []);
+
+
+
     useEffect(() => {
       totalCarbon();
     }, []);
@@ -87,9 +263,9 @@ const CarbonBreakdown = (report) => {
       temp = report.totalCarbon - carbonAverage.totalCarbon;
       temp = temp/carbonAverage.totalCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.totalCarbon);
@@ -101,9 +277,9 @@ const CarbonBreakdown = (report) => {
       temp = report.gasCarbon - carbonAverage.gasCarbon;
       temp = temp/carbonAverage.gasCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.gasCarbon);
@@ -115,9 +291,9 @@ const CarbonBreakdown = (report) => {
       temp = report.paperCarbon - carbonAverage.paperCarbon;
       temp = temp/carbonAverage.paperCarbon * 100; 
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.paperCarbon);
@@ -129,9 +305,9 @@ const CarbonBreakdown = (report) => {
       temp = report.transportCarbon - carbonAverage.transportCarbon;
       temp = temp/carbonAverage.transportCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.transportCarbon);
@@ -143,9 +319,9 @@ const CarbonBreakdown = (report) => {
       temp = report.wasteCarbon - carbonAverage.wasteCarbon;
       temp = temp/carbonAverage.wasteCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.wasteCarbon);
@@ -157,9 +333,9 @@ const CarbonBreakdown = (report) => {
       temp = report.foodDrinkCarbon - carbonAverage.foodDrinkCarbon;
       temp = temp/carbonAverage.foodDrinkCarbon * 100; 
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.foodDrinkCarbon);
@@ -171,9 +347,9 @@ const CarbonBreakdown = (report) => {
       temp = report.electricityCarbon - carbonAverage.electricityCarbon;
       temp = temp/carbonAverage.electricityCarbon;
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.electricityCarbon);
@@ -185,9 +361,9 @@ const CarbonBreakdown = (report) => {
       temp = report.waterCarbon - carbonAverage.waterCarbon;
       temp = temp/carbonAverage.waterCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.waterCarbon);
@@ -199,19 +375,30 @@ const CarbonBreakdown = (report) => {
       temp = report.eventsCarbon - carbonAverage.eventsCarbon;
       temp = temp/carbonAverage.eventsCarbon * 100;  
       if(temp > 0){ 
-        temp = " +" + temp + " Increase";
+        temp = " +" + temp + " Percentage Increase";
       } else {
-        temp = + temp + " Decrease";
+        temp = + temp + " Percentage Decrease";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.eventsCarbon);
       setTipState(tips.events);
     }
-  
-    return ( 
+    
+    
+    const options = {
+      tooltips: {
+      enabled: true,
+      },
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      }
+    };
 
-          <div className="column container">
-            <Card className="card" bordered={true}>
+    return (
+      <div>
+        <div className="columnLeft">
+        <Card className="card" bordered={true}>
             <div className="column">
                 <div className="btn-group">
                   <button onClick={totalCarbon}>Total</button>
@@ -236,15 +423,20 @@ const CarbonBreakdown = (report) => {
                 <p>Carbon Report Amount {carbonValue}</p>
                 <p>Comapred To Average {percentageDifference}</p>
             </Card>
-
-            <Card id="carbonBreakdown" title={<h1>Carbon Reduction Tips</h1>} bordered={true}>
+            <Card className="carbonBreakdown" title={<h1>Carbon Reduction Tips</h1>} bordered={true}>
             { tipState.map((item, index) => (
                         <div key = {index}>
                             <p>{item}</p>
                         </div>
                     ))}
             </Card>
-          </div>
+        </div>
+        <div className="columnRight">
+              <CChart className="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={options} />
+              <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
+              <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} />
+        </div>
+      </div>
     );
 }
 export default CarbonBreakdown;
