@@ -940,42 +940,6 @@ export const deleteProjectEditor = /* GraphQL */ `
     }
   }
 `;
-export const createSolution = /* GraphQL */ `
-  mutation CreateSolution(
-    $input: CreateSolutionInput!
-    $condition: ModelSolutionConditionInput
-  ) {
-    createSolution(input: $input, condition: $condition) {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      backers {
-        items {
-          id
-          solutionID
-          backerID
-          money_amount
-          credits
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const updateSolution = /* GraphQL */ `
   mutation UpdateSolution(
     $input: UpdateSolutionInput!
@@ -1057,26 +1021,6 @@ export const createSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -1109,6 +1053,26 @@ export const createSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -1121,26 +1085,6 @@ export const updateSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -1173,6 +1117,26 @@ export const updateSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -1185,26 +1149,6 @@ export const deleteSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -1237,6 +1181,26 @@ export const deleteSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -1388,6 +1352,42 @@ export const deleteReport = /* GraphQL */ `
       paperCarbon
       foodDrinkCarbon
       eventsCarbon
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSolution = /* GraphQL */ `
+  mutation CreateSolution(
+    $input: CreateSolutionInput!
+    $condition: ModelSolutionConditionInput
+  ) {
+    createSolution(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }

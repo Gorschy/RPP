@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, Row, Col, Modal, Button, Divider, Progress, Tooltip, InputNumber } from 'antd';
+import { List, Row, Col, Modal, Button, Divider, Progress, Tooltip, InputNumber, Card } from 'antd';
 import { Link } from 'react-router-dom';
 import { Auth, API, graphqlOperation } from 'aws-amplify';
 import {getUser, listSolutions} from '../graphql/queries';
@@ -20,7 +20,7 @@ COMMENTS BY: Zachary O'Reilly-Fullerton
 const nonNegativeUserCarbon = true;
 const startingZoom = 2; 
 var waypointList = [];
-var pageUser={"given_name":""};
+var pageUser={"given_name":" "};
 var currentUnitsSelected = 1;
 const startVariables = [
     0, //Start Latitude
@@ -290,6 +290,44 @@ function populateMarkers(solutionsArray) {
     })
 };
 
+function CreateMap () {
+    return (
+        <MapContainer 
+            attributionControl={false}
+            id="map" 
+            center={startVariables} 
+            zoom={startingZoom} 
+            scrollWheelZoom={true}
+            maxBounds={[[-90, -180],[90, 180]]}
+            >
+            <TileLayer  
+                attribution= '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                minZoom='2'
+                noWrap="true"
+                bounds={[[-90, -180],[90, 180]]}
+            ></TileLayer>
+            <LayersControl position="topright">
+                <LayersControl.Overlay checked name="Tree Solutions">
+                    <LayerGroup>
+                    <Waypoints arrayToShow="trees"/>
+                    </LayerGroup>
+                </LayersControl.Overlay>
+                <LayersControl.Overlay checked name="Land Solutions">
+                    <LayerGroup>
+                    <Waypoints arrayToShow="land"/>
+                    </LayerGroup>
+                </LayersControl.Overlay>
+                <LayersControl.Overlay checked name="Animal Solutions">
+                    <LayerGroup>
+                    <Waypoints arrayToShow="animal"/>
+                    </LayerGroup>
+                </LayersControl.Overlay>
+            </LayersControl>
+        </MapContainer>
+    );
+}
+
 var mainClass;
 // Finally, the actual section that renders the page.
 class Solutions extends Component { 
@@ -315,15 +353,23 @@ class Solutions extends Component {
 
     async componentDidMount () {
         try {
-        var currentUser = await Auth.currentAuthenticatedUser();
-        const userID = currentUser.attributes.sub;
-        const userForUpdate = await API.graphql(graphqlOperation(getUser,  {id: userID}))
-        const userFinal = userForUpdate.data.getUser;
-        if (userFinal.offsetted_units == null) {userFinal.offsetted_units = 0;}
-        if (userFinal.carbon_units == null) {userFinal.carbon_units = 0;}
-        this.setState({user: userFinal})
-        pageUser = userFinal;
-        } catch (e) { console.error(e); }
+            var currentUser = await Auth.currentAuthenticatedUser();
+        } catch {
+            currentUser = null;
+        }
+        if (currentUser === null) {
+            this.setState({user: null})
+            pageUser = null;
+        }
+        else {
+            const userID = currentUser.attributes.sub;
+            const userForUpdate = await API.graphql(graphqlOperation(getUser,  {id: userID}))
+            const userFinal = userForUpdate.data.getUser;
+            if (userFinal.offsetted_units == null) {userFinal.offsetted_units = 0;}
+            if (userFinal.carbon_units == null) {userFinal.carbon_units = 0;}
+            this.setState({user: userFinal})
+            pageUser = userFinal;
+        }
 
         try {
         const getSols = await API.graphql(graphqlOperation(listSolutions));
@@ -336,6 +382,9 @@ class Solutions extends Component {
         
         populateMarkers(sortArray)
         this.setState({loaded: true})
+        console.log("ag")
+        console.log(mainClass.state.user);
+        mainClass.forceUpdate();
         } catch (e) { console.error(e); }
     }
 
@@ -344,6 +393,7 @@ class Solutions extends Component {
         mainClass.setState({carbonScore: mainClass.state.carbonScore - currentUnitsSelected})
         mainClass.setState({carbonOffset: mainClass.state.carbonOffset + currentUnitsSelected})
         var userObject;
+
         if (nonNegativeUserCarbon) {
             if (mainClass.state.user.carbon_units - currentUnitsSelected <= 0) {
                 userObject = await API.graphql(graphqlOperation(updateUser, 
@@ -387,6 +437,7 @@ class Solutions extends Component {
         }}));
         console.log("User " + userObject + " has updated solution " + solnObject + " and has created " + backerObject);
         window.location.reload();
+        
         } catch (e) { console.error(e) }
             
     
@@ -395,44 +446,25 @@ class Solutions extends Component {
     render() {
         return(
             <div>
+                {(mainClass.state.user != null ) ? 
+
                 <Row>
-                    <MapContainer 
-                    attributionControl={false}
-                    id="map" 
-                    center={startVariables} 
-                    zoom={startingZoom} 
-                    scrollWheelZoom={true}
-                    maxBounds={[[-90, -180],[90, 180]]}
-                    >
-                    <TileLayer  
-                        attribution= '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        minZoom='2'
-                        noWrap="true"
-                        bounds={[[-90, -180],[90, 180]]}
-                    ></TileLayer>
-                    <LayersControl position="topright">
-                        <LayersControl.Overlay checked name="Tree Solutions">
-                            <LayerGroup>
-                            <Waypoints arrayToShow="trees"/>
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                        <LayersControl.Overlay checked name="Land Solutions">
-                            <LayerGroup>
-                            <Waypoints arrayToShow="land"/>
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                        <LayersControl.Overlay checked name="Animal Solutions">
-                            <LayerGroup>
-                            <Waypoints arrayToShow="animal"/>
-                            </LayerGroup>
-                        </LayersControl.Overlay>
-                    </LayersControl>
-                    
-                    </MapContainer>
-                
+                <CreateMap />
                 <CreateList />
                 </Row>
+             : (
+                <Card>
+                <div id="loginAndRegisterContainer">
+                    <h2 id="loginAndRegisterText">Please log in or register to view solutions.</h2>
+                    <Link to="/login"><Button className="loginAndRegisterButtons">Log In</Button></Link>
+                    <br/><br/>
+                    <Link to="/register"><Button className="loginAndRegisterButtons">Register</Button></Link>
+                </div>
+                </Card>
+
+
+             )}
+
             </div>
         ); 
 

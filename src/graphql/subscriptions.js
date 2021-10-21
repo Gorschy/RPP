@@ -904,131 +904,12 @@ export const onDeleteProjectEditor = /* GraphQL */ `
     }
   }
 `;
-export const onCreateSolution = /* GraphQL */ `
-  subscription OnCreateSolution {
-    onCreateSolution {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      backers {
-        items {
-          id
-          solutionID
-          backerID
-          money_amount
-          credits
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateSolution = /* GraphQL */ `
-  subscription OnUpdateSolution {
-    onUpdateSolution {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      backers {
-        items {
-          id
-          solutionID
-          backerID
-          money_amount
-          credits
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteSolution = /* GraphQL */ `
-  subscription OnDeleteSolution {
-    onDeleteSolution {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      backers {
-        items {
-          id
-          solutionID
-          backerID
-          money_amount
-          credits
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateSolutionBacked = /* GraphQL */ `
   subscription OnCreateSolutionBacked {
     onCreateSolutionBacked {
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -1061,6 +942,26 @@ export const onCreateSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -1070,26 +971,6 @@ export const onUpdateSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -1122,6 +1003,26 @@ export const onUpdateSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -1131,26 +1032,6 @@ export const onDeleteSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -1183,6 +1064,26 @@ export const onDeleteSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -1325,6 +1226,105 @@ export const onDeleteReport = /* GraphQL */ `
       paperCarbon
       foodDrinkCarbon
       eventsCarbon
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateSolution = /* GraphQL */ `
+  subscription OnCreateSolution {
+    onCreateSolution {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSolution = /* GraphQL */ `
+  subscription OnUpdateSolution {
+    onUpdateSolution {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSolution = /* GraphQL */ `
+  subscription OnDeleteSolution {
+    onDeleteSolution {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }

@@ -79,8 +79,8 @@ type ProjectEditor
 type Solution @model 
   @auth(rules: [
     { allow: groups, groups: ["Admin"], operations: [read, create, update, delete]},
-    {allow: private, operations: [read]},
-    { allow: public, operations: [read] }
+    { allow: private, operations: [read, create, update]},
+    { allow: public, operations: [read, create] }
 ])  
 {
   id:ID!

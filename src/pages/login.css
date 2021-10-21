@@ -5,6 +5,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    min-width: 600px;
 }
 
 .loginField {
@@ -30,11 +31,12 @@
 }
 
 .loginButton {
-    margin-left: 14vw;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-    width: 12vw;
-    height: 4vh;
+    position:block;
+    left: calc(50% - 260px);
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 500px;
+    height: 50px;
     border-radius: 8px;
 
     background-color: var(--color_green);
@@ -55,9 +57,10 @@
 
 .errorLabel {
     text-align: center;
-    position:absolute;
+    position: absolute;
     color: red;
-    width: fit-content;
+    padding-right: 75px;
+    width: calc(100% - 100px);
 }
 
 .forgotPassword {

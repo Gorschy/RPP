@@ -237,70 +237,6 @@ export const listProjects = /* GraphQL */ `
     }
   }
 `;
-export const getSolution = /* GraphQL */ `
-  query GetSolution($id: ID!) {
-    getSolution(id: $id) {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      backers {
-        items {
-          id
-          solutionID
-          backerID
-          money_amount
-          credits
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listSolutions = /* GraphQL */ `
-  query ListSolutions(
-    $filter: ModelSolutionFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listSolutions(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getReport = /* GraphQL */ `
   query GetReport($id: ID!) {
     getReport(id: $id) {
@@ -382,6 +318,70 @@ export const listReports = /* GraphQL */ `
         paperCarbon
         foodDrinkCarbon
         eventsCarbon
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSolution = /* GraphQL */ `
+  query GetSolution($id: ID!) {
+    getSolution(id: $id) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSolutions = /* GraphQL */ `
+  query ListSolutions(
+    $filter: ModelSolutionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSolutions(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
         createdAt
         updatedAt
       }
