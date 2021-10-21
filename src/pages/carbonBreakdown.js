@@ -6,8 +6,8 @@ import './carbonBreakdown.css';
 
 const CarbonBreakdown = (report) => {
 
-    const [percentageDifference, setPercentageDifference] = useState("Loading");
-    const [carbonValue, setCarbonValue] = useState("Loading");
+    const [percentageDifference, setPercentageDifference] = useState("Select A Report");
+    const [carbonValue, setCarbonValue] = useState("Select A Tab");
     const [tipState, setTipState] = useState([]);
 
     //Not sure how accurate this is. need to update this.
@@ -28,7 +28,9 @@ const CarbonBreakdown = (report) => {
         "Temp data total tips"
       ],
       transport: [
-        "Temp data transport tips"
+        'For shorter trips, consider walking, riding or using public transport. Car-pooling is also a great option if you are travelling to the same place as others. ',
+        'Plan your public transport journey using Public Transport Victoria or Google Maps for trains, trams and buses.',
+        'Find the best cycling route for you using the Google Maps bicycling feature. The map feature will highlight trails, dedicated lanes and bicycle-friendly roads.'
       ],
       electricity: [
         'During the colder months, wear more clothing layers to keep warm before turning on the heater', 
@@ -41,19 +43,35 @@ const CarbonBreakdown = (report) => {
         "Temp data gas tips"
       ],
       waste: [
-        "Temp data waste tips"
+        'Most household waste comes from food and garden waste which can be reduced by composting',
+        'Implement a compost bin',
+        'Worm farms are also another good method of dealing with food wastes',
+        'If you live in an apartment or small complex bokashi composting is another method'
       ],
       water: [
-        "Temp data water tips"
+        'Reduce your shower time – aim for 4 minutes or less',
+        'Change to water-efficient shower heads',
+        'Turn taps off when not in use – for example, while brushing your teeth',
+        'Fix leaking taps',
+        'Use the half-flush on the toilet whenever possible',
+        'Scrape excess food from plates and bowls, rather than pre-rinsing',
+        'Only run your dishwasher when it is full',
       ],
       paper: [
-        "Temp data paper tips"
+        'Aim to use recycled paper',
+        'When you can instead of using paper record digitally'
       ],
       foodDrink: [
-        "Temp data foodDrink tips"
+        'Dont waste food',
+        'Aim to buy foods and drinks with limited to no plastic',
+        'Eat less meat, especially meats like beef',
+        'Substitute meats where possible for plant based proteins',
+        'Grow your own produce',
+        'When buying food aim to buy local produce',
       ],
       events: [
-        "Temp data events tips"
+        "Try to only have events every now and then maybe once a month",
+        'When you do go out be mindful of what youre purchasing focusing on less plastic, and less meat'
       ]
     };
 
@@ -219,7 +237,7 @@ const CarbonBreakdown = (report) => {
                 <p>Comapred To Average {percentageDifference}</p>
             </Card>
 
-            <Card id="carbonBreakdown" title={<h1>Carbon Breakdown</h1>} bordered={true}>
+            <Card id="carbonBreakdown" title={<h1>Carbon Reduction Tips</h1>} bordered={true}>
             { tipState.map((item, index) => (
                         <div key = {index}>
                             <p>{item}</p>
