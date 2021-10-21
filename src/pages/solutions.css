@@ -150,3 +150,7 @@ h3.backerCountText {
     line-height: 0px;
 
 }
+
+.leaflet-control-layers-selector > * {
+    color: blue;
+}

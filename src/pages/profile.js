@@ -109,7 +109,6 @@ const Profile = () => {
                 </Card> 
             </div>
             <CarbonBreakdown {...selectedReport} />
-            <Graphs {...selectedReport} />
         </div>
     );
 }
