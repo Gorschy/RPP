@@ -5,7 +5,7 @@ import { Auth, API, graphqlOperation } from 'aws-amplify';
 import {getUser, listSolutions} from '../graphql/queries';
 import {createSolutionBacked, updateSolution, updateUser} from '../graphql/mutations';
 import L from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup, LayersControl, LayerGroup} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import '../style.css';
 import './solutions.css';
 import 'leaflet/dist/leaflet.css';
@@ -397,6 +397,7 @@ class Solutions extends Component {
             <div>
                 <Row>
                     <MapContainer 
+                    attributionControl={false}
                     id="map" 
                     center={startVariables} 
                     zoom={startingZoom} 
@@ -409,7 +410,7 @@ class Solutions extends Component {
                         minZoom='2'
                         noWrap="true"
                         bounds={[[-90, -180],[90, 180]]}
-                    />
+                    ></TileLayer>
                     <LayersControl position="topright">
                         <LayersControl.Overlay checked name="Tree Solutions">
                             <LayerGroup>

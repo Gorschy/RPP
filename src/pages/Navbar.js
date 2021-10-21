@@ -47,11 +47,14 @@ const Navbar = () => {
         } catch (error) {
             console.log('error signing out: ', error);
         }
+        window.location.reload();
     };
 
     useEffect(() => {
         getProfilePicture();
     }, []);
+
+    
 
     return (
         <React.Fragment>

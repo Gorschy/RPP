@@ -77,6 +77,7 @@ export default function contactUs() {
                     </div>
                 </div>
             </form>
+
         </Card>
         </Row>
         </div>

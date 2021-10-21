@@ -69,7 +69,7 @@ h3.navbarHeadersBurger {
     background-color:var(--foreground_color);
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
 
     .leftStyle {
         display: none;
