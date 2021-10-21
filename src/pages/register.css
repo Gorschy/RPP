@@ -1,5 +1,5 @@
 .registerCard {
-    width: 40vw !important;
+    width: min(1000px, 90vw) !important;
     position: fixed; /* or absolute */
     top: 50%;
     left: 50%;
@@ -7,8 +7,8 @@
 }
 
 .registerField {
-    margin-left: 4vw;
-    width: 32vw;
+    margin-left: 50px;
+    width: min(800px, 80vw) !important;;
     height: 4vh;
     border-radius: 8px;
     display: inline-block;
@@ -28,10 +28,10 @@
 }
 
 .registerButton {
-    margin-left: 10vw;
+    margin-left: calc(50% - (250px));
     margin-top: 1vh;
     margin-bottom: 1vh;
-    width: 12vw;
+    width: 500px;
     height: 4vh;
     border-radius: 8px;
 
