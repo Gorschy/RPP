@@ -22,7 +22,7 @@
 
 /*  Image Stylings   */
 
-@media screen and (max-width: 1750px) {
+@media screen and (max-width: 1775px) {
     #imgWrapper {
         animation: smoothDisappear 0.2s linear;
         opacity:0;
@@ -36,7 +36,7 @@
     }
 }
 
-@media screen and (min-width: 1750px) {
+@media screen and (min-width: 1775px) {
     #imgWrapper {
         margin-left: 0px;
         animation: smoothAppear 0.2s linear;
