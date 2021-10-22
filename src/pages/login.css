@@ -31,14 +31,19 @@
 }
 
 .loginButton {
-    position:block;
-    left: calc(50% - 260px);
+    margin-left: calc(50% - 300px);
     margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 50px;
-    width: 500px;
+    width: calc(100% - 400px);
     height: 50px;
     border-radius: 8px;
-
+    position: block;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 175px;
     background-color: var(--color_green);
 
     font-family: var(--general_font_family);

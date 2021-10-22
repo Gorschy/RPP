@@ -1,6 +1,6 @@
 .registerCard {
     width: min(1000px, 90vw) !important;
-    position: absolute; /* or absolute */
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); 
@@ -31,11 +31,17 @@
 .registerButton {
     margin-left: calc(50% - 300px);
     margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 50px;
     width: calc(100% - 400px);
     height: 50px;
     border-radius: 8px;
-
+    position: block;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 175px;
     background-color: var(--color_green);
 
     font-family: var(--general_font_family);
@@ -49,10 +55,13 @@
 }
 
 .registerLabels {
-    margin-left: 4vw;
+    margin-left: 50px;
 }
 
 .errorLabel {
-    margin-left: 4vw;
+    text-align: center;
+    position: absolute;
     color: red;
+    padding-right: 75px;
+    width: calc(100% - 100px);
 }
