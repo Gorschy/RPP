@@ -264,9 +264,9 @@ const CarbonBreakdown = (report) => {
       temp = report.totalCarbon - carbonAverage.totalCarbon;
       temp = temp/carbonAverage.totalCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.totalCarbon);
@@ -427,39 +427,36 @@ const CarbonBreakdown = (report) => {
                 <button onClick={eventsCarbon}>Events</button>
               </div>
             </div>
-
-            <div>
-              <p>Carbon Report Amount {carbonValue}</p>
-              <p>Comapred To Average {percentageDifference}</p>
-            </div>
+           
           </div>
 
+         
+
           <div className = "roww">
+
+          
             <div className = "col">
+              <div>
+                <p>Carbon Report Total: {carbonValue}t CO2</p>
+                <p>Comapred To Average: {percentageDifference}</p>
+              </div>
               <h2>Carbon Reduction Tips</h2>
               { tipState.map((item, index) => (
-                <div key = {index}>
-                    <p>{item}</p>
-                </div>
+                <li className = "tips" key = {index}>
+                    <span>{item}</span>
+                </li>
               ))}
             </div>
+            
             <div className = "colgraphs">
               <CChart className="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={options} />
               <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
               {/* <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} /> */}
             </div>
+          
           </div>
-        </div>
-
-
-        <div className="card">
-          
-          
-
           
         </div>
-
-         
       </div>
       
     );
