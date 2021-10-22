@@ -60,9 +60,10 @@ const Profile = () => {
       try {
           const report_to_delete = selectedReport.id;
           await API.graphql(graphqlOperation(deleteReport, { input: { id: report_to_delete }}));
+          init();
 
       } catch(err) { console.log("Report could not be deleted -> " + err) }
-      
+
   }
 
   
