@@ -5,10 +5,13 @@ import { Menu, Button, Image, Dropdown, Row, Col } from 'antd';
 import './Navbar.css';
 import '../style.css';
 import logo from '../assets/LOTT rd.png';
-import { Auth, Storage } from 'aws-amplify';
+import { Auth, Storage, graphqlOperation } from 'aws-amplify';
 import Avatar from '../assets/avatar.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import {getUser} from '../graphql/customQueries';
+import { API } from 'aws-amplify'; // Used for sending DynamoDB
+
 const { Item } = Menu;
 const { SubMenu } = Menu;
 /* TODO:
@@ -18,10 +21,29 @@ const { SubMenu } = Menu;
     - remove hover border
 */
 const Navbar = () => {
-
+    const [isAdmin, setAdmin] = useState(false);
+   
     //Not sure if this needs to be braces vs brackets???
     const {loggedIn, setLoggedIn} = useContext(UserContext);
+    if(loggedIn == true){
+        GetUserData();
+    }
 
+
+    async function GetUserData(){
+        if(loggedIn == true){
+            const data = await Auth.currentUserPoolUser();
+            const userInfo = { ...data.attributes };
+            const uData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub })); // Only looking at Users not admins
+            if(uData.data.getUser.admin == true){
+               console.log(uData.data.getUser.admin); 
+                setAdmin(true);
+            }else{
+                setAdmin(false);
+            }
+            
+        }
+    }
     const [image, setImage] = useState(Avatar);
 
     const getProfilePicture = async () => {
@@ -69,7 +91,8 @@ const Navbar = () => {
                 {loggedIn ? (<Item key="Projects"> <Link to='/projects'><h3 className="navbarHeadersBurger">Projects</h3></Link> </Item>) : null }
                 <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeadersBurger">Solutions</h3></Link> </Item>
                 <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeadersBurger">Contact Us</h3></Link> </Item>
-                
+                {loggedIn && isAdmin ? <Item key="Admin"> <Link to='/admin'><h3 className="navbarHeadersBurger">Admin</h3></Link> </Item> : null }
+
                 </SubMenu>
                 
             </Menu>
@@ -82,7 +105,8 @@ const Navbar = () => {
                 {loggedIn ? (<Item key="Projects"> <Link to='/projects'><h3 className="navbarHeaders">Projects</h3></Link> </Item>) : null }
                 <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeaders">Solutions</h3></Link> </Item>
                 <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeaders">Contact Us</h3></Link> </Item>
-                
+                {loggedIn && isAdmin ? <Item key="Admin"> <Link to='/admin'><h3 className="navbarHeaders">Admin</h3></Link> </Item> : null }
+
                  
 
             </Menu>

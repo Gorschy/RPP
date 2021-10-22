@@ -62,9 +62,23 @@ export const listProjects = /* GraphQL */ `
 `;
 
 export const getID = /* GraphQL */ `
+query getID(
+    $filter: ModelUserFilterInput
+    $limit: Int
+  ){
+  listUsers (filter: $filter, limit: $limit){
+    items {
+      id
+    }
+  }
+}
+`;
+
+export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
+      admin
     }
   }
 `;

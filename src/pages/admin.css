@@ -141,3 +141,7 @@
       margin-right: auto;
       border-radius: 15px;
     }
+
+    Input.Search {
+      margin: 0rem !important;
+    }
