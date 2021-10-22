@@ -2,7 +2,7 @@ import emailjs from 'emailjs-com';
 import React from 'react';
 import '../style.css';
 import { Form, Input, Row, Col, Select, Card, Image, Divider} from 'antd';
-import contactDetailsImage from '../assets/Nature1.png'
+import contactDetailsImage from '../assets/Nature1.png' 
 import './contactUs.css';
 export default function contactUs() {
 
@@ -11,7 +11,7 @@ export default function contactUs() {
 
         /* We get 200 emails a month with the free tier DON"T SPAM THE SEND MESSAGE BOX
         Fields ServiceID, templateID, e.target (refers to what the user is submiting through the form), UserID (this is the user api key) >> https://www.emailjs.com/  */
-
+    try{
         emailjs.sendForm('service_8vz2gxx', 'template_abxoegl', e.target, 'user_IiRHYUwqWVSGke3woZlnQ')
             .then((result) => {
                 console.log(result.text);
@@ -19,12 +19,12 @@ export default function contactUs() {
                 console.log(error.text);
             });
         e.target.reset();
+    } catch (error){
+        console.log("There was an error in sendEmail " + error);
+    }
         
     }
 
-
-
-    /* Dropdown value is not currently being collected properly, its not showing up on the email. The input is getting reset with the onclick function as it should */
     function handleChange(value) {
         console.log(`selected ${value}`);
     }
@@ -42,7 +42,7 @@ export default function contactUs() {
             <div className="standardText">0474690899</div>
 
             <Divider />
-            <div id="sprayImageHolder"><Image id="sprayImage" src={contactDetailsImage} alt="Spray Image Asset"/></div>
+            <div id="sprayImageHolder"><Image id="sprayImage" preview={false} src={contactDetailsImage} alt="Spray Image Asset"/></div>
         </Card>
         
         <Card id="submitTicketCard" title={<h1>Submit Support Ticket</h1>} bordered={false}>
