@@ -37,6 +37,10 @@
 }
 
 /* modal styling */
+#modalTitle {
+  line-height: 40px;
+
+}
 
 /*global*/
 .ant-modal-content {

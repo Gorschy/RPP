@@ -478,7 +478,7 @@ const UserLists = (currentUser) => {
                             centered
                         >
                             <div className = "center-text">
-                                <h1>Looks like you don't have any Projects...</h1>
+                                <h1 id="modalTitle">Looks like you don't have any Projects...</h1>
                                 <h2>Would you like to create one?</h2>
                                 <h3>We just need a few details...</h3>
                             </div>
