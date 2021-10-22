@@ -439,7 +439,7 @@ const CarbonBreakdown = (report) => {
 
                 <div className = "flex-child">
                   <CChart className="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={options} />
-                  <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
+                  <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={bar.labels} />
                   <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} />
                 </div>
               </div>          
