@@ -1685,7 +1685,7 @@ const Calculator = () => {
                       id="gasAdv"
                       name="gasConsumption"
                       onChange={handleEmission}
-                      placeholder={uom.consumption}
+                      placeholder={uom.gas}
                     />
 
                     <Divider plain> OR </Divider>
@@ -1697,7 +1697,7 @@ const Calculator = () => {
                       id="gasAdv"
                       name="lpgConsumption"
                       onChange={handleEmission}
-                      placeholder={uom.consumption}
+                      placeholder={uom.gas}
                     />
 
                     <Divider />
@@ -1796,7 +1796,7 @@ const Calculator = () => {
                       id="gas"
                       name="gasConsumption"
                       onChange={handleEmission}
-                      placeholder={uom.consumption}
+                      placeholder={uom.gas}
                     />
 
                     <Divider plain> OR </Divider>
@@ -1808,7 +1808,7 @@ const Calculator = () => {
                       id="gas"
                       name="lpgConsumption"
                       onChange={handleEmission}
-                      placeholder={uom.consumption}
+                      placeholder={uom.gas}
                     />
 
                     <Divider />
