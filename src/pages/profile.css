@@ -8,7 +8,7 @@
     width: 48vw;
 }
 
-.column {
+.columnn {
     flex-direction: column;
     margin-right: 1.5vw;
 }
@@ -22,12 +22,22 @@
     box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
 }
 
-.reports-list-card {
-    width: auto;
+.reports-list-cardd {
+    width: 300px;
     min-width: 250px;
     height: 450px;
     flex-direction: column;
     text-align: center;
 }
+
+.containerr {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  
+  }
 
 

@@ -120,10 +120,10 @@ const Account = () => {
     { loggedIn ? (
     <div>
 
-        <Card className="accountCard" title={<h1>Account Details</h1>} bordered={false} >
+        <Card id="accountCard" title={<h1>Account Details</h1>} bordered={false} >
             
             <br/>
-            <h2 id="label" >First Name</h2>
+            <h2 className="accountLabel" >First Name</h2>
             <input className="inputFieldShort"
             id="firstName"
             label="firstName" 
@@ -132,8 +132,8 @@ const Account = () => {
             onChange={e => setGivenName(e.target.value)}
             />
       
-            <br/><br/>
-            <h2 id="label">Last Name</h2>
+            
+            <h2 className="accountLabel">Last Name</h2>
             <input className="inputFieldShort" 
             id='lastName'
             label="lastName" 
@@ -142,7 +142,7 @@ const Account = () => {
             onChange={e => setFamilyName(e.target.value)}
             />
 
-            <h2 id="label" >Email</h2>
+            <h2 className="accountLabel" >Email</h2>
             <input className="inputFieldShort" 
                 id="email"
                 label="email" 
@@ -151,7 +151,7 @@ const Account = () => {
                 onChange={e => setEmail(e.target.value)}
             />
             
-            <h2 id="label" >Phone Number</h2>
+            <h2 className="accountLabel" >Phone Number</h2>
             <input className="inputFieldShort" 
                 id='phoneNumber'
                 label="phoneNumber" 
@@ -163,7 +163,8 @@ const Account = () => {
 
         <Divider orientation="left"><h2>Change Password</h2></Divider>
 
-            <input className="inputFieldLong" 
+        <h2 className="accountLabel" >New Password</h2>
+            <input className="inputFieldShort" 
                 id='currentPassword'
                 label="currentPassword" 
                 value={currentPassword}
@@ -171,18 +172,21 @@ const Account = () => {
                 onChange={e => setCurrentPassword(e.target.value)} 
                 /*addonBefore={prefixSelector} style={{ width: '100%' }}*/
             />
+        <Divider orientation="left"><h2>Change Profile Image</h2></Divider>
             <a href="#">
             <input
+                id="fileButton"
                 type="file"
                 onChange={onProcessFile}
                 ref={fileInput}
+                accept="image/*"
             />
-            </a>
-            <img src={image} onClick={onOpenFileDialog} />
+            </a> <br /><br />
+            <img id="profileImgDisplay" src={image} onClick={onOpenFileDialog} />
 
             <span className="errorLabel">{errors}</span>
             <br/><br/>
-            <Button className="loginButton"  type="primary" onClick={updateUserDetails} > Update Account Details </Button>
+            <Button id="pWSubmitButton"  type="primary" onClick={updateUserDetails} > Update Account Details </Button>
         </Card> 
     
       

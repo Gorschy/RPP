@@ -523,7 +523,7 @@ const UserLists = (currentUser) => {
                                             
                                         </div>
                                         <form className = "new-project-form">
-                                        <h2>Create a new Project!</h2>
+                                            <h2>Create a new Project!</h2>
                                             <h3>We just need a few details...</h3>
                                             <label className = "form-label">Project Name</label>
                                             <input
@@ -700,8 +700,10 @@ const UserLists = (currentUser) => {
 
                                     </div>
 
-                                    <div className = "column">   
-                                        {/* <CarbonBreakdown { ...selected_report } /> */}
+                                    <div className = "column">
+                                        <div className = "test">   
+                                            <CarbonBreakdown { ...selected_report } />
+                                        </div>
                                     </div>
 
                                     <div className = "column">                

@@ -43,7 +43,7 @@ const ConfirmSignUp = () => {
                     value={authCode}
                     onChange={e => setAuthCode(e.target.value)}
                 />
-                <span className="errorLabel">{errors}</span>
+                <div className="errorLabel">{errors}</div>
                 <br/><br/>
                 <Button className="authButton" id="confirmSignup" onClick={confirmSignUp} type="primary">
                     Confirm Sign Up                
