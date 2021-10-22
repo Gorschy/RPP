@@ -156,10 +156,10 @@ const Helper = () => {
                   <button onClick = { handleCancel }>Personal Report</button>
                   <h3>or</h3>
                   <label>Project Report</label>
-                  <select onChange={ setProjectID }>
-                    <option value="" selected hidden>Select a Project</option>
+                  <select onChange={ setProjectID } id="selectorWheel">
+                    <option value="" selected hidden className="optionStyling">Select a Project</option>
                     { projects_list.map((item, index) => (
-                      <option key = {index} value = {item.id}>{item.title}</option>
+                      <option key = {index} value = {item.id} className="optionStyling">{item.title}</option>
                     ))}
                   </select>
                 

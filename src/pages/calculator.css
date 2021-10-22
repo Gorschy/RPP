@@ -84,6 +84,23 @@ TODO:
     border-width: 1px !important;
 
 }
+.optionStyling {
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    color: var(--general_text_color);
+    font-weight: var(--general_text_font_weight);
+    text-align: left;
+
+}
+#selectorWheel{
+    width:200px;
+    height: 30px;
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    color: var(--general_text_color);
+    font-weight: var(--general_text_font_weight);
+    text-align: left;
+}
 
 #centreContent {
     text-align: center;
