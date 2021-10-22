@@ -408,7 +408,7 @@ const CarbonBreakdown = (report) => {
               <div className = "flex-container">
 
     
-                <div className = "flex-child 1">  
+                <div className = "flex-child">  
                   <div className = "btn-group">
                     <button onClick={totalCarbon}>Total</button>
                     <button onClick={transportCarbon}>Transport</button>

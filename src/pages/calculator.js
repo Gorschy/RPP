@@ -375,16 +375,8 @@ const Calculator = () => {
 
         //Basic Electricity Case
         case emissionData[i].hasOwnProperty("electricity"):
-          electricityCarbon +=
-            Math.pow(
-              0.00086905 * emissionData[i].electricity.electricityConsumption,
-              1.00009
-            ) + 0.00160968;
-          totalCarbon +=
-            Math.pow(
-              0.00086905 * emissionData[i].electricity.electricityConsumption,
-              1.00009
-            ) + 0.00160968;
+          electricityCarbon += Math.pow(0.00086905 * emissionData[i].electricity.electricityConsumption, 1.00009) + 0.00160968;
+          totalCarbon += Math.pow(0.00086905 * emissionData[i].electricity.electricityConsumption, 1.00009) + 0.00160968;
           break;
 
         //Basic Gas Case
@@ -433,36 +425,36 @@ const Calculator = () => {
               }else if(emissionData[i].hasOwnProperty("lpgConsumption")) {
                 switch (tempState) {
                   case "ACT":
-                    totalCarbon += 0.00115015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.00115015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.00115015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.00115015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   case "NSW":
-                    totalCarbon += 0.00134015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.00134015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.00134015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.00134015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   case "NT":
-                    totalCarbon += 0.001655015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.001665015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.001655015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.001665015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   case "QLD":
-                    totalCarbon += 0.0165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.0165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.0165015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.0165015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   case "SA":
-                    totalCarbon += 0.000165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.000165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.000165015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.000165015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   case "TAS":
-                    totalCarbon += 0.001365015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.001365015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.001365015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.001365015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   case "VIC":
-                    totalCarbon += 0.0014565015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.0014565015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.0014565015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.0014565015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   case "WA":
-                    totalCarbon += 0.0016528015 * emissionData[i].gas.gasConsumption  - 0.000555556;
-                    gasCarbon += 0.0016528015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    totalCarbon += 0.0016528015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    gasCarbon += 0.0016528015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
                     break;
                   default:
                     console.log("-- gas error --");
@@ -631,7 +623,305 @@ const Calculator = () => {
           totalCarbon += temp;
           eventsCarbon += temp;
           break;
+          
         //Add Adv Case
+        case emissionData[i].hasOwnProperty("vehicleTravelAdv"):
+          let numOfVehicles = emissionData[i].vehicleTravelAdv.numberOfVehicles;
+          let fuelType = emissionData[i].vehicleTravelAdv.fuelType;
+ 
+          if(emissionData[i].hasOwnProperty("feulConsumption")) {
+            let fuelConsumption = emissionData[i].vehicleTravelAdv.fuelConsumption;
+            switch(fuelType){
+              case "Petrol":
+                temp = Math.pow(0.00243852 * fuelConsumption, 0.9999 ) - 0.0019906;
+                break;
+              case "Diesel":
+                temp = Math.pow(0.00286059 * fuelConsumption, 1 ) + 0.00116744;
+                break;
+              case "Biodiesel":
+                temp = Math.pow(0.0000876365 * fuelConsumption, 0.998862 ) + 0.00044676;
+                break;
+              case "Biofuel":
+                temp = Math.pow(0.000602778* fuelConsumption, 1.00074) + 0.000495741;
+                break;
+              case "LPG":
+                temp = Math.pow(0.00168946* fuelConsumption, 1.00002) + 0.00151031;
+                break;
+              case "E10":
+                temp = Math.pow(0.00214471* fuelConsumption, 0.99994) - 0.00258171;
+                break;
+              case "Ethanol":
+                temp = Math.pow(0.0000960945* fuelConsumption, 0.997729) - 0.00148327;
+                break;   
+            } 
+          } else if(emissionData[i].hasOwnProperty("travelDistance") && emissionData[i].hasOwnProperty("fuelEfficiency") ) {
+
+            let travelDistance = emissionData[i].vehicleTravelAdv.travelDistance;
+            let fuelEfficiency = emissionData[i].vehicleTravelAdv.fuelEfficiency/100;
+            let fuelConsumption = fuelConsumption = travelDistance * fuelEfficiency;
+            switch(fuelType){
+              case "Petrol":
+                temp = Math.pow(0.00243852 * fuelConsumption, 0.9999 ) - 0.0019906;
+                break;
+              case "Diesel":
+                temp = Math.pow(0.00286059 * fuelConsumption, 1 ) + 0.00116744;
+                break;
+              case "Biodiesel":
+                temp = Math.pow(0.0000876365 * fuelConsumption, 0.998862 ) + 0.00044676;
+                break;
+              case "Biofuel":
+                temp = Math.pow(0.000602778* fuelConsumption, 1.00074) + 0.000495741;
+                break;
+              case "LPG":
+                temp = Math.pow(0.00168946* fuelConsumption, 1.00002) + 0.00151031;
+                break;
+              case "E10":
+                temp = Math.pow(0.00214471* fuelConsumption, 0.99994) - 0.00258171;
+                break;
+              case "Ethanol":
+                temp = Math.pow(0.0000960945* fuelConsumption, 0.997729) - 0.00148327;
+                break;   
+          }
+        }
+
+          if(emissionData[i].hasOwnProperty("includeCO2")){
+            temp = temp * 1.07;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeN2O")){
+            temp = temp * 1.02;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeCH4")){
+            temp = temp * 1.04;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeSCOPE3")){
+            temp = temp * 1.05;
+          }
+
+          if(numOfVehicles >= 1){
+            temp = temp * numOfVehicles;
+          }
+
+          totalCarbon += temp;
+          transportCarbon += temp;
+          break;
+        
+        case emissionData[i].hasOwnProperty("airTravelAdv"):
+          let tempCabinClassAdv = emissionData[i].airTravel.cabinClass;
+          let tempDistanceAdv = emissionData[i].airTravel.airDistance;
+          let tempPassengersAdv = emissionData[i].airTravel.passengers;
+
+          switch (tempCabinClassAdv) {
+            case 1:
+              temp = Math.pow(0.00040532 * tempDistanceAdv, 0.934661) - 0.106027;
+              break;
+            case 2:
+              temp =
+                Math.pow(0.000202965 * tempDistanceAdv, 0.973721) + 0.00407937;
+              break;
+            case 3:
+              temp = Math.pow(0.00040532 * tempDistanceAdv, 0.934661) - 0.106027;
+              break;
+            case 4:
+              temp = Math.pow(0.00040532 * tempDistanceAdv, 0.934661) - 0.106027;
+              break;
+            case 5:
+              temp = Math.pow(0.00040532 * tempDistanceAdv, 0.934661) - 0.106027;
+              break;
+            default:
+              console.log("-- main switch error --");
+          }
+
+          if (temp < 0) {
+            temp = 0;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeCO2")){
+            temp = temp * 1.07;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeN2O")){
+            temp = temp * 1.02;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeCH4")){
+            temp = temp * 1.04;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeSCOPE3")){
+            temp = temp * 1.05;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeINDIRECT")){
+            temp = temp * 1.05;
+          }
+
+          if(emissionData[i].hasOwnProperty("includeRFI")){
+            temp = temp * 1.05;
+          }
+
+          if(tempPassengersAdv > 0) {
+            temp = temp/tempPassengersAdv;
+          }
+          totalCarbon += temp;
+          transportCarbon += temp;
+          break;
+
+        case emissionData[i].hasOwnProperty("publicTravelAdv"):
+          let tempTransportMethodAdv = emissionData[i].publicTravel.transportMethod;
+          let tempTransportTypeAdv = emissionData[i].publicTravel.transportType;
+          let tempDistancePubAdv = emissionData[i].publicTravel.pubDistance;
+          let tempPassengersAdvPub = emissionData[i].publicTravel.passengers;
+
+
+          if (tempTransportMethodAdv === 1) {
+            if (tempTransportTypeAdv === 1) {
+              temp =
+                Math.pow(0.0000884831 * tempDistancePubAdv, 0.934661) - 0.106027;
+            } else if (tempTransportTypeAdv === 2) {
+              temp =
+                Math.pow(0.0000497395 * tempDistancePubAdv, 0.998722) - 0.00129669;
+            } else if (tempTransportTypeAdv === 3) {
+              temp =
+                Math.pow(0.0000570462 * tempDistancePubAdv, 0.999922) + 0.00049945;
+            } else {
+              console.log(
+                "There was an unexpected transport TYPE in calculate function bus"
+              );
+            }
+          } else if (tempTransportMethodAdv === 2) {
+            if (tempTransportTypeAdv === 1) {
+              temp =
+                Math.pow(0.000111839 * tempDistancePubAdv, 1.00013) - 0.0000298673;
+            } else if (tempTransportTypeAdv === 2) {
+              temp =
+                Math.pow(0.000041585 * tempDistancePubAdv, 0.998798) - 0.0013409;
+            } else if (tempTransportTypeAdv === 3) {
+              temp = 0.00118995 * tempDistancePubAdv + 0.000183289;
+            } else {
+              console.log(
+                "There was an unexpected transport TYPE in calculate function train"
+              );
+            }
+          } else {
+            console.log(
+              "There was an unexpected transport METHOD in calculate function"
+            );
+          }
+
+          if (temp < 0) {
+            temp = 0;
+          }
+
+          if(tempPassengersAdvPub > 0){
+            temp = temp/tempPassengersAdvPub;
+          }
+          totalCarbon += temp;
+          transportCarbon += temp;
+          break;
+        
+      //Adv Electricity Case
+      case emissionData[i].hasOwnProperty("electricityAdv"):
+        temp += Math.pow(0.00086905 * emissionData[i].electricityAdv.electricityConsumption, 1.00009) + 0.00160968;
+        if(emissionData[i].hasOwnProperty("includeSCOPE2")){
+          temp = temp * 1.02;
+        }  
+        if(emissionData[i].hasOwnProperty("includeSCOPE3")){
+            temp = temp * 1.05;
+        }
+        totalCarbon += temp;
+        electricityCarbon += temp;
+        break;
+
+      //gas
+      case emissionData[i].hasOwnProperty("gasAdv"):
+          //Measurement is unused
+          let tempUnitOfMeasurementAdv = emissionData[i].gas.unitOfMeasurement;
+          let tempStateAdv = emissionData[i].gas.stateOrTerritory;
+          
+              if(emissionData[i].hasOwnProperty("gasConsumption")){
+                switch (tempStateAdv) {
+                  case "ACT":
+                    temp = 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NSW":
+                    temp = 0.00175015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NT":
+                    temp = 0.00135015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "QLD":
+                    temp = 0.00125015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "SA":
+                    temp = 0.00185015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "TAS":
+                    temp = 0.00195015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "VIC":
+                    temp = 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "WA":
+                    temp = 0.001675015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  default:
+                    console.log("-- gas error --");
+                }
+              }else if(emissionData[i].hasOwnProperty("lpgConsumption")) {
+                switch (tempStateAdv) {
+                  case "ACT":
+                    temp = 0.00115015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  case "NSW":
+                    temp = 0.00134015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  case "NT":
+                    temp = 0.001655015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  case "QLD":
+                    temp = 0.0165015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  case "SA":
+                    temp = 0.000165015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  case "TAS":
+                    temp = 0.001365015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  case "VIC":
+                    temp = 0.0014565015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  case "WA":
+                    temp = 0.0016528015 * emissionData[i].gas.lpgConsumption  - 0.000555556;
+                    break;
+                  default:
+                    console.log("-- gas error --");
+                }
+              }
+
+              if(emissionData[i].hasOwnProperty("includeCO2")){
+                temp = temp * 1.07;
+              }
+    
+              if(emissionData[i].hasOwnProperty("includeN2O")){
+                temp = temp * 1.02;
+              }
+    
+              if(emissionData[i].hasOwnProperty("includeCH4")){
+                temp = temp * 1.04;
+              }
+    
+              if(emissionData[i].hasOwnProperty("includeSCOPE3")){
+                temp = temp * 1.05;
+              }
+                
+              totalCarbon += temp;
+              gasCarbon += temp;
+          break;
+
+
         default:
           console.log("-- main switch error --");
       }
@@ -647,7 +937,6 @@ const Calculator = () => {
     let tempFoodDrinkCarbon = foodDrinkCarbon.toString();
     let tempEventsCarbon = eventsCarbon.toString();
 
-  
       const data = await Auth.currentUserPoolUser();
       const userInfo = { ...data.attributes }; // userInfo.sub == user ID
       const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
@@ -880,13 +1169,13 @@ const Calculator = () => {
                       <option value="" selected hidden>
                         Please Select
                       </option>
-                      <option value="0.24">Petrol (RON91-98)</option>
-                      <option value="0.29">Diesel</option>
-                      <option value="0.01">Biodiesel</option>
-                      <option value="0.01">Biofuel</option>
-                      <option value="0.17">LPG</option>
-                      <option value="0.21">E10 (Petrol w 10% Ethanol)</option>
-                      <option value="0.01">Ethanol</option>
+                      <option value="Petrol">Petrol (RON91-98)</option>
+                      <option value="Diesel">Diesel</option>
+                      <option value="Biodiesel">Biodiesel</option>
+                      <option value="Biofuel">Biofuel</option>
+                      <option value="LPG">LPG</option>
+                      <option value="E10">E10 (Petrol w 10% Ethanol)</option>
+                      <option value="Ethanol">Ethanol</option>
                     </select>
 
                     <Divider orientation="left"> Estimate By * </Divider>

@@ -88,7 +88,7 @@ const Navbar = () => {
             </Menu>
 
             <Menu theme="light" mode="horizontal" className="rightStyle">
-            { loggedIn ? ( <Item key="profileImage"> <img className = "profile-pic" src={image} /> </Item> ) : null }  
+            { loggedIn ? (<Item key="profileImage"> <Link to='/account'><img className = "profile-pic" src={image} /></Link></Item> ) : null }  
             { loggedIn ? (<Item><Link to="/"><Button onClick={signOut} className="loginButtonNav" type="primary">Sign out</Button></Link></Item>) : null }
                 
             { !loggedIn ? (<Item><Link to='/register'><Button type="link" ><div className="standardTextLink">Need an Account?</div></Button></Link></Item>) : null }
