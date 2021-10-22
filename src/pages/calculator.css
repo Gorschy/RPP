@@ -101,7 +101,20 @@ TODO:
     font-weight: var(--general_text_font_weight);
     text-align: left;
 }
+#personalReportButton {
+    position:block;
+    width: 150px;
+    height: 50px;
+    border-radius: 8px;
 
+    background-color: var(--color_green);
+
+    font-family: var(--general_font_family);
+    font-size: var(--general_font_size);
+    font-weight: var(--heading_text_font_weight);
+    color: var(--color_white);
+
+}
 #centreContent {
     text-align: center;
 
