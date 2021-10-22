@@ -41,7 +41,8 @@ const Register = () => {
                 <h2 className="registerLabels">Email</h2>
                 <Input className="registerField"
                     id="username"
-                    label="Username" 
+                    label="Username"
+                    placeholder="jane.doe@email.com.au" 
                     value={username}
                     maxLength="40"
                     onChange={e => setUsername(e.target.value)}
@@ -52,6 +53,7 @@ const Register = () => {
                     type="password"
                     id="password"
                     label="Password" 
+                    placeholder="AStrongPassword!@"
                     value={password}
                     maxLength="30"
                     onChange={e => setPassword(e.target.value)}
@@ -62,6 +64,7 @@ const Register = () => {
                     type="given_name"
                     id="given_name"
                     label="given_name" 
+                    placeholder="Jane"
                     value={given_name}
                     maxLength="30"
                     onChange={e => setGivenName(e.target.value)}
@@ -72,6 +75,7 @@ const Register = () => {
                     type="family_name"
                     id="family_name"
                     label="family_name" 
+                    placeholder="Doe"
                     value={family_name}
                     maxLength="30"
                     onChange={e => setFamilyName(e.target.value)}
@@ -82,6 +86,7 @@ const Register = () => {
                     type="phone_number"
                     id="phone_number"
                     label="phone_number" 
+                    placeholder="+1234567890"
                     value={phone_number}
                     maxLength="12"
                     onChange={e => setPhoneNumber(e.target.value)}
