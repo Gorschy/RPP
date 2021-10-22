@@ -1201,7 +1201,7 @@ const Calculator = () => {
                       id="vehicleTravelAdv"
                       name="travelDistance"
                       maxLength="10"
-                      onChange={handleEmission}     
+                      onChange={handleEmission}  
                       placeholder={uom.distance}
                     />
 
