@@ -478,7 +478,7 @@ const UserLists = (currentUser) => {
                             centered
                         >
                             <div className = "center-text">
-                                <h1 id="modalTitle">Looks like you don't have any Projects...</h1>
+                                <h1>Looks like you don't have any Projects...</h1>
                                 <h2>Would you like to create one?</h2>
                                 <h3>We just need a few details...</h3>
                             </div>
@@ -523,7 +523,7 @@ const UserLists = (currentUser) => {
                                             
                                         </div>
                                         <form className = "new-project-form">
-                                        <h2>Create a new Project!</h2>
+                                            <h2>Create a new Project!</h2>
                                             <h3>We just need a few details...</h3>
                                             <label className = "form-label">Project Name</label>
                                             <input
@@ -701,7 +701,7 @@ const UserLists = (currentUser) => {
                                     </div>
 
                                     <div className = "column">   
-                                        {/* <CarbonBreakdown { ...selected_report } /> */}
+                                        <CarbonBreakdown { ...selected_report } />
                                     </div>
 
                                     <div className = "column">                

@@ -1,20 +1,27 @@
 .profcard {
   margin: 1em;
+  padding: 1em;
   padding-top: 0.5em;
   background-color: white;
   border-radius: 0.5em;
   box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
   width: auto;
-  height: 800px;
-  display: inline-flex;
+  height: auto;
+  display: flex;
 }
 
 .roww {
   flex-direction: row;
+
 }
 
 .col {
-  flex-direction: column;
+  flex: 1;
+  width: auto;
+}
+
+.col h1 {
+    padding: 0.5em;
 }
 
 .left,
@@ -22,12 +29,16 @@
   width: 19.5%;
 }
 
+.btn-group {
+    width: 150px;
+    display: inline-block;
+}
+
 .btn-group button {
   display: block; /* Make the buttons appear below each other */
 }
 
 .containerr {
- 
   overflow: hidden;
 }
 
@@ -48,16 +59,20 @@
 .barChart {
   height: 200px;
   width: 400px;
+  margin: 1em;
 }
 
 .pieChart {
   height: 200px;
   width: 200px;
+  margin: 1em;
+  margin-left: 28%;
 }
 
 .lineGraph {
   height: 200px;
   width: 400px;
+  margin: 1em;
 }
 
 .colgraphs {
@@ -68,5 +83,22 @@
     width: 400px;
     padding-bottom: 0.5em;
     list-style-image:  url(../assets/leafIcon.png);
-    list-style-position: outside;
+    
+}
+
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+}  
+
+.flex-child:first-child {
+    margin-right: 20px;
+} 
+
+.listt {
+    margin-left: 1.4em;
 }

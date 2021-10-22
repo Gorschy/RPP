@@ -278,9 +278,9 @@ const CarbonBreakdown = (report) => {
       temp = report.gasCarbon - carbonAverage.gasCarbon;
       temp = temp/carbonAverage.gasCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.gasCarbon);
@@ -292,9 +292,9 @@ const CarbonBreakdown = (report) => {
       temp = report.paperCarbon - carbonAverage.paperCarbon;
       temp = temp/carbonAverage.paperCarbon * 100; 
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.paperCarbon);
@@ -306,9 +306,9 @@ const CarbonBreakdown = (report) => {
       temp = report.transportCarbon - carbonAverage.transportCarbon;
       temp = temp/carbonAverage.transportCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.transportCarbon);
@@ -320,9 +320,9 @@ const CarbonBreakdown = (report) => {
       temp = report.wasteCarbon - carbonAverage.wasteCarbon;
       temp = temp/carbonAverage.wasteCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.wasteCarbon);
@@ -334,9 +334,9 @@ const CarbonBreakdown = (report) => {
       temp = report.foodDrinkCarbon - carbonAverage.foodDrinkCarbon;
       temp = temp/carbonAverage.foodDrinkCarbon * 100; 
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.foodDrinkCarbon);
@@ -348,9 +348,9 @@ const CarbonBreakdown = (report) => {
       temp = report.electricityCarbon - carbonAverage.electricityCarbon;
       temp = temp/carbonAverage.electricityCarbon;
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.electricityCarbon);
@@ -362,9 +362,9 @@ const CarbonBreakdown = (report) => {
       temp = report.waterCarbon - carbonAverage.waterCarbon;
       temp = temp/carbonAverage.waterCarbon * 100;
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.waterCarbon);
@@ -376,9 +376,9 @@ const CarbonBreakdown = (report) => {
       temp = report.eventsCarbon - carbonAverage.eventsCarbon;
       temp = temp/carbonAverage.eventsCarbon * 100;  
       if(temp > 0){ 
-        temp = " +" + temp + " Percentage Increase";
+        temp = " +" + parseInt(temp).toString() + "%";
       } else {
-        temp = + temp + " Percentage Decrease";
+        temp = + parseInt(temp).toString() + "%";
       }
       setPercentageDifference(temp);
       setCarbonValue(report.eventsCarbon);
@@ -401,57 +401,50 @@ const CarbonBreakdown = (report) => {
       <div className="containerr">
         
         <div className="profcard" >
-          <h1>Carbon Breakdown</h1>
-          <div className = "roww">
-    
+ 
             <div className = "col">
-              <div className="btn-group">
-                <button onClick={totalCarbon}>Total</button>
-                <button onClick={transportCarbon}>Transport</button>
-                <button onClick={electrictyCarbon}>Electricity</button>
-              </div>
-            </div>
-          
-            <div className="col">
-              <div className="btn-group">
-                <button onClick={gasCarbon}>Gas</button>
-                <button onClick={wasteCarbon}>Waste</button>
-                <button onClick={waterCarbon}>Water</button>
-              </div>
-            </div>
-          
-            <div className="col">
-              <div className="btn-group">
-                <button onClick={paperCarbon}>Paper</button>
-                <button onClick={foodDrinkCarbon}>Food And Drink</button>
-                <button onClick={eventsCarbon}>Events</button>
-              </div>
-            </div>
-           
-          </div>
-
-         
-
-          <div className = "roww">
-
-          
-            <div className = "col">
-              <div>
-                <p>Carbon Report Total: {carbonValue}t CO2</p>
-                <p>Comapred To Average: {percentageDifference}</p>
-              </div>
-              <h2>Carbon Reduction Tips</h2>
-              { tipState.map((item, index) => (
-                <li className = "tips" key = {index}>
-                    <span>{item}</span>
-                </li>
-              ))}
-            </div>
+              <h1>Carbon Breakdown</h1>
             
+              <div className = "flex-container">
+
+    
+                <div className = "flex-child">  
+                  <div className = "btn-group">
+                    <button onClick={totalCarbon}>Total</button>
+                    <button onClick={transportCarbon}>Transport</button>
+                    <button onClick={electrictyCarbon}>Electricity</button>
+                    <button onClick={gasCarbon}>Gas</button>
+                    <button onClick={wasteCarbon}>Waste</button>
+                    <button onClick={waterCarbon}>Water</button>
+                    <button onClick={paperCarbon}>Paper</button>
+                    <button onClick={foodDrinkCarbon}>Food And Drink</button>
+                    <button onClick={eventsCarbon}>Events</button>
+                  </div>
+                </div>
+
+
+                <div className = "flex-child">
+                  <h3>Carbon Report Total: {carbonValue}t CO2</h3>
+                  <h3>Comapred To Average: {percentageDifference}</h3><br/>
+                  <h2>Carbon Reduction Tips</h2>
+                  <ul className = "listt">
+                    { tipState.map((item, index) => (
+                      <li className = "tips" key = {index}>
+                          <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+              </div>          
+           </div>  
+
+          <div className = "roww">
+
             <div className = "colgraphs">
               <CChart className="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={options} />
               <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
-              {/* <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} /> */}
+              <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} />
             </div>
           
           </div>
