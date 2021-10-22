@@ -147,11 +147,12 @@ const Helper = () => {
               confirmLoading={ confirmLoading }
               footer = {null}
               closable={false}
+              className = "custom-mod"
               centered
             >
               <div id = "userPrompt">
                 <h2>Tell us what this Report is for!</h2>
-                <div id = "buttons">
+                
                   <button onClick = { handleCancel }>Personal Report</button>
                   <h3>or</h3>
                   <label>Project Report</label>
@@ -161,7 +162,7 @@ const Helper = () => {
                       <option key = {index} value = {item.id}>{item.title}</option>
                     ))}
                   </select>
-                </div>
+                
               </div>
 
             </Modal>
@@ -2197,7 +2198,7 @@ const Calculator = () => {
             <Content>
               <Card
                 id="totalCard"
-                title={<h2 id="centreContent">Carbon Report</h2>}
+                title={<h2 id="centreContent">Emissions</h2>}
               >
                 <ul>{emissionList}</ul>
 
@@ -2213,7 +2214,7 @@ const Calculator = () => {
           </Layout>
         </Tabs>
       </Card>
-      <Card id="switchCard">
+      <div>
         <div className="switchContainer">
           <label className="switch" for="advBasic">
             <input
@@ -2243,7 +2244,7 @@ const Calculator = () => {
           </label>
           <h3 className="switchLabel">Imperial</h3>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

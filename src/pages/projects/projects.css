@@ -11,6 +11,11 @@
 
 .column {
   flex-direction: column;
+  display: inline-flex;
+}
+
+.row {
+  flex-direction: row;
 }
 
 /* ignore this - just hard coded for functionality bandaid */
@@ -19,14 +24,16 @@
   position: absolute;
   font-family: var(--general_font_family);
   font-size: 2em;
+  font-weight: 400;
   color: var(--color_hay_yellow);
-  margin-left: 40%;
-  margin-right: 40%;
+  margin-left: 25%;
+  margin-right: 35%;
   height: 80% !important;
+  width: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 0;
+  
 }
 
 /* modal styling */
@@ -36,9 +43,12 @@
 	border-radius: 0.5em;
 }
 
+.custom-modal .ant-modal-footer {
+  text-align: center;
+}
+
 .custom-modal .ant-modal-content {
 	text-align: center;
-	vertical-align: middle;
 }
 
 .custom-modal .ant-btn-primary {
@@ -55,15 +65,13 @@
 
 /* form styling */
 
-.new-project-form {
-	text-align: left;
-	margin: auto;
-  width: 50%;
+.new-project-form > * {
+  text-align: center;
 }
 
 .form-input {
 	width: 300px;
-  display: block;
+  
   border: 1px solid #A3C586;
   border-radius: 6px;
   padding: 5px 9px;
@@ -89,6 +97,14 @@ ul {
   border-bottom: solid 1px #f0f0f0;
 }
 
+.member-container {
+  overflow-y: hidden;
+}
+
+.member-container:hover, .member-container:active, .member-container:focus {
+  overflow-y: overlay;
+}
+
 .lists:hover, .lists:active, .lists:focus {
 	overflow-y: overlay;
 }
@@ -111,6 +127,11 @@ ul {
 }
 
 .team-member-item {
+  display: inline-block;
+  padding: 0.5em;
+}
+.team-text {
+  margin-left: 1em;
   display: inline-block;
   vertical-align: middle;
 }
@@ -158,7 +179,6 @@ ul {
   height: auto;
   border-radius: 0.5em;
   margin-bottom: 1vh;
-  
 }
 
 .project-admin-card h3 {
@@ -170,12 +190,13 @@ ul {
   height: 45vh;
   display: flex;
 	padding: 1em;
+  flex-direction: column;
 }
 
-.members-list-card button {
-  margin-left: 70%;
-  margin-right: 50%;
+.members-list-card h2 {
+  text-align: center;
 }
+
 
 .project-analytics-card {
   padding: 1em;
@@ -187,7 +208,7 @@ ul {
 
 /* Header ID stylings */
 
-.center-text {
+.center-text h2 h3 {
 	text-align: center;
 }
 
@@ -224,6 +245,10 @@ ul {
 }
 
 /* buttons */
+
+.admin-btns {
+  
+}
 
 button {
   color: #fff;
@@ -276,11 +301,3 @@ button.ant-modal-close {
   transition: color 0.3s;
 }
 
-.chart {
-  border: solid;
-  margin: 0.25em;
-  width: auto;
-  height: auto;
-  max-height: 250px;
-  max-width: 250px;
-}

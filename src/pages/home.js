@@ -9,7 +9,7 @@ const home = () => {
 
     return ( 
         <div>
-            <Row justify="left">
+            <Row justify="center">
                 <Card className="homeOurTeamCard" title={<h1>FAQ</h1>}>
                 <div id="ourTeamText" className="standardText">
                 <h2>What is the Restoration Projects Platform?</h2>
@@ -34,8 +34,9 @@ const home = () => {
                 </div>
                 </Card>    
                 <div id="imgWrapper"><Image id = "homeImage" src={homeSideImage} alt="asset" preview={false}/></div> 
-            </Row>
+            
             <div id="bottomImgWrapper"><Image id = "homeBottomImage" src={homeBottomImg} alt="asset" preview={false}/></div>
+            </Row>
         </div>
     );
 }

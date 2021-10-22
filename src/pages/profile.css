@@ -14,7 +14,7 @@
 }
 
 
-.card {
+.cardd {
     margin: 1em;
     padding-top: 0.5em;
     background-color: white;
@@ -30,6 +30,4 @@
     text-align: center;
 }
 
-.container { 
-    overflow-x: hidden;
-}
+

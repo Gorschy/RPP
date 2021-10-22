@@ -3,6 +3,7 @@ import {CChart}  from "@coreui/react-chartjs";
 import { Card,  } from "antd";
 import '../style.css';
 import './carbonBreakdown.css';
+import './graphs.css';
 //import './graphs.css';
 import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
 import { listReports } from "../graphql/queries"; // For creating Reports
@@ -396,47 +397,71 @@ const CarbonBreakdown = (report) => {
     };
 
     return (
-      <div>
-        <div className="columnLeft">
-        <Card className="card" bordered={true}>
-            <div className="column">
-                <div className="btn-group">
-                  <button onClick={totalCarbon}>Total</button>
-                  <button onClick={transportCarbon}>Transport</button>
-                  <button onClick={electrictyCarbon}>Electricity</button>
-                </div>
+      
+      <div className="containerr">
+        
+        <div className="profcard" >
+          <h1>Carbon Breakdown</h1>
+          <div className = "roww">
+    
+            <div className = "col">
+              <div className="btn-group">
+                <button onClick={totalCarbon}>Total</button>
+                <button onClick={transportCarbon}>Transport</button>
+                <button onClick={electrictyCarbon}>Electricity</button>
               </div>
-              <div className="column">
-                <div className="btn-group">
-                  <button onClick={gasCarbon}>Gas</button>
-                  <button onClick={wasteCarbon}>Waste</button>
-                  <button onClick={waterCarbon}>Water</button>
+            </div>
+          
+            <div className="col">
+              <div className="btn-group">
+                <button onClick={gasCarbon}>Gas</button>
+                <button onClick={wasteCarbon}>Waste</button>
+                <button onClick={waterCarbon}>Water</button>
+              </div>
+            </div>
+          
+            <div className="col">
+              <div className="btn-group">
+                <button onClick={paperCarbon}>Paper</button>
+                <button onClick={foodDrinkCarbon}>Food And Drink</button>
+                <button onClick={eventsCarbon}>Events</button>
+              </div>
+            </div>
+
+            <div>
+              <p>Carbon Report Amount {carbonValue}</p>
+              <p>Comapred To Average {percentageDifference}</p>
+            </div>
+          </div>
+
+          <div className = "roww">
+            <div className = "col">
+              <h2>Carbon Reduction Tips</h2>
+              { tipState.map((item, index) => (
+                <div key = {index}>
+                    <p>{item}</p>
                 </div>
-                </div>
-                <div className="column">
-                <div className="btn-group">
-                  <button onClick={paperCarbon}>Paper</button>
-                  <button onClick={foodDrinkCarbon}>Food And Drink</button>
-                  <button onClick={eventsCarbon}>Events</button>
-                </div>
-                </div>
-                <p>Carbon Report Amount {carbonValue}</p>
-                <p>Comapred To Average {percentageDifference}</p>
-            </Card>
-            <Card className="carbonBreakdown" title={<h1>Carbon Reduction Tips</h1>} bordered={true}>
-            { tipState.map((item, index) => (
-                        <div key = {index}>
-                            <p>{item}</p>
-                        </div>
-                    ))}
-            </Card>
-        </div>
-        <div className="columnRight">
+              ))}
+            </div>
+            <div className = "colgraphs">
               <CChart className="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={options} />
               <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
-              <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} />
+              {/* <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} /> */}
+            </div>
+          </div>
         </div>
+
+
+        <div className="card">
+          
+          
+
+          
+        </div>
+
+         
       </div>
+      
     );
 }
 export default CarbonBreakdown;

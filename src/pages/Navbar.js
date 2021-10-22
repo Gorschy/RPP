@@ -65,10 +65,11 @@ const Navbar = () => {
                 <SubMenu mode="vertical" title={<h3 className="navbarHeaders"><FontAwesomeIcon icon={faBars} /></h3>}>
                 {loggedIn ? ( <Item key="Dashboard"> <Link to='/dashboard'><h3 className="navbarHeadersBurger">Dashboard</h3></Link> </Item>) : null }   
                 <Item key="Calculator"> <Link to='/calculator'><h3 className="navbarHeadersBurger">Calculator</h3></Link> </Item>
+                {loggedIn ? (<Item key="Profile"> <Link to='/profile'><h3 className="navbarHeadersBurger">Profile</h3></Link> </Item>) : null }
                 {loggedIn ? (<Item key="Projects"> <Link to='/projects'><h3 className="navbarHeadersBurger">Projects</h3></Link> </Item>) : null }
                 <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeadersBurger">Solutions</h3></Link> </Item>
                 <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeadersBurger">Contact Us</h3></Link> </Item>
-                {loggedIn ? (<Item key="Profile"> <Link to='/profile'><h3 className="navbarHeadersBurger">Profile</h3></Link> </Item>) : null }
+                
                 </SubMenu>
                 
             </Menu>
@@ -77,10 +78,11 @@ const Navbar = () => {
                 <Item key="Home"><Link to='/home'><Image src={logo} id="LOTTLogo" preview={false}/></Link></Item>
                 {loggedIn ? ( <Item key="Dashboard"> <Link to='/dashboard'><h3 className="navbarHeaders">Dashboard</h3></Link> </Item>) : null }   
                 <Item key="Calculator"> <Link to='/calculator'><h3 className="navbarHeaders">Calculator</h3></Link> </Item>
+                {loggedIn ? (<Item key="Profile"> <Link to='/profile'><h3 className="navbarHeaders">Profile</h3></Link> </Item>) : null}
                 {loggedIn ? (<Item key="Projects"> <Link to='/projects'><h3 className="navbarHeaders">Projects</h3></Link> </Item>) : null }
                 <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeaders">Solutions</h3></Link> </Item>
                 <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeaders">Contact Us</h3></Link> </Item>
-                {loggedIn ? (<Item key="Profile"> <Link to='/profile'><h3 className="navbarHeaders">Profile</h3></Link> </Item>) : null}
+                
                  
 
             </Menu>

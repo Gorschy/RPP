@@ -1,7 +1,7 @@
 import "../../style.css";
 import "./projects.css";
 import CarbonBreakdown from '../carbonBreakdown.js';
-import Graphs from "../graphs";
+import defaultImg from "../../assets/default.png"
 import { Modal } from "antd";
 import { useContext, useEffect, useReducer, useState } from "react";
 import { UserContext } from "../UserContext";
@@ -503,7 +503,7 @@ const UserLists = (currentUser) => {
 
                 ) : no_projects === false ? (
                     
-                    <div className = "container">
+                    <div>
                     
                         {
                             forceConceal ? (
@@ -520,10 +520,11 @@ const UserLists = (currentUser) => {
                                         centered
                                     >
                                         <div className = "center-text">
-                                            <h2>Create a new Project!</h2>
-                                            <h3>We just need a few details...</h3>
+                                            
                                         </div>
                                         <form className = "new-project-form">
+                                        <h2>Create a new Project!</h2>
+                                            <h3>We just need a few details...</h3>
                                             <label className = "form-label">Project Name</label>
                                             <input
                                                 className = "form-input"
@@ -566,41 +567,42 @@ const UserLists = (currentUser) => {
                                         
                                         
                                     </Modal>
-                                
-                                    <div className = "column">
-                                        
-                                        <div className = "projects-list-card card">
-                                            <h2>Projects</h2>
-                                            <div className = "lists">
-                                                <ul>
-                                                    { projects_list.map((item, index) => (
-                                                        <li className = "lists-item" id = { item.id } onClick = { handleProjectSelect.bind(item) } key = { index }>
-                                                            <span className = "label" id = { item.id } onClick = { handleProjectSelect.bind(item) }>{ item.title }</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                    <div className = "row">
+                                        <div className = "column">
+                                            
+                                            <div className = "projects-list-card card">
+                                                <h2>Projects</h2>
+                                                <div className = "lists">
+                                                    <ul>
+                                                        { projects_list.map((item, index) => (
+                                                            <li className = "lists-item" id = { item.id } onClick = { handleProjectSelect.bind(item) } key = { index }>
+                                                                <span className = "label" id = { item.id } onClick = { handleProjectSelect.bind(item) }>{ item.title }</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                                <button className = "create-project-btn" onClick = { showModal }>Create Project</button>
                                             </div>
-                                            <button className = "create-project-btn" onClick = { showModal }>Create Project</button>
+
+                                            <div className = "reports-list-card card">
+                                                <h2>Carbon Reports</h2>
+                                                <div className = "lists">
+                                                    <ul>
+                                                        { user_reports.map((item, index) => (
+                                                            <li className = "lists-item" id = { item.id } onClick = { handleReportSelect.bind(item) } key = { index }>
+                                                                <span className = "label" id = { item.id } onClick = { handleReportSelect.bind(item) }>{ item.date }</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                                <button onClick = { createReport }>Create Report</button>
+                                            </div>
+
                                         </div>
 
-                                        <div className = "reports-list-card card">
-                                            <h2>Carbon Reports</h2>
-                                            <div className = "lists">
-                                                <ul>
-                                                    { user_reports.map((item, index) => (
-                                                        <li className = "lists-item" id = { item.id } onClick = { handleReportSelect.bind(item) } key = { index }>
-                                                            <span className = "label" id = { item.id } onClick = { handleReportSelect.bind(item) }>{ item.date }</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                            <button onClick = { createReport }>Create Report</button>
+                                        <div className = "column">
+                                            <h1 className = "center">Select a project to get started!</h1>
                                         </div>
-
-                                    </div>
-
-                                    <div className = "center">
-                                        <p>Select a project to get started!</p>
                                     </div>
                                 </div>
 
@@ -699,7 +701,7 @@ const UserLists = (currentUser) => {
                                     </div>
 
                                     <div className = "column">   
-                                        <CarbonBreakdown { ...selected_report } />
+                                        {/* <CarbonBreakdown { ...selected_report } /> */}
                                     </div>
 
                                     <div className = "column">                
@@ -709,6 +711,21 @@ const UserLists = (currentUser) => {
                                             <p>{ selected_project && selected_project.description }</p>
                                             <h3>Total Carbon</h3>
                                             <h1>{ global_report && parseInt(global_report.totalCarbon).toString() }t CO<sub>2</sub></h1>
+                                            {
+                                                admin ? (
+                                                    
+                                                    <div>
+                                                        <br/><h2>Admin Panel</h2>
+                                                        <div className = "row">
+                                                            <button onClick = { payOffset }>Offset Carbon</button>
+                                                            <button onClick = { showInvite }>Invite Users</button>
+                                                        </div>                       
+                                                        <button className = "delete-btn" onClick = { deleteSelectedProject }>Delete Project</button>
+                                                        <button className = "delete-btn" onClick = { deleteSelectedReport }>Delete Report</button>
+                                                    </div>
+
+                                                ) : null
+                                            }
                                             {/* <h3>Analytics</h3> */}
                                             {/*  core ui graphs don't work.  */}
                                             {/* <div>
@@ -724,34 +741,28 @@ const UserLists = (currentUser) => {
                                         
                                         <div className = "project-admin-card card">
                                             <h4 className = "project-admin-header">Project Admin</h4>
-                                            <img className = "admin-pic" src = { admin_image } alt = "Display Picture" />
+                                            <img className = "admin-pic" src = { admin_image || defaultImg  } alt = "Display Picture" />
                                             <h3>{ selected_project && selected_project.creator.given_name} { selected_project && selected_project.creator.family_name}</h3>
-                                            <h4>{ selected_project && selected_project.creator.email }</h4>
-                                            {
-                                                admin ? (
-                                                    
-                                                    <div>
-                                                        <button onClick = { payOffset }>Offset Carbon</button><br/>
-                                                        <button onClick = { showInvite }>Invite Users</button><br/>                           
-                                                        <button className = "delete-btn" onClick = { deleteSelectedProject }>Delete Project</button>
-                                                        <button className = "delete-btn" onClick = { deleteSelectedReport }>Delete Report</button>
-                                                    </div>
-
-                                                ) : null
-                                            }
+                                            <h4>{ selected_project && selected_project.creator.email }</h4><br/>
+                                            
                                         </div>
-                                        <div className = "members-list-card card">             
-                                            { team_members.map((item, index) => (
-                                                <div className = "team-member-item" key = {index}>
-                                                    <div className = "column">
-                                                        <img className = "team-member-pic" src = { item.url } alt = "" />
+                                        <div className = "members-list-card card">
+                                            <h2>Team Members</h2>
+                                            <div className = "member-container">         
+                                                { team_members.map((item, index) => (
+                                                    <div className = "team-member-item" key = {index}>
+                                                        <div className = "row">
+                                                            
+                                                            <img className = "team-member-pic" src = { item.url || defaultImg } alt = "" />
+                                                            
+                                                            <div className = "team-text">
+                                                                <span>{ item.given_name } { item.family_name }</span><br/>
+                                                                <span>{ item.email }</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className = "column">
-                                                        <span>{ item.given_name } { item.family_name }</span><br/>
-                                                        <span>{ item.email }</span>
-                                                    </div><br/>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
 
                                     </div>        

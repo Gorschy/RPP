@@ -32,14 +32,31 @@ TODO:
     - set page specific styling classnames etc
 */
 
+
+
+.custom-mod .ant-modal-content {
+	text-align: center;
+    width: 300px;
+    
+}
+
+
+#userPrompt > *{
+    text-align: center;
+    
+}
+
 /* headers/tab labels/title */
-#totalCard {
+#totalCard > * {
     width: min(450px, 40vw);
     height: auto;
-    padding: var(--card_standard_padding);
+    padding: 0.5em;
     background-color: var(--foreground_color);
-    border: 1px solid var(--input_border_color);
+    text-align: center;
+    margin: 0.5em;
+    padding-right: 2em;
 }
+
 #switchCard {
     width: 200px;
     height: 200px;
@@ -122,6 +139,12 @@ TODO:
     display: -webkit-flex; 
     display: flex;         
     justify-content: center;    
+}
+
+#calculate {
+    margin-left: 34%;
+    margin-right: 34%;
+    margin-top: 1em;
 }
 
 .formButton {
@@ -257,6 +280,12 @@ input:checked + .slider:before {
   
 .slider.round:before {
     border-radius: 50%;
+}
+
+.switchContainer > h3 {
+    color: #EFD200;
+    font-weight: 400;
+    padding-top: 0.4em;
 }
 
 .switchContainer {

@@ -93,9 +93,9 @@ const Profile = () => {
     return ( 
         <div className="container">
             <div className="column">
-                <Card className="card">
-                <p>Your Total Carbon Owed Is  {carbonOwing}</p>
-                <p>Your Total Offset Carbon Is {offsetCarbon}</p>
+                <Card className="card" title = {<h1>Your Carbon</h1>}>
+                <h2>Total Carbon:  {carbonOwing + "t CO2"}</h2>
+                <h2>Total Offseted Carbon: {offsetCarbon + "t CO2"}</h2>
                 </Card>
                 <Card className="reports-list-card" title={<h1>List of Reports</h1>} bordered={true}>   
                 { allReports.map((item, index) => (

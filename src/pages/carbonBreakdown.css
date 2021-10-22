@@ -1,60 +1,65 @@
-.carbonBreakdown {
-    height: 65vh;
-    width: 45vw;
-	display:block; 
+.profcard {
+  margin: 1em;
+  padding-top: 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+  box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
 }
 
-.card {
-	margin: 1em;
-	padding-top: 0.5em;
-	background-color: white;
-	border-radius: 0.5em;
-	box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
+.roww {
+  flex-direction: row;
+  display: inline-flex;
 }
 
-.column {
-    float: left;
+.col {
+  flex-direction: column;
 }
-  
-.left, .right {
-    width: 19.5%;
+
+.left,
+.right {
+  width: 19.5%;
 }
 
 .btn-group button {
-	display: block; /* Make the buttons appear below each other */
-}
-  
-.container { 
-overflow-x: hidden;
+  display: block; /* Make the buttons appear below each other */
 }
 
+.containerr {
+ 
+  overflow: hidden;
+}
 
 .breakdownTips {
-	overflow-y: auto;
+  overflow-y: auto;
 }
 
 .columnLeft {
-    display:block;
-    float: left;
+  display: block;
+  float: left;
 }
 
 .columnRight {
-    display:block;
-    float: right;
+  display: block;
+  float: right;
 }
 
 .barChart {
-    height: 30vh;
-    width: 30vw;
+  height: 200px;
+  width: 400px;
 }
 
 .pieChart {
-    height: 30vh;
-    width: 30vw;
+  height: 200px;
+  width: 200px;
 }
 
 .lineGraph {
-    height: 30vh;
-    width: 30vw;
+  height: 200px;
+  width: 400px;
 }
 
+.colgraphs {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
