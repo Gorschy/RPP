@@ -170,7 +170,6 @@ Parameters:
   hostedUI:
     Type: String
             
-            
       
   parentStack:
     Type: String
@@ -191,6 +190,7 @@ Parameters:
   authProviders:
     Type: CommaDelimitedList
       
+            
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   

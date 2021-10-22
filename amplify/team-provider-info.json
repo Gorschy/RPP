@@ -19,7 +19,7 @@
       "function": {
         "rppc25d3b1aPostConfirmation": {
           "deploymentBucketName": "amplify-amplify9ac69181feda4-staging-124018-deployment",
-          "s3Key": "amplify-builds/rppc25d3b1aPostConfirmation-53654a736474334c4f49-build.zip"
+          "s3Key": "amplify-builds/rppc25d3b1aPostConfirmation-51715351692f727a374a-build.zip"
         }
       }
     }

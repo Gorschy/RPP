@@ -7,7 +7,7 @@
   "functionName": "rppc25d3b1aPostConfirmation",
   "resourceName": "rppc25d3b1aPostConfirmation",
   "parentStack": "auth",
-  "triggerEnvs": [],
+  "triggerEnvs": "[]",
   "triggerDir": "C:\\snapshot\\node_modules\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\PostConfirmation",
   "triggerTemplate": "PostConfirmation.json.ejs",
   "triggerEventPath": "PostConfirmation.event.json",
