@@ -1154,6 +1154,7 @@ const Calculator = () => {
                       type="number"
                       id="vehicleTravelAdv"
                       name="numberOfVehicles"
+                      maxLength="5"
                       onChange={handleEmission}
                       placeholder="Amount"
                     />
@@ -1186,6 +1187,7 @@ const Calculator = () => {
                       type="number"
                       id="vehicleTravelAdv"
                       name="fuelConsumption"
+                      maxLength="15"
                       onChange={handleEmission}
                       placeholder={uom.gas}
                     />
@@ -1198,7 +1200,8 @@ const Calculator = () => {
                       type="number"
                       id="vehicleTravelAdv"
                       name="travelDistance"
-                      onChange={handleEmission}
+                      maxLength="10"
+                      onChange={handleEmission}     
                       placeholder={uom.distance}
                     />
 
@@ -1208,6 +1211,7 @@ const Calculator = () => {
                       type="number"
                       id="vehicleTravelAdv"
                       name="fuelEfficiency"
+                      maxLength="15"
                       onChange={handleEmission}
                       placeholder="L/100 km"
                     />
@@ -1288,6 +1292,7 @@ const Calculator = () => {
                       type="number"
                       id="airTravelAdv"
                       name="passengers"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder="Amount"
                     />
@@ -1298,6 +1303,7 @@ const Calculator = () => {
                       type="number"
                       id="airTravelAdv"
                       name="airDistance"
+                      maxLength="15"
                       onChange={handleEmission}
                       placeholder={uom.distance}
                     />
@@ -1411,6 +1417,7 @@ const Calculator = () => {
                       type="number"
                       id="publicTravelAdv"
                       name="passengers"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder="Amount"
                     />
@@ -1421,6 +1428,7 @@ const Calculator = () => {
                       type="number"
                       id="publicTravelAdv"
                       name="pubDistance"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.distance}
                     />
@@ -1687,6 +1695,7 @@ const Calculator = () => {
                       type="number"
                       id="gasAdv"
                       name="gasConsumption"
+                      maxLength="20"
                       onChange={handleEmission}
                       placeholder={uom.gas}
                     />
@@ -1699,6 +1708,7 @@ const Calculator = () => {
                       type="number"
                       id="gasAdv"
                       name="lpgConsumption"
+                      maxLength="20"
                       onChange={handleEmission}
                       placeholder={uom.gas}
                     />
@@ -1917,6 +1927,7 @@ const Calculator = () => {
                       type="number"
                       id="wasteAdv"
                       name="wasteWeight"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.waste}
                     />
@@ -1929,6 +1940,7 @@ const Calculator = () => {
                       type="number"
                       id="wasteAdv"
                       name="wasteVolume"
+                      maxLength="15"
                       onChange={handleEmission}
                       placeholder="m3"
                     />
@@ -2030,6 +2042,7 @@ const Calculator = () => {
                       type="number"
                       id="waterAdv"
                       name="waterConsumption"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder="kL"
                     />
@@ -2119,6 +2132,7 @@ const Calculator = () => {
                       type="number"
                       id="paperAdv"
                       name="paperWeight"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.weight}
                     />
@@ -2226,6 +2240,7 @@ const Calculator = () => {
                       type="number"
                       id="foodAndDrinkAdv"
                       name="expenditure"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2299,6 +2314,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="numberOfAttendees"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder="Amount"
                     />
@@ -2309,6 +2325,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="numberOfNights"
+                      maxLength="5"
                       onChange={handleEmission}
                       placeholder="Amount"
                     />
@@ -2321,6 +2338,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="roomCost"
+                      maxLength="5"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2333,6 +2351,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="totalAccommodation"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2347,6 +2366,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="numberOfMeals"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder="Amount"
                     />
@@ -2359,6 +2379,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="avgCostOfMeals"
+                      maxLength="5"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2371,6 +2392,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="totalMeals"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2383,6 +2405,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="totalDrinks"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2393,6 +2416,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="totalSpirits"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2403,6 +2427,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="totalBeer"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2413,6 +2438,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="totalWine"
+                      maxLength="10"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
@@ -2425,6 +2451,7 @@ const Calculator = () => {
                       type="number"
                       id="eventsAdv"
                       name="totalEventProducts"
+                      maxLength="20"
                       onChange={handleEmission}
                       placeholder={uom.dollar}
                     />
