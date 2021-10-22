@@ -153,7 +153,7 @@ const Helper = () => {
               <div id = "userPrompt">
                 <h2>Tell us what this Report is for!</h2>
                 
-                  <button onClick = { handleCancel }>Personal Report</button>
+                  <button onClick = { handleCancel } id="personalReportButton">Personal Report</button>
                   <h3>or</h3>
                   <label>Project Report</label>
                   <select onChange={ setProjectID } id="selectorWheel">
