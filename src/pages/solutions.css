@@ -34,6 +34,7 @@
 
 }
 
+
 @keyframes lightenOffHover {
     from    {background-color: #cdcdcd}
     to      {background-color: var(--foreground_color)}
@@ -72,6 +73,10 @@
     font-weight: var(--general_text_font_weight);
     text-align: left;
 
+}
+
+div.centreInvestButton {
+    text-align: center;
 }
 
 Button.investButton, Button.cancelButton, Button.purchaseButton {
@@ -144,4 +149,8 @@ h3.backerCountText {
     text-align: right;
     line-height: 0px;
 
+}
+
+.leaflet-control-layers-selector > * {
+    color: blue;
 }

@@ -2,71 +2,86 @@
 
 .homeOurTeamCard  {
     margin-bottom: 25px;
-    margin-left: 25px;
+    margin-left: min(25px, 5vw);
     margin-top: 15px;
-    margin-right: 25px;
-    width: clamp(600px, 50vw, 1000px);
+    margin-right: min(25px, 5vw);
+    width: min(1000px, 90vw);
     
     overflow: auto;
-    height: 950px;
+    height: auto;
     padding: var(--card_standard_padding);
     background-color: var(--foreground_color);
 }
 
+.standardText > h2 {
+    color: #63c11f;
+    padding-top: 1em;
+    font-weight: 500;
+}
+
 
 /*  Image Stylings   */
-@media screen and (max-width: 1400px) {
-    #homeImage3 {
-        display:none !important;
-    }
-    #img1Wrapper {
-        display:none !important;
-    }
-}
 
-@media screen and (max-width: 1900px) {
-    #homeImage2 {
-        display:none !important;
+@media screen and (max-width: 1775px) {
+    #imgWrapper {
+        animation: smoothDisappear 0.2s linear;
+        opacity:0;
+        display:none;
     }
-    #img2Wrapper {
-        display:none !important;
+
+    #bottomImgWrapper {
+        animation: smoothAppear 0.5s linear;
+        display: absolute;
+        opacity:1;
     }
 }
 
-#homeImage1 {
-    width: 20vw;
-    height: 50vh;   
+@media screen and (min-width: 1775px) {
+    #imgWrapper {
+        margin-left: 0px;
+        animation: smoothAppear 0.2s linear;
+        opacity:1;
+    }
+
+    #bottomImgWrapper {
+        animation: smoothDisappear 0.3s linear;
+        display: absolute;
+        opacity:0;
+    }
 }
 
-#homeImage2 {
-    width: 800px;
-    height: 400px;
+@keyframes smoothDisappear {
+    from    {opacity: 1}
+    to      {opacity: 0}
+}
+@keyframes smoothAppear {
+    from    {opacity: 0}
+    to      {opacity: 1}
 }
 
-#homeImage3 {
-    width: 500;
-    margin-left: 25px;
-    margin-right: 25px;
+#bottomImgWrapper {
     margin-bottom: 25px;
+    margin-left: min(25px, 5vw);
+    margin-top: 15px;
+    margin-right: min(25px, 5vw);
+    width: min(1000px, 90vw);
+    
 }
 
+#homeImage {
+    width: 600px;
+    height: 300px;
+    
+}
 
-#img1Wrapper {
-    height: 550px;
-    width: 500px;
-    overflow: hidden;
+#imgWrapper {
+    width: 600px;
+    height: 900px;
     margin-top: 15px;
     margin-bottom: 25px;
     margin-right: 25px;
-}
-
-#img2Wrapper {
-    width: 750px;
-    height: 800px;
-    margin-top: 15px;
-    margin-bottom: 25px;
-    margin-right: 25px;
     overflow: hidden;
+    justify-items: right;
 }
 
 /* Text Control */
@@ -76,3 +91,4 @@
 #faqText {
     min-width: 450px;
 }
+

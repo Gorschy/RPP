@@ -15,24 +15,24 @@ const Dashboard = () => {
     const {loggedIn, setLoggedIn} = useContext(UserContext);
 
     return(
-    <div> 
+    <div className = "content"> 
     { loggedIn ? (
         <div>
-        <Row justify="space-around" gutter={24}>
+        <Row justify="center" align = "middle" gutter={24}>
         
-        <Col span={8}> <Link to="/account">
+        <Col span={6}> <Link to="/account">
         <Card title={<h1>Account</h1>} className="CardClass" hoverable > 
-            <Row justify="space-around" gutter={24}>
+            <Row justify="space-evenly" gutter={24}>
                 <img className="CardImage" src={DashIcon1} alt="Account" /> <br/>
             </Row>
         </Card> </Link> </Col>
         
-        <Col span={8}> <Link to="/calculator">
+        <Col span={6}> <Link to="/profile">
         <Card title={<h1>Carbon Reports</h1>} className="CardClass" hoverable > 
             <Row justify="space-around" gutter={24}> <img className="CardImage" src={DashIcon2} alt="Carbon Report" /> <br/> </Row>  
         </Card> </Link> </Col> 
         
-        <Col span={8}> <Link to="/projects">
+        <Col span={6}> <Link to="/projects">
         <Card title={<h1>Projects</h1>} className="CardClass" hoverable > 
             <Row justify="space-around" gutter={24}>
                 <img className="CardImage" src={DashIcon3} alt="Projects" /> <br/>
@@ -42,7 +42,7 @@ const Dashboard = () => {
         </Row>
         <br/>
         <Row justify="space-around">
-            <Card> <img className="sprayImage" src={DashImg1} alt="Spray" style={{maxWidth: "100%", minWidth:"10%"}}/> </Card>
+            <img className="sprayImage" src={DashImg1} alt="Spray" style={{maxWidth: "100%", minWidth:"10%"}}/>
         </Row>
         </div>
      ) : (<Redirect to="/home"/>) }        

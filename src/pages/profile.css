@@ -1,36 +1,33 @@
-#barChart {
-    height: 30vh;
-    width: 30vw;
-}
-
-#radarChart {
-    height: 30vh;
-    width: 30vw;
-}
-
-#pieChart {
-    height: 30vh;
-    width: 30vw;
-}
-
 #reportList {
     height: 80vh;
     width: 18vw;
 }
 
 #carbonBreakdown {
-    height: 80vh;
+    height: 40vh;
     width: 48vw;
 }
 
 .column {
-    float: left;
+    flex-direction: column;
+    margin-right: 1.5vw;
 }
-  
-.left, .right {
-    width: 19.5%;
+
+
+.cardd {
+    margin: 1em;
+    padding-top: 0.5em;
+    background-color: white;
+    border-radius: 0.5em;
+    box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
 }
-  
-.middle {
-    width: 49.5%;
+
+.reports-list-card {
+    width: auto;
+    min-width: 250px;
+    height: 450px;
+    flex-direction: column;
+    text-align: center;
 }
+
+

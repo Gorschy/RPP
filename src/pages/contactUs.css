@@ -1,20 +1,30 @@
 #contactDetailsCard {
   padding: var(--card_standard_padding);
   background-color: var(--foreground_color);
-
+  height:auto;
+  width: min(450px, 90vw);
+  margin-bottom: 25px;
+  margin-left: min(25px, 5vw);
+  margin-top: 15px;
+  margin-right: min(25px, 5vw);
+  overflow-wrap: break-word;
 }
 
 #submitTicketCard {
   padding: var(--card_standard_padding);
   background-color: var(--foreground_color);
+  width:min(1000px, 90vw);
+  margin-bottom: 25px;
+  margin-left: min(25px, 5vw);
+  margin-top: 15px;
+  margin-right: min(25px, 5vw);
 }
 
 #SprayImage {
-
-    padding-top: 45px;;
-    width: 36.4vw;
-    height: 50vh;
-    /* box-shadow: 0 10px 10px 0 rgb(131, 131, 131), 0 8px 8px 0 rgba(0, 0, 0, 0.10); */
+  padding-top: 45px;;
+  width: 400px;
+  height: 250px;
+  /* box-shadow: 0 10px 10px 0 rgb(131, 131, 131), 0 8px 8px 0 rgba(0, 0, 0, 0.10); */
 }
 
 

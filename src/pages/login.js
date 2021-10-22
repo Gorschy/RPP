@@ -66,10 +66,11 @@ const SignIn = ({ onSignin }) => {
                     onChange={e => setPassword(e.target.value)}
                 />
 
-
+                <br/>
                 <a className="forgotPassword" onClick={forgotPassword}>Forgot Password? </a> 
-                <span className="errorLabel">{errors}</span>
-                <br/><br/>
+                <br/>
+                <div className="errorLabel">{errors}</div>
+                
                 <Button className="loginButton" onClick={signIn} type="primary" > Log In </Button>
             </Card> 
         </div>

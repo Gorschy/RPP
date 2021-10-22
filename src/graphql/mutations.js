@@ -68,6 +68,26 @@ export const createUser = /* GraphQL */ `
         }
         nextToken
       }
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -135,6 +155,26 @@ export const updateUser = /* GraphQL */ `
           backerID
           money_amount
           credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
           createdAt
           updatedAt
         }
@@ -212,6 +252,26 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -247,6 +307,9 @@ export const createProject = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -262,6 +325,26 @@ export const createProject = /* GraphQL */ `
       }
       title
       description
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -297,6 +380,9 @@ export const updateProject = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -312,6 +398,26 @@ export const updateProject = /* GraphQL */ `
       }
       title
       description
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -347,6 +453,9 @@ export const deleteProject = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -362,6 +471,26 @@ export const deleteProject = /* GraphQL */ `
       }
       title
       description
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -396,6 +525,38 @@ export const createProjectReport = /* GraphQL */ `
         }
         title
         description
+        project_carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -443,6 +604,38 @@ export const updateProjectReport = /* GraphQL */ `
         }
         title
         description
+        project_carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -490,6 +683,38 @@ export const deleteProjectReport = /* GraphQL */ `
         }
         title
         description
+        project_carbon_reports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
+          nextToken
+        }
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -538,6 +763,9 @@ export const createProjectEditor = /* GraphQL */ `
         }
         title
         description
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -563,27 +791,11 @@ export const createProjectEditor = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
-      }
-      carbon_reports {
-        items {
-          id
-          projectID
-          date
-          totalCarbon
-          transportCarbon
-          electricityCarbon
-          gasCarbon
-          wasteCarbon
-          waterCarbon
-          paperCarbon
-          foodDrinkCarbon
-          eventsCarbon
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -620,6 +832,9 @@ export const updateProjectEditor = /* GraphQL */ `
         }
         title
         description
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -645,27 +860,11 @@ export const updateProjectEditor = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
-      }
-      carbon_reports {
-        items {
-          id
-          projectID
-          date
-          totalCarbon
-          transportCarbon
-          electricityCarbon
-          gasCarbon
-          wasteCarbon
-          waterCarbon
-          paperCarbon
-          foodDrinkCarbon
-          eventsCarbon
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -702,6 +901,9 @@ export const deleteProjectEditor = /* GraphQL */ `
         }
         title
         description
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -727,63 +929,11 @@ export const deleteProjectEditor = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
-      }
-      carbon_reports {
-        items {
-          id
-          projectID
-          date
-          totalCarbon
-          transportCarbon
-          electricityCarbon
-          gasCarbon
-          wasteCarbon
-          waterCarbon
-          paperCarbon
-          foodDrinkCarbon
-          eventsCarbon
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSolution = /* GraphQL */ `
-  mutation CreateSolution(
-    $input: CreateSolutionInput!
-    $condition: ModelSolutionConditionInput
-  ) {
-    createSolution(input: $input, condition: $condition) {
-      id
-      title
-      desc
-      coordX
-      coordY
-      filledP
-      totalP
-      type
-      goal
-      funding
-      backerCount
-      visibility
-      priority
-      backers {
-        items {
-          id
-          solutionID
-          backerID
-          money_amount
-          credits
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -871,26 +1021,6 @@ export const createSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -913,6 +1043,9 @@ export const createSolutionBacked = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -920,6 +1053,26 @@ export const createSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -932,26 +1085,6 @@ export const updateSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -974,6 +1107,9 @@ export const updateSolutionBacked = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -981,6 +1117,26 @@ export const updateSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -993,26 +1149,6 @@ export const deleteSolutionBacked = /* GraphQL */ `
       id
       solutionID
       backerID
-      solution {
-        id
-        title
-        desc
-        coordX
-        coordY
-        filledP
-        totalP
-        type
-        goal
-        funding
-        backerCount
-        visibility
-        priority
-        backers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       backer {
         id
         email
@@ -1035,6 +1171,9 @@ export const deleteSolutionBacked = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1042,6 +1181,26 @@ export const deleteSolutionBacked = /* GraphQL */ `
       credits
       createdAt
       updatedAt
+      solution {
+        id
+        title
+        desc
+        coordX
+        coordY
+        filledP
+        totalP
+        type
+        goal
+        funding
+        backerCount
+        visibility
+        priority
+        backers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -1073,6 +1232,9 @@ export const createReport = /* GraphQL */ `
         carbon_units
         offsetted_units
         my_solutions {
+          nextToken
+        }
+        project_carbon_reports {
           nextToken
         }
         createdAt
@@ -1123,6 +1285,9 @@ export const updateReport = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1171,6 +1336,9 @@ export const deleteReport = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1184,6 +1352,42 @@ export const deleteReport = /* GraphQL */ `
       paperCarbon
       foodDrinkCarbon
       eventsCarbon
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSolution = /* GraphQL */ `
+  mutation CreateSolution(
+    $input: CreateSolutionInput!
+    $condition: ModelSolutionConditionInput
+  ) {
+    createSolution(input: $input, condition: $condition) {
+      id
+      title
+      desc
+      coordX
+      coordY
+      filledP
+      totalP
+      type
+      goal
+      funding
+      backerCount
+      visibility
+      priority
+      backers {
+        items {
+          id
+          solutionID
+          backerID
+          money_amount
+          credits
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }

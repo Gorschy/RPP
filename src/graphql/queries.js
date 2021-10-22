@@ -65,6 +65,26 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -97,6 +117,9 @@ export const listUsers = /* GraphQL */ `
         carbon_units
         offsetted_units
         my_solutions {
+          nextToken
+        }
+        project_carbon_reports {
           nextToken
         }
         createdAt
@@ -133,6 +156,9 @@ export const getProject = /* GraphQL */ `
         my_solutions {
           nextToken
         }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -148,6 +174,26 @@ export const getProject = /* GraphQL */ `
       }
       title
       description
+      project_carbon_reports {
+        items {
+          id
+          projectID
+          userID
+          date
+          totalCarbon
+          transportCarbon
+          electricityCarbon
+          gasCarbon
+          wasteCarbon
+          waterCarbon
+          paperCarbon
+          foodDrinkCarbon
+          eventsCarbon
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -181,6 +227,9 @@ export const listProjects = /* GraphQL */ `
         }
         title
         description
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -188,32 +237,36 @@ export const listProjects = /* GraphQL */ `
     }
   }
 `;
-export const getProjectReport = /* GraphQL */ `
-  query GetProjectReport($id: ID!) {
-    getProjectReport(id: $id) {
+export const getReport = /* GraphQL */ `
+  query GetReport($id: ID!) {
+    getReport(id: $id) {
       id
-      projectID
-      project {
+      userID
+      user {
         id
-        creatorID
-        creator {
-          id
-          email
-          given_name
-          family_name
-          phone_number
-          admin
-          hasRegistered
-          carbon_units
-          offsetted_units
-          createdAt
-          updatedAt
-        }
-        editors {
+        email
+        given_name
+        family_name
+        phone_number
+        admin
+        carbon_reports {
           nextToken
         }
-        title
-        description
+        projects_created {
+          nextToken
+        }
+        projects_in {
+          nextToken
+        }
+        hasRegistered
+        carbon_units
+        offsetted_units
+        my_solutions {
+          nextToken
+        }
+        project_carbon_reports {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -232,21 +285,26 @@ export const getProjectReport = /* GraphQL */ `
     }
   }
 `;
-export const listProjectReports = /* GraphQL */ `
-  query ListProjectReports(
-    $filter: ModelProjectReportFilterInput
+export const listReports = /* GraphQL */ `
+  query ListReports(
+    $filter: ModelReportFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listProjectReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        projectID
-        project {
+        userID
+        user {
           id
-          creatorID
-          title
-          description
+          email
+          given_name
+          family_name
+          phone_number
+          admin
+          hasRegistered
+          carbon_units
+          offsetted_units
           createdAt
           updatedAt
         }
@@ -324,91 +382,6 @@ export const listSolutions = /* GraphQL */ `
         backers {
           nextToken
         }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getReport = /* GraphQL */ `
-  query GetReport($id: ID!) {
-    getReport(id: $id) {
-      id
-      userID
-      user {
-        id
-        email
-        given_name
-        family_name
-        phone_number
-        admin
-        carbon_reports {
-          nextToken
-        }
-        projects_created {
-          nextToken
-        }
-        projects_in {
-          nextToken
-        }
-        hasRegistered
-        carbon_units
-        offsetted_units
-        my_solutions {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      date
-      totalCarbon
-      transportCarbon
-      electricityCarbon
-      gasCarbon
-      wasteCarbon
-      waterCarbon
-      paperCarbon
-      foodDrinkCarbon
-      eventsCarbon
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listReports = /* GraphQL */ `
-  query ListReports(
-    $filter: ModelReportFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        userID
-        user {
-          id
-          email
-          given_name
-          family_name
-          phone_number
-          admin
-          hasRegistered
-          carbon_units
-          offsetted_units
-          createdAt
-          updatedAt
-        }
-        date
-        totalCarbon
-        transportCarbon
-        electricityCarbon
-        gasCarbon
-        wasteCarbon
-        waterCarbon
-        paperCarbon
-        foodDrinkCarbon
-        eventsCarbon
         createdAt
         updatedAt
       }

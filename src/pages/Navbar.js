@@ -1,88 +1,103 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
 import { Link } from 'react-router-dom';
-import { Menu, Button } from 'antd';
+import { Menu, Button, Image, Dropdown, Row, Col } from 'antd';
 import './Navbar.css';
 import '../style.css';
 import logo from '../assets/LOTT rd.png';
-import { Auth } from 'aws-amplify';
+import { Auth, Storage } from 'aws-amplify';
+import Avatar from '../assets/avatar.png';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 const { Item } = Menu;
-
+const { SubMenu } = Menu;
 /* TODO:
     - add light dark mode functionality
     - route page tabs
     - style according to style guide
     - remove hover border
 */
-
 const Navbar = () => {
 
-        const {loggedIn, setLoggedIn} = useContext(UserContext);
-        
-        const signOut = async () => {
-            try {
-                await Auth.signOut();
-                setLoggedIn(false);
-            } catch (error) {
-                console.log('error signing out: ', error);
-            }
-        };
+    //Not sure if this needs to be braces vs brackets???
+    const {loggedIn, setLoggedIn} = useContext(UserContext);
+
+    const [image, setImage] = useState(Avatar);
+
+    const getProfilePicture = async () => {
+        //Need to change profilePicture.png into userSub Id
+        let user = await Auth.currentAuthenticatedUser();
+        let temp = user.attributes.sub + ".png";
+        Storage.get(temp)
+            .then(url => {
+            var myRequest = new Request(url);
+            fetch(myRequest).then(function(response) {
+                if (response.status === 200) {
+                setImage(url);
+                }
+            });
+            })
+            .catch(err => console.log(err));
+    };
+ 
+    const signOut = async () => {
+        try {
+            await Auth.signOut();
+            setLoggedIn(false);
+        } catch (error) {
+            console.log('error signing out: ', error);
+        }
+        window.location.reload();
+    };
+
+    useEffect(() => {
+        getProfilePicture();
+    }, []);
+
+    
 
     return (
-        <div>
+        <React.Fragment>
+            {/* The Hidden Burger Model */}
+            
+            <Menu className="burgerList" mode="horizontal" defaultSelectedKeys={["Home"]}>
+                <Item key="Home"><Link to='/home'><Image src={logo} id="LOTTLogo" preview={false}/></Link></Item>
+                <SubMenu mode="vertical" title={<h3 className="navbarHeaders"><FontAwesomeIcon icon={faBars} /></h3>}>
+                {loggedIn ? ( <Item key="Dashboard"> <Link to='/dashboard'><h3 className="navbarHeadersBurger">Dashboard</h3></Link> </Item>) : null }   
+                <Item key="Calculator"> <Link to='/calculator'><h3 className="navbarHeadersBurger">Calculator</h3></Link> </Item>
+                {loggedIn ? (<Item key="Profile"> <Link to='/profile'><h3 className="navbarHeadersBurger">Profile</h3></Link> </Item>) : null }
+                {loggedIn ? (<Item key="Projects"> <Link to='/projects'><h3 className="navbarHeadersBurger">Projects</h3></Link> </Item>) : null }
+                <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeadersBurger">Solutions</h3></Link> </Item>
+                <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeadersBurger">Contact Us</h3></Link> </Item>
+                
+                </SubMenu>
+                
+            </Menu>
+
             <Menu theme="light" mode="horizontal" defaultSelectedKeys={["Home"]} className="leftStyle">
-                            <Item style={{borderBottom:'none'}}>
-                                <Link to='/home'><img className="logo" src={logo} alt="Logo"/></Link>
-                            </Item>
-                            
-                            <Item key="Home">
-                                <Link to='/home'>Home</Link>
-                            </Item>
+                <Item key="Home"><Link to='/home'><Image src={logo} id="LOTTLogo" preview={false}/></Link></Item>
+                {loggedIn ? ( <Item key="Dashboard"> <Link to='/dashboard'><h3 className="navbarHeaders">Dashboard</h3></Link> </Item>) : null }   
+                <Item key="Calculator"> <Link to='/calculator'><h3 className="navbarHeaders">Calculator</h3></Link> </Item>
+                {loggedIn ? (<Item key="Profile"> <Link to='/profile'><h3 className="navbarHeaders">Profile</h3></Link> </Item>) : null}
+                {loggedIn ? (<Item key="Projects"> <Link to='/projects'><h3 className="navbarHeaders">Projects</h3></Link> </Item>) : null }
+                <Item key="Solutions"> <Link to='/solutions'><h3 className="navbarHeaders">Solutions</h3></Link> </Item>
+                <Item key="ContactUs"> <Link to='/contactUs'><h3 className="navbarHeaders">Contact Us</h3></Link> </Item>
+                
+                 
 
-                            {loggedIn ? (
-                                <Item key="Dashboard">        
-                                    <Link to='/dashboard'>Dashboard</Link>     
-                                </Item>
-                            ) : null }   
-                     
+            </Menu>
 
-                            <Item key="Calculator">        
-                                <Link to='/calculator'>Calculator</Link>     
-                            </Item>
+            <Menu theme="light" mode="horizontal" className="rightStyle">
+            { loggedIn ? ( <Item key="profileImage"> <img className = "profile-pic" src={image} /> </Item> ) : null }  
+            { loggedIn ? (<Item><Link to="/"><Button onClick={signOut} className="loginButtonNav" type="primary">Sign out</Button></Link></Item>) : null }
+                
+            { !loggedIn ? (<Item><Link to='/register'><Button type="link" ><div className="standardTextLink">Need an Account?</div></Button></Link></Item>) : null }
+            { !loggedIn ? (<Item><Link to="/login"><Button  className="loginButtonNav" type="primary">Login</Button></Link></Item>) : null }
 
-                            {loggedIn ? (<Item key="Projects">        
-                                <Link to='/projects'>Projects</Link>     
-                            </Item>) : null }
-
-                                                
-                            <Item key="ContactUs">
-                                <Link to='/contactUs'>Contact Us</Link>
-                            </Item>                 
-                        </Menu>
-
-                        <Menu theme="light" mode="horizontal" className="rightStyle">
-
-                            { loggedIn ? (
-                                    <Link to="/">  
-                                        <Button onClick={signOut} id="navButton" className="loginButtonNav" type="primary">
-                                            Sign out
-                                        </Button>
-                                    </Link> 
-                                ) : ( 
-                                    <div>
-                                        <Link to='/register'>
-                                            <Button type="link" style={{paddingRight: 30}}><div className="standardTextLink">Need an Account?</div></Button>
-                                        </Link>
-                                        <Link to="/login">    
-                                            <Button id="navButton" className="loginButtonNav" type="primary">
-                                                Login
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                )}
-                        </Menu>     
-        </div>
+            </Menu>
+        </React.Fragment>
     );
 }
 
 export default Navbar;
+

@@ -1,70 +1,65 @@
-#barChart {
-    height: 30vh;
-    width: 30vw;
+.profcard {
+  margin: 1em;
+  padding-top: 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+  box-shadow: 0 4px 10px 0 rgba(24, 24, 24, 0.1);
 }
 
-#radarChart {
-    height: 30vh;
-    width: 30vw;
+.roww {
+  flex-direction: row;
+  display: inline-flex;
 }
 
-#pieChart {
-    height: 30vh;
-    width: 30vw;
+.col {
+  flex-direction: column;
 }
 
-#reportList {
-    height: 80vh;
-    width: 18vw;
+.left,
+.right {
+  width: 19.5%;
 }
 
-#carbonBreakdown {
-    height: 80vh;
-    width: 48vw;
+.btn-group button {
+  display: block; /* Make the buttons appear below each other */
 }
 
-.column {
-    float: left;
-}
-  
-.left, .right {
-    width: 19.5%;
-}
-  
-.middle {
-    width: 49.5%;
+.containerr {
+ 
+  overflow: hidden;
 }
 
-.divider
-{
-	position: relative;
-	margin-top: 90px;
-	height: 1px;
+.breakdownTips {
+  overflow-y: auto;
 }
 
-.div-transparent:before
-{
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 5%;
-	right: 5%;
-	width: 90%;
-	height: 1px;
-	background-image: linear-gradient(to right, transparent, rgb(48,49,51), transparent);
+.columnLeft {
+  display: block;
+  float: left;
 }
 
-.div-arrow-down:after
-{
-	content: "";
-	position: absolute;
-	z-index: 1;
-	top: -7px;
-	left: calc(50% - 7px);
-	width: 14px;
-	height: 14px;
-	transform: rotate(45deg);
-	background-color: white;
-	border-bottom: 1px solid rgb(48,49,51);
-	border-right: 1px solid rgb(48,49,51);
+.columnRight {
+  display: block;
+  float: right;
+}
+
+.barChart {
+  height: 200px;
+  width: 400px;
+}
+
+.pieChart {
+  height: 200px;
+  width: 200px;
+}
+
+.lineGraph {
+  height: 200px;
+  width: 400px;
+}
+
+.colgraphs {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

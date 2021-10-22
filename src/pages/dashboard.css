@@ -6,3 +6,9 @@ img.CardImage {
     margin-right: auto;
 }
 
+.content {
+    overflow: hidden;
+    height: auto;
+    width: auto;
+    padding-top: 5em;
+}

@@ -1,15 +1,16 @@
 .registerCard {
-    width: 40vw !important;
-    position: fixed; /* or absolute */
+    width: min(1000px, 90vw) !important;
+    position: absolute; /* or absolute */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); 
 }
 
 .registerField {
-    margin-left: 4vw;
-    width: 32vw;
-    height: 4vh;
+    margin-left: 50px;
+    margin-right: 50px;
+    width: calc(100% - 100px);
+    height:40px;
     border-radius: 8px;
     display: inline-block;
     border: 1px solid var(--color_green);
@@ -28,19 +29,23 @@
 }
 
 .registerButton {
-    margin-left: 10vw;
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-    width: 12vw;
-    height: 4vh;
+    margin-left: calc(50% - 300px);
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: calc(100% - 400px);
+    height: 50px;
     border-radius: 8px;
 
-    color: var(--color_green);
+    background-color: var(--color_green);
 
     font-family: var(--general_font_family);
     font-size: var(--general_font_size);
     font-weight: var(--heading_text_font_weight);
     color: var(--color_white);
+}
+
+.registerButton:focus {
+    background-color: var(--color_forest_green);
 }
 
 .registerLabels {

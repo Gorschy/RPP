@@ -2,12 +2,10 @@
 #accountCard {
     width:40vw;
     height: 50vh;
-
     padding: var(--card_standard_padding);
     background-color: var(--foreground_color);
 
 }
-
 
 .inputFieldShort {
     margin-right: 2vw;

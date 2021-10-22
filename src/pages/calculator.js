@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTint,
@@ -10,17 +10,18 @@ import {
   faIcons,
   faRoute,
 } from "@fortawesome/free-solid-svg-icons";
-import { Card, Tabs, Layout, Divider } from "antd";
+import { Card, Tabs, Layout, Divider, Modal } from "antd";
 import "./calculator.css";
 import "../style.css";
 
 // Imports for Calculator DB ~Alex
 import { useHistory } from "react-router-dom"; // redirects
-import { Button as BootButton, Modal } from "react-bootstrap"; // For Modal
+import { Button as BootButton } from "react-bootstrap"; // For Modal
 import { API, graphqlOperation, Auth } from "aws-amplify"; // Used for sending DynamoDB
-import { createReport } from "../graphql/mutations"; // For creating Reports
+import { createReport, createProjectReport, updateUser } from "../graphql/mutations"; // For creating Reports
 import { getID } from "../graphql/customQueries"; // For creating Reports
-import { getUser } from "../graphql/queries";
+import { getUser, getProject } from "../graphql/queries";
+import { UserContext } from "./UserContext";
 
 /*
 Added in the database API all ye need to do is;
@@ -60,9 +61,123 @@ const eventsIcon = (
 const { Content } = Layout;
 const { TabPane } = Tabs;
 
+let projectID;
+
 /* ------------------------------------------------------------------ */
 
+// initialises current logged in users data
+async function GetUserData() {
+    
+      
+  const data = await Auth.currentUserPoolUser();
+  const userInfo = { ...data.attributes };
+  const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+  const user = userData.data.getUser;
+  
+  const created_projects = [...user.projects_created.items];
+  const temp = [...user.projects_in.items];
+  const editor_projects = [];
+  
+  // gets all projects the user is editor_in and processes
+  if(temp.length > 0) {
+      
+    // requests project object for each projectID
+    for(let i = 0; i < temp.length; i++) {
+        
+      const temp_project = await API.graphql(graphqlOperation(getProject, { id: temp[i].projectID}));
+      editor_projects.push(temp_project.data.getProject);
+    }
+  }
+
+  const projects = [...created_projects, ...editor_projects];
+
+  return projects;
+}
+
+const Helper = () => {
+
+  const { loggedIn } = useContext(UserContext);
+  const [projects_list, set_projects_list] = useState([]);  
+
+  const init = () => {
+      
+    const projects = GetUserData();
+    
+    // resolves promise returned by above
+    projects.then(function(result) {
+            
+      console.log(result);
+      
+      if(result.length > 0){
+          set_projects_list(result);
+      } else { console.log("User has no projects created"); }
+    });
+  }
+
+  useEffect(() => {
+      init();
+  }, []);
+
+  // modal state control
+  const [visible, setVisible] = useState(true);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const setProjectID = (e) => {
+    const { value } = e.target;
+    projectID = value;
+    setVisible(false);
+    console.log(projectID);
+  }
+
+  const handleCancel = () => {
+    setVisible(false);
+    console.log(projectID);
+  };
+
+  return (
+    
+    <div>
+      {
+        loggedIn ? (
+
+          <div className="container">          
+            
+            <Modal
+              visible={visible}
+              confirmLoading={ confirmLoading }
+              footer = {null}
+              closable={false}
+              className = "custom-mod"
+              centered
+            >
+              <div id = "userPrompt">
+                <h2>Tell us what this Report is for!</h2>
+                
+                  <button onClick = { handleCancel }>Personal Report</button>
+                  <h3>or</h3>
+                  <label>Project Report</label>
+                  <select onChange={ setProjectID }>
+                    <option value="" selected hidden>Select a Project</option>
+                    { projects_list.map((item, index) => (
+                      <option key = {index} value = {item.id}>{item.title}</option>
+                    ))}
+                  </select>
+                
+              </div>
+
+            </Modal>
+
+          </div>
+
+        ) : null
+      }
+    </div>
+  )
+}
+
 const Calculator = () => {
+
+  const history = useHistory();
   const [emission, setEmissions] = useState([]);
   const [emissionData, setEmissionData] = useState([]);
 
@@ -212,8 +327,7 @@ const Calculator = () => {
 
         //Basic Public Travel Case
         case emissionData[i].hasOwnProperty("publicTravel"):
-          let tempTransportMethod =
-            emissionData[i].publicTravel.transportMethod;
+          let tempTransportMethod = emissionData[i].publicTravel.transportMethod;
           let tempTransportType = emissionData[i].publicTravel.transportType;
           let tempDistancePub = emissionData[i].publicTravel.pubDistance;
 
@@ -275,6 +389,85 @@ const Calculator = () => {
 
         //Basic Gas Case
         case emissionData[i].hasOwnProperty("gas"):
+          //Measurement is unused
+          let tempUnitOfMeasurement = emissionData[i].gas.unitOfMeasurement;
+          let tempState = emissionData[i].gas.stateOrTerritory;
+          
+              if(emissionData[i].hasOwnProperty("gasConsumption")){
+                switch (tempState) {
+                  case "ACT":
+                    totalCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NSW":
+                    totalCarbon += 0.00175015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00175015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NT":
+                    totalCarbon += 0.00135015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00135015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "QLD":
+                    totalCarbon += 0.00125015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00125015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "SA":
+                    totalCarbon += 0.00185015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00185015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "TAS":
+                    totalCarbon += 0.00195015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00195015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "VIC":
+                    totalCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "WA":
+                    totalCarbon += 0.001675015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.001675015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  default:
+                    console.log("-- gas error --");
+                }
+              }else if(emissionData[i].hasOwnProperty("lpgConsumption")) {
+                switch (tempState) {
+                  case "ACT":
+                    totalCarbon += 0.00115015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00115015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NSW":
+                    totalCarbon += 0.00134015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.00134015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "NT":
+                    totalCarbon += 0.001655015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.001665015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "QLD":
+                    totalCarbon += 0.0165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.0165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "SA":
+                    totalCarbon += 0.000165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.000165015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "TAS":
+                    totalCarbon += 0.001365015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.001365015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "VIC":
+                    totalCarbon += 0.0014565015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.0014565015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  case "WA":
+                    totalCarbon += 0.0016528015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    gasCarbon += 0.0016528015 * emissionData[i].gas.gasConsumption  - 0.000555556;
+                    break;
+                  default:
+                    console.log("-- gas error --");
+                }
+              }
           break;
 
         //Basic Waste Case
@@ -435,21 +628,15 @@ const Calculator = () => {
           if (temp < 0) {
             temp = 0;
           }
-
           totalCarbon += temp;
           eventsCarbon += temp;
-
           break;
-
         //Add Adv Case
-
         default:
           console.log("-- main switch error --");
       }
     }
-    
 
-    //Hello message from nathan test.
     let tempTotalCarbon = totalCarbon.toString();
     let tempTransportCarbon = transportCarbon.toString();
     let tempElectricityCarbon = electricityCarbon.toString();
@@ -460,19 +647,38 @@ const Calculator = () => {
     let tempFoodDrinkCarbon = foodDrinkCarbon.toString();
     let tempEventsCarbon = eventsCarbon.toString();
 
-      try{
-        Auth.currentUserInfo().then((userInfo) => {
-          if(userInfo == null){ // If not signed in head to login page
-            localStorage.setItem('calculate_data','true') // Add to local storage. And will be removed when user is tasken to Carbon reports
-           // history.push('login');
-          }
-        })   
-        // If the user is still here they must be logged in 
-        // thus we send the data to DB
-    
-        const data = await Auth.currentUserPoolUser();
-        const userInfo = { ...data.attributes }; // userInfo.sub == user ID
-      
+  
+      const data = await Auth.currentUserPoolUser();
+      const userInfo = { ...data.attributes }; // userInfo.sub == user ID
+      const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
+
+      //Set user carbon owning += carbontotal 
+      if(projectID != undefined) {
+
+        console.log("creating project report -> projectID should be defined: " + projectID);
+        // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
+        const report = {
+          userID: userInfo.sub,
+          projectID: projectID,
+          date: date,
+          totalCarbon: tempTotalCarbon,
+          transportCarbon: tempTransportCarbon,
+          electricityCarbon: tempElectricityCarbon,
+          gasCarbon: tempGasCarbon,
+          wasteCarbon: tempWasteCarbon,
+          waterCarbon: tempWaterCarbon,
+          paperCarbon: tempPaperCarbon,
+          foodDrinkCarbon: tempFoodDrinkCarbon,
+          eventsCarbon: tempEventsCarbon
+        };
+
+        console.log(report);
+        await API.graphql(graphqlOperation(createProjectReport, { input: report }));
+        history.push('/projects'); // MUST FIX; should send user to carbon report
+        
+      } else {
+        
+        console.log("creating personal report -> projectID should be undefined: " + projectID);
         // Add the inputs you want to store to the Report graphql schema note "!" means required; check out discord #back-end for further tips ~ Alex
         const report = {
           userID: userInfo.sub,
@@ -487,21 +693,18 @@ const Calculator = () => {
           foodDrinkCarbon: tempFoodDrinkCarbon,
           eventsCarbon: tempEventsCarbon
         };
-
-        const userData = await API.graphql(graphqlOperation(getUser, { id: userInfo.sub }));
-        
-
-        //Set user carbon owning += carbontotal 
-
         console.log(report);
-         await API.graphql(graphqlOperation(createReport, { input: report}));
-         //history.push('carbon_report'); // MUST FIX; should send user to carbon report
-    
-      }catch(e){
-        console.error("Error in calculator.js report method: ", e)
-      }
-    
-  };
+        //history.push('carbon_report'); // MUST FIX; should send user to carbon report
+        await API.graphql(graphqlOperation(createReport, { input: report}));
+        
+        const userObject = await API.graphql(graphqlOperation(updateUser, 
+          { input:{
+              id: userInfo.sub, 
+              carbon_units: userData.data.getUser.carbon_units + Math.round(totalCarbon),
+        }}));
+        history.push('/profile'); // MUST FIX; should send user to carbon report
+  }
+};
 
   function resetForms(id) {
     console.log(id);
@@ -538,7 +741,7 @@ const Calculator = () => {
   /* -------- Local Storage --------*/
   // OUTDATED
   // Add to Local Storage
-  React.useEffect(() => {
+  useEffect(() => {
     // Every time the emission data is changed this will trigger
     localStorage.setItem("emission_key", JSON.stringify(emission, null, 2));
   }, [emission]);
@@ -638,6 +841,7 @@ const Calculator = () => {
 
   return (
     <div className="calculatorContent">
+      <Helper />
       <Card
         id="calculatorCard"
         bordered={false}
@@ -654,17 +858,6 @@ const Calculator = () => {
                   // ADVANCED TRANSPORT FORM
                   <div>
                     <h2>Vehicle</h2>
-
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="vehicleTravelAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      maxLength="60"
-                      placeholder="Description (eg. Landcruiser)"
-                    />
 
                     <label>Number of Vehicles</label>
                     <input
@@ -782,16 +975,6 @@ const Calculator = () => {
 
                     <h2>Air Travel</h2>
 
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="airTravelAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Conference Trip)"
-                    />
-
                     <label>Cabin Class</label>
                     <select
                       required
@@ -901,16 +1084,6 @@ const Calculator = () => {
                     <br />
 
                     <h2>Public Transport</h2>
-
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="publicTravelAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Trip to the city)"
-                    />
 
                     <label>Transport Method</label>
                     <select
@@ -1131,16 +1304,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED ELECTRICITY FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="electricityAdv"
-                      name="electricityDescription"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Office Lighting)"
-                    />
-
                     <label>Electricity Utility Location</label>
                     <select
                       required
@@ -1224,16 +1387,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED GAS FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="gasAdv"
-                      name="gasDescription"
-                      onChange={handleEmission}
-                      placeholder="Description (ed. Workplace Gas Usage)"
-                    />
-
                     <Divider />
 
                     <label>Gas Consumption</label>
@@ -1271,8 +1424,8 @@ const Calculator = () => {
                       <option value="" selected hidden>
                         Please Select
                       </option>
-                      <option value="">Kilowatt Hours</option>
-                      <option value="">Megajoules</option>
+                      <option value="Kilowatt Hours">Kilowatt Hours</option>
+                      <option value="Megajoules">Megajoules</option>
                     </select>
 
                     <label>State or Territory</label>
@@ -1286,14 +1439,14 @@ const Calculator = () => {
                       <option value="" selected hidden>
                         Please Select
                       </option>
-                      <option value="23.27">ACT</option>
-                      <option value="23.27">NSW</option>
-                      <option value="21.68">NT</option>
-                      <option value="21.72">QLD</option>
-                      <option value="22.4">SA</option>
-                      <option value="21.68">TAS</option>
-                      <option value="19.99">VIC</option>
-                      <option value="20.03">WA</option>
+                      <option value="ACT">ACT</option>
+                      <option value="NSW">NSW</option>
+                      <option value="NT">NT</option>
+                      <option value="QLD">QLD</option>
+                      <option value="SA">SA</option>
+                      <option value="TAS">TAS</option>
+                      <option value="VIC">VIC</option>
+                      <option value="WA">WA</option>
                     </select>
 
                     <div>
@@ -1429,16 +1582,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED WASTE FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="wasteAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Office General Waste)"
-                    />
-
                     <label>Waste Type</label>
                     <select
                       required
@@ -1645,16 +1788,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED PAPER FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="paperAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Office Printing)"
-                    />
-
                     <label>Source</label>
                     <select
                       required
@@ -1765,16 +1898,6 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED FOOD AND DRINK FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="foodAndDrinkAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Shopping)"
-                    />
-
                     <label>Food Type</label>
                     <select
                       required
@@ -1872,18 +1995,7 @@ const Calculator = () => {
                 {advCalc ? (
                   // ADVANCED EVENTS FORM
                   <div>
-                    <label>Description</label>
-                    <input
-                      className="userInput"
-                      type="text"
-                      id="eventsAdv"
-                      name="description"
-                      onChange={handleEmission}
-                      placeholder="Description (eg. Concert)"
-                    />
-
                     <h2>Accommodation</h2>
-
                     <label>Number of Attendees in Accomodation</label>
                     <input
                       className="userInput"
@@ -2086,7 +2198,7 @@ const Calculator = () => {
             <Content>
               <Card
                 id="totalCard"
-                title={<h2 id="centreContent">Carbon Report</h2>}
+                title={<h2 id="centreContent">Emissions</h2>}
               >
                 <ul>{emissionList}</ul>
 
@@ -2102,10 +2214,9 @@ const Calculator = () => {
           </Layout>
         </Tabs>
       </Card>
-
       <div>
-        <div class="switchContainer">
-          <label class="switch" for="advBasic">
+        <div className="switchContainer">
+          <label className="switch" for="advBasic">
             <input
               type="checkbox"
               id="advBasic"
@@ -2114,13 +2225,13 @@ const Calculator = () => {
                 handleAdvCalc(e.target.checked);
               }}
             />
-            <div class="slider round"></div>
+            <div className="slider round"></div>
           </label>
-          <h3 class="switchLabel">Advanced</h3>
+          <h3 className="switchLabel">Advanced</h3>
         </div>
 
-        <div class="switchContainer">
-          <label class="switch" for="uom">
+        <div className="switchContainer">
+          <label className="switch" for="uom">
             <input
               type="checkbox"
               id="uom"
@@ -2129,9 +2240,9 @@ const Calculator = () => {
                 handleUom(e.target.checked);
               }}
             />
-            <div class="slider round"></div>
+            <div className="slider round"></div>
           </label>
-          <h3 class="switchLabel">Imperial</h3>
+          <h3 className="switchLabel">Imperial</h3>
         </div>
       </div>
     </div>
