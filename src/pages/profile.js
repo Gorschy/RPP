@@ -91,8 +91,8 @@ const Profile = () => {
     }
 
     return ( 
-        <div className="container">
-            <div className="column">
+        <div className="containerr">
+            <div className="columnn">
                 <Card className="cardd" title = {<h1>Your Carbon</h1>}>
                   <h2>Total Carbon:  {carbonOwing + "t CO2"}</h2>
                   <h2>Total Offseted Carbon: {offsetCarbon + "t CO2"}</h2>

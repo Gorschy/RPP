@@ -408,7 +408,7 @@ const CarbonBreakdown = (report) => {
               <div className = "flex-container">
 
     
-                <div className = "flex-child">  
+                <div className = "flex-child 1">  
                   <div className = "btn-group">
                     <button onClick={totalCarbon}>Total</button>
                     <button onClick={transportCarbon}>Transport</button>
@@ -435,20 +435,16 @@ const CarbonBreakdown = (report) => {
                     ))}
                   </ul>
                 </div>
+                
 
+                <div className = "flex-child">
+                  <CChart className="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={options} />
+                  <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
+                  <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} />
+                </div>
               </div>          
            </div>  
 
-          <div className = "roww">
-
-            <div className = "colgraphs">
-              <CChart className="pieChart" type="pie" datasets={pie.datasets} labels={pie.labels} options={options} />
-              <CChart className="barChart" type="bar" datasets={bar.datasets} options={options} labels={pie.labels} />
-              <CChart className="lineGraph" type="line" datasets={line.datasets} labels={line.labels} options={options} />
-            </div>
-          
-          </div>
-          
         </div>
       </div>
       

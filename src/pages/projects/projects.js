@@ -700,8 +700,10 @@ const UserLists = (currentUser) => {
 
                                     </div>
 
-                                    <div className = "column">   
-                                        <CarbonBreakdown { ...selected_report } />
+                                    <div className = "column">
+                                        <div className = "test">   
+                                            <CarbonBreakdown { ...selected_report } />
+                                        </div>
                                     </div>
 
                                     <div className = "column">                

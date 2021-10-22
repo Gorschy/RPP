@@ -5,8 +5,10 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
 }
 
 .column {
@@ -34,7 +36,6 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  
 }
 
 /* modal styling */
@@ -139,7 +140,7 @@ ul {
 /* Card Stylings */
 
 .card {
-  margin: 1em;
+  margin: 0.5em;
 	padding-top: 0.5em;
   background-color: white;
   border-radius: 0.5em;
@@ -172,13 +173,11 @@ ul {
 
 .project-admin-card {
   text-align: center;
-  background-color: white;
-  width: auto;
-  min-height: 400px;
-  min-width: 300px;
+  width: 350px;
   height: auto;
+  min-height: 400px;
+  max-width: 350px;
   border-radius: 0.5em;
-  margin-bottom: 1vh;
 }
 
 .project-admin-card h3 {
@@ -186,8 +185,11 @@ ul {
 }
 
 .members-list-card {
-  width: 17vw;
-  height: 45vh;
+  width: auto;
+  height: auto;
+  min-height: 400px;
+  max-width: 350px;
+  border-radius: 0.5em;
   display: flex;
 	padding: 1em;
   flex-direction: column;
@@ -199,6 +201,7 @@ ul {
 
 
 .project-analytics-card {
+  transform: translateY(6px);
   padding: 1em;
   height: auto;
 	max-height: 890px;
@@ -206,9 +209,13 @@ ul {
   min-width: 300px;
 }
 
+.test {
+  margin: -1em;
+}
+
 /* Header ID stylings */
 
-.center-text h2 h3 {
+.center-text > * {
 	text-align: center;
 }
 
@@ -238,8 +245,8 @@ ul {
 }
 
 .team-member-pic {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
 }
